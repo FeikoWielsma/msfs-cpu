@@ -76,6 +76,81 @@ def build_norm_series(rows):
     return series
 
 
+# Per-CPU specs for the badges + "what drives performance" analysis.
+# Fields: socket, arch, p (P/perf cores), e (E-cores; 0 = none), t (threads),
+# ccd (chiplets; 1 for monolithic/Intel), l3 (total MB incl. V-Cache), vc (3D
+# V-Cache), clk (max boost GHz). Threads stored explicitly (SMT/HT/none vary).
+def _spec(socket, arch, p, e, t, ccd, l3, vc, clk):
+    return {"socket": socket, "arch": arch, "p": p, "e": e, "t": t,
+            "ccd": ccd, "l3": l3, "vcache": vc, "clk": clk}
+
+
+SPECS = {
+    # ---- AMD AM4 · Zen 2 (3000) ----
+    "Ryzen 5 3600":     _spec("AM4", "Zen 2", 6, 0, 12, 1, 32, False, 4.2),
+    "Ryzen 7 3800XT":   _spec("AM4", "Zen 2", 8, 0, 16, 1, 32, False, 4.7),
+    "Ryzen 9 3900X":    _spec("AM4", "Zen 2", 12, 0, 24, 2, 64, False, 4.6),
+    "Ryzen 9 3950X":    _spec("AM4", "Zen 2", 16, 0, 32, 2, 64, False, 4.7),
+    # ---- AMD AM4 · Zen 3 (5000) ----
+    "Ryzen 5 5600":     _spec("AM4", "Zen 3", 6, 0, 12, 1, 32, False, 4.4),
+    "Ryzen 5 5600X3D":  _spec("AM4", "Zen 3", 6, 0, 12, 1, 96, True, 4.4),
+    "Ryzen 7 5800X":    _spec("AM4", "Zen 3", 8, 0, 16, 1, 32, False, 4.7),
+    "Ryzen 7 5700X3D":  _spec("AM4", "Zen 3", 8, 0, 16, 1, 96, True, 4.1),
+    "Ryzen 7 5800X3D":  _spec("AM4", "Zen 3", 8, 0, 16, 1, 96, True, 4.5),
+    "Ryzen 9 5950X":    _spec("AM4", "Zen 3", 16, 0, 32, 2, 64, False, 4.9),
+    # ---- AMD AM5 · Zen 4 (7000) ----
+    "Ryzen 5 7500F":    _spec("AM5", "Zen 4", 6, 0, 12, 1, 32, False, 5.0),
+    "Ryzen 5 7600X":    _spec("AM5", "Zen 4", 6, 0, 12, 1, 32, False, 5.3),
+    "Ryzen 5 7500X3D":  _spec("AM5", "Zen 4", 6, 0, 12, 1, 96, True, 4.5),
+    "Ryzen 5 7600X3D":  _spec("AM5", "Zen 4", 6, 0, 12, 1, 96, True, 4.7),
+    "Ryzen 7 7700X":    _spec("AM5", "Zen 4", 8, 0, 16, 1, 32, False, 5.4),
+    "Ryzen 7 7800X3D":  _spec("AM5", "Zen 4", 8, 0, 16, 1, 96, True, 5.0),
+    "Ryzen 9 7900":     _spec("AM5", "Zen 4", 12, 0, 24, 2, 64, False, 5.4),
+    "Ryzen 9 7900X3D":  _spec("AM5", "Zen 4", 12, 0, 24, 2, 128, True, 5.6),
+    "Ryzen 9 7950X":    _spec("AM5", "Zen 4", 16, 0, 32, 2, 64, False, 5.7),
+    "Ryzen 9 7950X3D":  _spec("AM5", "Zen 4", 16, 0, 32, 2, 128, True, 5.7),
+    # ---- AMD AM5 · Zen 5 (9000) ----
+    "Ryzen 5 9600X":    _spec("AM5", "Zen 5", 6, 0, 12, 1, 32, False, 5.4),
+    "Ryzen 7 9700X":    _spec("AM5", "Zen 5", 8, 0, 16, 1, 32, False, 5.5),
+    "Ryzen 7 9800X3D":  _spec("AM5", "Zen 5", 8, 0, 16, 1, 96, True, 5.2),
+    "Ryzen 7 9850X3D":  _spec("AM5", "Zen 5", 8, 0, 16, 1, 96, True, 5.3),
+    "Ryzen 9 9900X":    _spec("AM5", "Zen 5", 12, 0, 24, 2, 64, False, 5.6),
+    "Ryzen 9 9900X3D":  _spec("AM5", "Zen 5", 12, 0, 24, 2, 128, True, 5.5),
+    "Ryzen 9 9950X":    _spec("AM5", "Zen 5", 16, 0, 32, 2, 64, False, 5.7),
+    "Ryzen 9 9950X3D":  _spec("AM5", "Zen 5", 16, 0, 32, 2, 128, True, 5.7),
+    "Ryzen 9 9950X3D2": _spec("AM5", "Zen 5", 16, 0, 32, 2, 192, True, 5.6),  # "Dual Edition": V-Cache on both CCDs
+    # ---- Intel LGA1200 · Rocket Lake (11th) ----
+    "Core i9-11900K":   _spec("LGA1200", "Rocket Lake", 8, 0, 16, 1, 16, False, 5.3),
+    # ---- Intel LGA1700 · Alder Lake (12th) ----
+    "Core i5-12400F":   _spec("LGA1700", "Alder Lake", 6, 0, 12, 1, 18, False, 4.4),
+    "Core i5-12600K":   _spec("LGA1700", "Alder Lake", 6, 4, 16, 1, 20, False, 4.9),
+    "Core i7-12700K":   _spec("LGA1700", "Alder Lake", 8, 4, 20, 1, 25, False, 5.0),
+    "Core i9-12900K":   _spec("LGA1700", "Alder Lake", 8, 8, 24, 1, 30, False, 5.2),
+    # ---- Intel LGA1700 · Raptor Lake (13th / 14th) ----
+    "Core i3-13100F":   _spec("LGA1700", "Raptor Lake", 4, 0, 8, 1, 12, False, 4.5),
+    "Core i5-13400F":   _spec("LGA1700", "Raptor Lake", 6, 4, 16, 1, 20, False, 4.6),
+    "Core i5-13600K":   _spec("LGA1700", "Raptor Lake", 6, 8, 20, 1, 24, False, 5.1),
+    "Core i7-13700K":   _spec("LGA1700", "Raptor Lake", 8, 8, 24, 1, 30, False, 5.4),
+    "Core i9-13900K":   _spec("LGA1700", "Raptor Lake", 8, 16, 32, 1, 36, False, 5.8),
+    "Core i3-14100":    _spec("LGA1700", "Raptor Lake", 4, 0, 8, 1, 12, False, 4.7),
+    "Core i5-14400":    _spec("LGA1700", "Raptor Lake", 6, 4, 16, 1, 20, False, 4.7),
+    "Core i5-14400F":   _spec("LGA1700", "Raptor Lake", 6, 4, 16, 1, 20, False, 4.7),
+    "Core i5-14600K":   _spec("LGA1700", "Raptor Lake", 6, 8, 20, 1, 24, False, 5.3),
+    "Core i7-14700K":   _spec("LGA1700", "Raptor Lake", 8, 12, 28, 1, 33, False, 5.6),
+    "Core i9-14900K":   _spec("LGA1700", "Raptor Lake", 8, 16, 32, 1, 36, False, 6.0),
+    "Core i9-14900KS":  _spec("LGA1700", "Raptor Lake", 8, 16, 32, 1, 36, False, 6.2),
+    # ---- Intel LGA1851 · Arrow Lake (Core Ultra 2xx; no Hyper-Threading) ----
+    "Core Ultra 5 225":      _spec("LGA1851", "Arrow Lake", 6, 4, 10, 1, 20, False, 4.9),
+    "Core Ultra 5 225F":     _spec("LGA1851", "Arrow Lake", 6, 4, 10, 1, 20, False, 4.9),
+    "Core Ultra 5 235":      _spec("LGA1851", "Arrow Lake", 6, 8, 14, 1, 24, False, 5.0),
+    "Core Ultra 5 245K":     _spec("LGA1851", "Arrow Lake", 6, 8, 14, 1, 24, False, 5.2),
+    "Core Ultra 5 250K Plus": _spec("LGA1851", "Arrow Lake", 6, 12, 18, 1, 30, False, 5.3),
+    "Core Ultra 7 265K":     _spec("LGA1851", "Arrow Lake", 8, 12, 20, 1, 30, False, 5.5),
+    "Core Ultra 7 270K Plus": _spec("LGA1851", "Arrow Lake", 8, 16, 24, 1, 36, False, 5.5),
+    "Core Ultra 9 285K":     _spec("LGA1851", "Arrow Lake", 8, 16, 24, 1, 36, False, 5.7),
+}
+
+
 TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en" data-theme="light" data-density="comfortable" data-bars="vendor">
 <head>
@@ -244,14 +319,37 @@ TEMPLATE = r"""<!DOCTYPE html>
   .cpu { font-weight:600; font-size:15px; letter-spacing:-.005em; white-space:nowrap;
     overflow:hidden; text-overflow:ellipsis; min-width:0; }
   html[data-density="compact"] .cpu { font-size:14px; }
+  .meta { display:flex; align-items:center; gap:5px; flex:none; }
   .badge { font-size:10px; font-weight:700; letter-spacing:.03em; padding:2px 6px; border-radius:5px;
-    vertical-align:1px; margin-left:6px; }
+    white-space:nowrap; vertical-align:1px; }
   .badge.x3d { background:var(--pos-bg); color:var(--pos); }
-  .badge.vendor { margin-left:6px; }
-  .badge.amd { background:rgba(207,58,54,.13); color:var(--amd-deep); }
-  .badge.intel { background:rgba(43,108,212,.14); color:var(--intel-deep); }
-  html[data-theme="dark"] .badge.amd { color:var(--amd); }
-  html[data-theme="dark"] .badge.intel { color:var(--intel); }
+  .badge.sock { background:var(--track); color:var(--ink-2); }
+  .badge.sock.amd { background:rgba(207,58,54,.13); color:var(--amd-deep); }
+  .badge.sock.intel { background:rgba(43,108,212,.14); color:var(--intel-deep); }
+  html[data-theme="dark"] .badge.sock.amd { color:var(--amd); }
+  html[data-theme="dark"] .badge.sock.intel { color:var(--intel); }
+  .badge.cores { background:transparent; color:var(--muted); border:1px solid var(--line);
+    font-family:"JetBrains Mono", ui-monospace, monospace; font-weight:600; letter-spacing:0; }
+  @media (max-width:520px) { .badge.cores { display:none; } }
+
+  /* ---------- factor analysis ---------- */
+  .factors { display:flex; flex-direction:column; gap:1px; background:var(--line-2);
+    border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-top:14px; }
+  .frow { display:grid; grid-template-columns:1fr auto; column-gap:14px; align-items:baseline;
+    padding:12px 15px; background:var(--card); }
+  .frow .fname { font-weight:700; font-size:14.5px; }
+  .frow .fsub { font-size:12px; color:var(--muted); margin-top:1px; }
+  .frow .feffect { font-family:"JetBrains Mono", ui-monospace, monospace; font-weight:700;
+    font-size:16px; text-align:right; white-space:nowrap; }
+  .feffect.pos { color:var(--pos); } .feffect.neg { color:var(--neg); } .feffect.flat { color:var(--muted); }
+  .fbar { grid-column:1 / -1; position:relative; height:7px; background:var(--track);
+    border-radius:5px; margin-top:9px; }
+  .fbar-zero { position:absolute; left:50%; top:-3px; bottom:-3px; width:2px; background:var(--faint); border-radius:2px; }
+  .fbar-fill { position:absolute; top:0; height:100%; border-radius:5px; min-width:2px; }
+  .fbar-fill.pos { background:linear-gradient(90deg, var(--pos), color-mix(in srgb, var(--pos) 55%, #fff)); }
+  .fbar-fill.neg { background:linear-gradient(90deg, color-mix(in srgb, var(--neg) 55%, #fff), var(--neg)); }
+  .frow .fex { grid-column:1 / -1; font-size:11.5px; color:var(--faint); margin-top:7px; line-height:1.5; }
+  .frow .fex b { color:var(--ink-2); font-weight:600; }
 
   .val { margin-left:auto; display:flex; align-items:baseline; gap:8px; flex:none; }
   .val .big { font-size:17px; font-weight:700; }
@@ -313,12 +411,19 @@ TEMPLATE = r"""<!DOCTYPE html>
   .srcgrid .s b a { text-decoration:none; } .srcgrid .s b a:hover { text-decoration:underline; }
   .srcgrid .s small { color:var(--muted); font-size:12px; display:block; margin-top:5px; }
 
+  .tblfilters { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin:2px 0 14px; }
+  .tblfilters .ctl-group { gap:7px; }
+  .tchk { display:inline-flex; align-items:center; gap:7px; font-size:13.5px; font-weight:600;
+    color:var(--ink-2); cursor:pointer; }
+  .tchk input { width:16px; height:16px; accent-color:var(--accent); cursor:pointer; }
+  .tblfilters .search { max-width:220px; }
   .tablewrap { overflow:auto; border-radius:10px; border:1px solid var(--line); margin-top:4px;
     -webkit-overflow-scrolling:touch; max-height:520px; }
-  table { border-collapse:collapse; width:100%; font-size:13px; min-width:560px; }
+  table { border-collapse:collapse; width:100%; font-size:13px; min-width:720px; }
   th, td { padding:8px 11px; border-bottom:1px solid var(--line-2); text-align:left; white-space:nowrap; }
   thead th { position:sticky; top:0; background:var(--card-2); cursor:pointer; user-select:none;
     font-size:11.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); z-index:2; }
+  thead th.tnum { text-align:right; }
   th .arr { font-size:9px; }
   td.tnum { text-align:right; }
   tbody tr:hover { background:var(--hover); }
@@ -405,6 +510,15 @@ TEMPLATE = r"""<!DOCTYPE html>
   <div class="legend" id="legend"></div>
   <div class="chart" id="chart"></div>
 
+  <details class="panel" id="analysisPanel" open>
+    <summary>What actually drives MSFS&nbsp;2024 performance? <span class="pcount">from this data</span></summary>
+    <div class="panel-body">
+      <p class="methodology" id="analysisIntro"></p>
+      <div id="factorTable"></div>
+      <p class="methodology" id="analysisNote" style="margin-top:14px"></p>
+    </div>
+  </details>
+
   <details class="panel" id="srcPanel">
     <summary>Sources &amp; methodology <span class="pcount" id="srcCount"></span></summary>
     <div class="panel-body">
@@ -432,6 +546,15 @@ TEMPLATE = r"""<!DOCTYPE html>
   <details class="panel" id="tablePanel">
     <summary>Full data table <span class="pcount" id="rowCount"></span></summary>
     <div class="panel-body">
+      <div class="tblfilters">
+        <div class="ctl-group"><span class="ctl-label">Socket</span><select id="tSocket"></select></div>
+        <div class="ctl-group"><span class="ctl-label">Arch</span><select id="tArch"></select></div>
+        <label class="tchk"><input type="checkbox" id="tX3D"> X3D only</label>
+        <div class="search">
+          <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+          <input id="tSearch" type="search" placeholder="Filter CPUs…" autocomplete="off">
+        </div>
+      </div>
       <div class="tablewrap"><table id="table"><thead></thead><tbody></tbody></table></div>
     </div>
   </details>
@@ -448,17 +571,27 @@ TEMPLATE = r"""<!DOCTYPE html>
 <script>
 window.DATA = __DATA__;
 window.NORM_SERIES = __NORM__;
+window.SPECS = __SPECS__;
 window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
 </script>
 <script>
 /* MSFS 2024 CPU benchmark — redesigned app logic (vanilla). */
 (function () {
   "use strict";
-  const DATA = window.DATA, NORM_SERIES = window.NORM_SERIES;
+  const DATA = window.DATA, NORM_SERIES = window.NORM_SERIES, SPECS = window.SPECS || {};
   const $ = s => document.querySelector(s);
   const el = (t, c) => { const e = document.createElement(t); if (c) e.className = c; return e; };
   const fmt = (x, d) => Number(x).toFixed(d);
   const isX3D = c => /x3d/i.test(c);
+
+  // Compact core-config string from a spec, e.g. "8P+16E·32T", "8C/16T", "16C/32T·2CCD".
+  function coreStr(sp) {
+    if (!sp) return "";
+    if (sp.e > 0) return `${sp.p}P+${sp.e}E·${sp.t}T`;
+    let s = `${sp.p}C/${sp.t}T`;
+    if (sp.ccd > 1) s += `·${sp.ccd}CCD`;
+    return s;
+  }
 
   // ---------- state ----------
   let tab = "ranking";          // ranking | source
@@ -599,11 +732,22 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
     }
   }
 
+  function enabledData(field) {
+    const valid = enabledSeries().map(s => ({ ...s, data: seriesData(s, field) }))
+                                 .filter(s => Object.keys(s.data).length);
+    const cpus = [...new Set(valid.flatMap(s => Object.keys(s.data)))];
+    return { valid, cpus };
+  }
+  // Pre-prior cross-source fit (no sanity overrides) — used by the factor analysis,
+  // which wants what the measurements actually say, not the sanitised ranking.
+  function fitRaw(field) {
+    const { valid, cpus } = enabledData(field);
+    return cpus.length ? twowayFit(valid, cpus, cpus[0]) : {};
+  }
+
   // returns sorted [{cpu, vendor, x3d, raw, idx, n}]
   function computeIndex(field) {
-    const series = enabledSeries().map(s => ({ ...s, data: seriesData(s, field) }));
-    const valid = series.filter(s => Object.keys(s.data).length);
-    const cpus = [...new Set(valid.flatMap(s => Object.keys(s.data)))];
+    const { valid, cpus } = enabledData(field);
     if (!cpus.length) return [];
     const raw = twowayFit(valid, cpus, cpus[0]);
     applyArchPrior(raw, valid);
@@ -636,10 +780,16 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
   }
 
   // ---------- shared bar row ----------
-  function badges(cpu, vendor, showVendor) {
-    let h = "";
-    if (showVendor) h += `<span class="badge vendor ${vendor.toLowerCase()}">${vendor}</span>`;
-    if (isX3D(cpu)) h += `<span class="badge x3d">3D</span>`;
+  // Socket badge (vendor-tinted) + core-config badge + 3D V-Cache badge.
+  function badges(cpu, vendor) {
+    const sp = SPECS[cpu]; let h = "";
+    if (sp) {
+      const tint = vendor === "AMD" ? "amd" : "intel";
+      h += `<span class="badge sock ${tint}" title="${sp.arch} · ${sp.l3} MB L3 · up to ${sp.clk.toFixed(1)} GHz">${sp.socket}</span>`;
+      const cs = coreStr(sp);
+      if (cs) h += `<span class="badge cores" title="${sp.arch}">${cs}</span>`;
+    }
+    if (isX3D(cpu)) h += `<span class="badge x3d" title="3D V-Cache">3D</span>`;
     return h;
   }
 
@@ -670,7 +820,8 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
       row.innerHTML =
         `<div class="br-top">
            <span class="rank num">${i + 1}</span>
-           <span class="cpu">${o.cpu}${badges(o.cpu, o.vendor, true)}</span>
+           <span class="cpu">${o.cpu}</span>
+           <span class="meta">${badges(o.cpu, o.vendor)}</span>
            <span class="val">
              ${deltaHtml}
              <span class="big num">${o.idx.toFixed(0)}<span class="unit">%</span></span>
@@ -726,7 +877,8 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
       row.innerHTML =
         `<div class="br-top">
            <span class="rank num">${i + 1}</span>
-           <span class="cpu">${r.cpu}${badges(r.cpu, r.vendor, true)}</span>
+           <span class="cpu">${r.cpu}</span>
+           <span class="meta">${badges(r.cpu, r.vendor)}</span>
            <span class="val">
              ${deltaHtml}
              <span class="big num">${fmt(r.avg, 1)}</span>
@@ -765,6 +917,64 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
     }
   }
 
+  // ---------- factor analysis ----------
+  // Each factor isolates one variable via matched pairs [faster, slower] that are
+  // otherwise alike. Effect = mean % gap from the raw cross-source fit on the
+  // current metric, so it's what the measurements say, before the sanity priors.
+  const FACTORS = [
+    { name: "3D V-Cache", sub: "+64 MB stacked L3 — same cores & architecture",
+      pairs: [["Ryzen 7 9800X3D", "Ryzen 7 9700X"], ["Ryzen 7 7800X3D", "Ryzen 7 7700X"],
+              ["Ryzen 5 7600X3D", "Ryzen 5 7600X"], ["Ryzen 7 5800X3D", "Ryzen 7 5800X"]] },
+    { name: "Newer architecture", sub: "Zen 3 → 4 → 5, 8-core X3D — IPC + clock + cache",
+      pairs: [["Ryzen 7 9800X3D", "Ryzen 7 7800X3D"], ["Ryzen 7 7800X3D", "Ryzen 7 5800X3D"]] },
+    { name: "8 cores vs 6", sub: "+2 cores, architecture & cache held constant",
+      pairs: [["Ryzen 7 7800X3D", "Ryzen 5 7600X3D"], ["Ryzen 7 7700X", "Ryzen 5 7600X"],
+              ["Ryzen 7 9700X", "Ryzen 5 9600X"]] },
+    { name: "16 cores / 2nd CCD vs 8", sub: "dual-CCD flagship vs the 8-core X3D",
+      pairs: [["Ryzen 9 9950X3D", "Ryzen 7 9800X3D"], ["Ryzen 9 7950X3D", "Ryzen 7 7800X3D"]] },
+    { name: "Higher clock", sub: "identical silicon, more MHz",
+      pairs: [["Ryzen 7 9850X3D", "Ryzen 7 9800X3D"], ["Core i9-14900KS", "Core i9-14900K"]] },
+    { name: "Best X3D vs best Intel", sub: "8-core X3D vs the Intel flagships",
+      pairs: [["Ryzen 7 9800X3D", "Core i9-14900K"], ["Ryzen 7 9800X3D", "Core Ultra 9 285K"]] },
+  ];
+  const shortName = c => c.replace(/^Ryzen \d+ /, "").replace(/^Core (Ultra \d+|i\d)[- ]/, "");
+
+  function renderAnalysis() {
+    const raw = fitRaw(metric), has = c => raw[c] != null;
+    const rows = FACTORS.map(f => {
+      const ds = f.pairs.filter(([a, b]) => has(a) && has(b))
+                        .map(([a, b]) => ({ a, b, pct: (raw[a] / raw[b] - 1) * 100 }));
+      if (!ds.length) return null;
+      return { ...f, eff: ds.reduce((t, d) => t + d.pct, 0) / ds.length, ds };
+    }).filter(Boolean);
+    const box = $("#factorTable");
+    if (!rows.length) { box.innerHTML = `<div class="empty">Enable a dataset to compute the factors.</div>`; return; }
+    const maxAbs = Math.max(1, ...rows.map(r => Math.abs(r.eff)));
+    const cls = e => e >= 2 ? "pos" : e <= -2 ? "neg" : "flat";
+    const sign = e => (e >= 0 ? "+" : "") + e.toFixed(1) + "%";
+    const ex = ds => ds.map(d => `<b>${shortName(d.a)}</b> vs ${shortName(d.b)} ${(d.pct >= 0 ? "+" : "")}${d.pct.toFixed(0)}%`).join(" &nbsp;·&nbsp; ");
+    box.innerHTML = `<div class="factors">` + rows.map(r => {
+      const w = Math.abs(r.eff) / maxAbs * 50, left = r.eff >= 0 ? 50 : 50 - w;
+      return `<div class="frow">
+        <div><div class="fname">${r.name}</div><div class="fsub">${r.sub}</div></div>
+        <div class="feffect ${cls(r.eff)}">${sign(r.eff)}</div>
+        <div class="fbar"><div class="fbar-zero"></div>
+          <div class="fbar-fill ${r.eff >= 0 ? "pos" : "neg"}" style="left:${left}%;width:${w}%"></div></div>
+        <div class="fex">${ex(r.ds)}</div>
+      </div>`;
+    }).join("") + `</div>`;
+    const metricLbl = metric === "avg" ? "average FPS" : "1% lows";
+    $("#analysisIntro").innerHTML = `Each row isolates <b>one variable</b> by comparing CPUs that are
+      otherwise matched — same vendor, similar cores, ± one thing — using the measured cross-source fit
+      on <b>${metricLbl}</b>. Bars are relative; the % is the average gap across the listed pairs.`;
+    $("#analysisNote").innerHTML = `<b>Takeaway:</b> MSFS&nbsp;2024 lives on a <b>big L3 cache and a few
+      fast cores</b>. 3D V-Cache is by far the biggest lever and a newer Zen generation helps a lot.
+      Core count <b>scales up to about eight, then reverses</b> — a second CCD (16-core parts) and Intel's
+      E-cores mostly sit idle or add cross-die latency, so the 16-core X3D chips trail the 8-core ones.
+      Clock speed barely moves the needle. Net: the sweet spot is an <b>8-core X3D</b> (a 6-core X3D is
+      the value pick). Switch the metric to <b>1% Low</b> to watch the cache advantage grow.`;
+  }
+
   // ---------- sources + table ----------
   function renderSources() {
     const map = new Map();
@@ -782,34 +992,70 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
     }).join("");
   }
 
-  const COLS = [["cpu", "CPU", 0], ["vendor", "Brand", 0], ["site", "Site", 0], ["group", "Epoch / Scene", 0],
-    ["avg", "Avg", 1], ["low", "1% Low", 1], ["p02", "0.2% Low", 1], ["date", "Date", 0]];
+  // Each measurement row, enriched with the CPU's specs. get() → cell html,
+  // sort() → sort value, num → right-aligned/numeric (default sort descending).
+  const sp = cpu => SPECS[cpu] || {};
+  const COLS = [
+    { k: "cpu", l: "CPU", get: r => `${r.cpu}${r.x3d ? ' <span class="badge x3d">3D</span>' : ""}`, sort: r => r.cpu },
+    { k: "socket", l: "Socket", get: r => sp(r.cpu).socket || "–", sort: r => sp(r.cpu).socket || "" },
+    { k: "arch", l: "Arch", get: r => sp(r.cpu).arch || "–", sort: r => sp(r.cpu).arch || "" },
+    { k: "config", l: "Cores", mono: true, get: r => coreStr(sp(r.cpu)) || "–", sort: r => (sp(r.cpu).p || 0) + (sp(r.cpu).e || 0) },
+    { k: "t", l: "Threads", num: true, get: r => sp(r.cpu).t ?? "–", sort: r => sp(r.cpu).t ?? -1 },
+    { k: "l3", l: "L3 MB", num: true, get: r => sp(r.cpu).l3 ?? "–", sort: r => sp(r.cpu).l3 ?? -1 },
+    { k: "clk", l: "Boost", num: true, get: r => sp(r.cpu).clk != null ? sp(r.cpu).clk.toFixed(1) : "–", sort: r => sp(r.cpu).clk ?? -1 },
+    { k: "avg", l: "Avg", num: true, get: r => fmt(r.avg, 1), sort: r => r.avg },
+    { k: "low", l: "1% Low", num: true, get: r => r.low != null ? fmt(r.low, 0) : "–", sort: r => r.low ?? -Infinity },
+    { k: "p02", l: "0.2% Low", num: true, get: r => r.p02 != null ? fmt(r.p02, 0) : "–", sort: r => r.p02 ?? -Infinity },
+    { k: "site", l: "Site", get: r => r.site, sort: r => r.site },
+    { k: "group", l: "Scene / Epoch", get: r => r.group, sort: r => r.group },
+    { k: "date", l: "Date", get: r => r.date, sort: r => r.date },
+  ];
   let sortKey = "avg", sortDir = -1;
+  const tFilter = { socket: "all", arch: "all", x3d: false, q: "" };
+
+  function tableRows() {
+    return DATA.filter(r => {
+      const s = sp(r.cpu);
+      if (tFilter.socket !== "all" && s.socket !== tFilter.socket) return false;
+      if (tFilter.arch !== "all" && s.arch !== tFilter.arch) return false;
+      if (tFilter.x3d && !r.x3d) return false;
+      if (tFilter.q && !r.cpu.toLowerCase().includes(tFilter.q)) return false;
+      return true;
+    });
+  }
   function renderTable() {
-    $("#rowCount").textContent = DATA.length + " rows";
+    const col = COLS.find(c => c.k === sortKey) || COLS[0];
+    const rows = tableRows().sort((a, b) => {
+      const x = col.sort(a), y = col.sort(b);
+      return (x < y ? -1 : x > y ? 1 : 0) * sortDir;
+    });
+    $("#rowCount").textContent = rows.length === DATA.length
+      ? `${DATA.length} rows` : `${rows.length} of ${DATA.length} rows`;
     const thead = $("#table thead"), tbody = $("#table tbody");
-    thead.innerHTML = "<tr>" + COLS.map(([k, l]) => {
-      const a = k === sortKey ? (sortDir < 0 ? "▼" : "▲") : "";
-      return `<th data-k="${k}">${l} <span class="arr">${a}</span></th>`;
+    thead.innerHTML = "<tr>" + COLS.map(c => {
+      const a = c.k === sortKey ? (sortDir < 0 ? "▼" : "▲") : "";
+      return `<th data-k="${c.k}" class="${c.num ? "tnum" : ""}">${c.l} <span class="arr">${a}</span></th>`;
     }).join("") + "</tr>";
     thead.querySelectorAll("th").forEach(th => th.onclick = () => {
       const k = th.dataset.k;
-      if (k === sortKey) sortDir *= -1; else { sortKey = k; sortDir = COLS.find(c => c[0] === k)[2] ? -1 : 1; }
+      if (k === sortKey) sortDir *= -1; else { sortKey = k; sortDir = COLS.find(c => c.k === k).num ? -1 : 1; }
       renderTable();
     });
-    const rows = DATA.slice().sort((a, b) => {
-      let x = a[sortKey], y = b[sortKey];
-      if (x == null) x = -Infinity; if (y == null) y = -Infinity;
-      return (x < y ? -1 : x > y ? 1 : 0) * sortDir;
-    });
-    tbody.innerHTML = rows.map(r => `<tr>
-      <td>${r.cpu}${r.x3d ? ' <span class="badge x3d">3D</span>' : ""}</td>
-      <td><span class="pill ${r.vendor}">${r.vendor}</span></td>
-      <td>${r.site}</td><td>${r.group}</td>
-      <td class="tnum num">${fmt(r.avg, 1)}</td>
-      <td class="tnum num">${r.low != null ? fmt(r.low, 0) : "–"}</td>
-      <td class="tnum num">${r.p02 != null ? fmt(r.p02, 0) : "–"}</td>
-      <td>${r.date}</td></tr>`).join("");
+    tbody.innerHTML = rows.map(r => "<tr>" + COLS.map(c =>
+      `<td class="${c.num ? "tnum num" : ""}${c.mono ? " num" : ""}">${c.get(r)}</td>`).join("") + "</tr>").join("");
+  }
+  function buildTableFilters() {
+    const order = (vals, pref) => [...new Set(vals)].filter(Boolean)
+      .sort((a, b) => (pref.indexOf(a) + 1 || 99) - (pref.indexOf(b) + 1 || 99) || (a < b ? -1 : 1));
+    const sockets = order(DATA.map(r => sp(r.cpu).socket), ["AM5", "AM4", "LGA1851", "LGA1700", "LGA1200"]);
+    const archs = order(DATA.map(r => sp(r.cpu).arch),
+      ["Zen 5", "Zen 4", "Zen 3", "Zen 2", "Arrow Lake", "Raptor Lake", "Alder Lake", "Rocket Lake"]);
+    $("#tSocket").innerHTML = `<option value="all">All sockets</option>` + sockets.map(s => `<option>${s}</option>`).join("");
+    $("#tArch").innerHTML = `<option value="all">All archs</option>` + archs.map(s => `<option>${s}</option>`).join("");
+    $("#tSocket").onchange = e => { tFilter.socket = e.target.value; renderTable(); };
+    $("#tArch").onchange = e => { tFilter.arch = e.target.value; renderTable(); };
+    $("#tX3D").onchange = e => { tFilter.x3d = e.target.checked; renderTable(); };
+    $("#tSearch").addEventListener("input", e => { tFilter.q = e.target.value.trim().toLowerCase(); renderTable(); });
   }
 
   // ---------- datasets (advanced) ----------
@@ -859,6 +1105,7 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
       $("#chartTitle").textContent = "By source";
       renderSource();
     }
+    renderAnalysis();
   }
 
   // ---------- controls wiring ----------
@@ -905,6 +1152,7 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
   applyTweaks();
   buildDatasetList();
   buildSiteSelect();
+  buildTableFilters();
   renderSources();
   renderTable();
   render();
@@ -931,7 +1179,9 @@ def main():
     html = (TEMPLATE
             .replace("__DATA__", json.dumps(rows, separators=(",", ":"),
                                             ensure_ascii=False))
-            .replace("__NORM__", json.dumps(norm_series, ensure_ascii=False)))
+            .replace("__NORM__", json.dumps(norm_series, ensure_ascii=False))
+            .replace("__SPECS__", json.dumps(SPECS, separators=(",", ":"),
+                                             ensure_ascii=False)))
     with open(args.out, "w", encoding="utf-8") as f:
         f.write(html)
     from collections import Counter
