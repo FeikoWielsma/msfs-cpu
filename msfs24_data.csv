@@ -1,0 +1,99 @@
+cpu,vendor,is_x3d,avg_fps,low_1pct,source,review_date,epoch
+Ryzen 9 9950X3D,AMD,1,154.5,125,9950x3d_review,2025-03-12,2025-spring
+Ryzen 7 9800X3D,AMD,1,146.1,117,9950x3d_review,2025-03-12,2025-spring
+Ryzen 9 7950X3D,AMD,1,123.4,93,9950x3d_review,2025-03-12,2025-spring
+Core i9-14900K,Intel,0,120.4,99,9950x3d_review,2025-03-12,2025-spring
+Ryzen 7 7800X3D,AMD,1,118.8,95,9950x3d_review,2025-03-12,2025-spring
+Core i7-14700K,Intel,0,118.5,98,9950x3d_review,2025-03-12,2025-spring
+Ryzen 9 7900X3D,AMD,1,117.3,90,9950x3d_review,2025-03-12,2025-spring
+Core i5-14600K,Intel,0,115.9,93,9950x3d_review,2025-03-12,2025-spring
+Core Ultra 9 285K,Intel,0,110.3,91,9950x3d_review,2025-03-12,2025-spring
+Core Ultra 7 265K,Intel,0,109.0,92,9950x3d_review,2025-03-12,2025-spring
+Ryzen 9 9950X,AMD,0,107.5,89,9950x3d_review,2025-03-12,2025-spring
+Core Ultra 5 245K,Intel,0,107.4,91,9950x3d_review,2025-03-12,2025-spring
+Ryzen 9 9900X,AMD,0,105.4,78,9950x3d_review,2025-03-12,2025-spring
+Ryzen 7 5800X3D,AMD,1,80.5,62,9950x3d_review,2025-03-12,2025-spring
+Ryzen 9 9950X3D,AMD,1,154.5,125,9900x3d_review,2025-04-09,2025-spring
+Ryzen 7 9800X3D,AMD,1,146.1,117,9900x3d_review,2025-04-09,2025-spring
+Ryzen 9 9900X3D,AMD,1,144.1,114,9900x3d_review,2025-04-09,2025-spring
+Ryzen 9 7950X3D,AMD,1,123.4,93,9900x3d_review,2025-04-09,2025-spring
+Core i9-14900K,Intel,0,120.4,99,9900x3d_review,2025-04-09,2025-spring
+Ryzen 7 7800X3D,AMD,1,118.8,95,9900x3d_review,2025-04-09,2025-spring
+Core i7-14700K,Intel,0,118.5,98,9900x3d_review,2025-04-09,2025-spring
+Ryzen 9 7900X3D,AMD,1,117.3,90,9900x3d_review,2025-04-09,2025-spring
+Core i5-14600K,Intel,0,115.9,93,9900x3d_review,2025-04-09,2025-spring
+Core Ultra 9 285K,Intel,0,110.3,91,9900x3d_review,2025-04-09,2025-spring
+Core Ultra 7 265K,Intel,0,109.0,92,9900x3d_review,2025-04-09,2025-spring
+Ryzen 9 9950X,AMD,0,107.5,89,9900x3d_review,2025-04-09,2025-spring
+Core Ultra 5 245K,Intel,0,107.4,91,9900x3d_review,2025-04-09,2025-spring
+Ryzen 9 9900X,AMD,0,105.4,78,9900x3d_review,2025-04-09,2025-spring
+Ryzen 7 5800X3D,AMD,1,80.5,62,9900x3d_review,2025-04-09,2025-spring
+Ryzen 7 9850X3D,AMD,1,153.7,128,9850x3d_review,2026-01-28,2026-jan
+Ryzen 9 9950X3D,AMD,1,145.9,119,9850x3d_review,2026-01-28,2026-jan
+Ryzen 7 9800X3D,AMD,1,144.6,120,9850x3d_review,2026-01-28,2026-jan
+Ryzen 9 9900X3D,AMD,1,138.0,109,9850x3d_review,2026-01-28,2026-jan
+Core i9-14900K,Intel,0,121.7,101,9850x3d_review,2026-01-28,2026-jan
+Core i7-14700K,Intel,0,120.1,98,9850x3d_review,2026-01-28,2026-jan
+Core i7-13700K,Intel,0,119.1,96,9850x3d_review,2026-01-28,2026-jan
+Ryzen 7 7800X3D,AMD,1,114.8,98,9850x3d_review,2026-01-28,2026-jan
+Core Ultra 9 285K,Intel,0,111.7,94,9850x3d_review,2026-01-28,2026-jan
+Core Ultra 7 265K,Intel,0,110.0,94,9850x3d_review,2026-01-28,2026-jan
+Ryzen 7 9700X,AMD,0,109.4,94,9850x3d_review,2026-01-28,2026-jan
+Core i7-12700K,Intel,0,101.6,87,9850x3d_review,2026-01-28,2026-jan
+Ryzen 7 5800X3D,AMD,1,94.5,78,9850x3d_review,2026-01-28,2026-jan
+Ryzen 7 9800X3D,AMD,1,144.2,122,250K_plus_review,2026-03-24,2026-spring
+Core i7-14700K,Intel,0,121.6,102,250K_plus_review,2026-03-24,2026-spring
+Core Ultra 7 270K Plus,Intel,0,120.5,103,250K_plus_review,2026-03-24,2026-spring
+Core i7-13700K,Intel,0,120.0,100,250K_plus_review,2026-03-24,2026-spring
+Ryzen 7 7800X3D,AMD,1,117.0,100,250K_plus_review,2026-03-24,2026-spring
+Ryzen 7 9700X,AMD,0,115.8,98,250K_plus_review,2026-03-24,2026-spring
+Ryzen 9 9900X,AMD,0,115.6,100,250K_plus_review,2026-03-24,2026-spring
+Core Ultra 5 250K Plus,Intel,0,115.4,97,250K_plus_review,2026-03-24,2026-spring
+Ryzen 5 7600X3D,AMD,1,113.8,96,250K_plus_review,2026-03-24,2026-spring
+Core i5-14600K,Intel,0,112.9,92,250K_plus_review,2026-03-24,2026-spring
+Core Ultra 7 265K,Intel,0,112.6,99,250K_plus_review,2026-03-24,2026-spring
+Core i5-13600K,Intel,0,111.6,93,250K_plus_review,2026-03-24,2026-spring
+Ryzen 5 9600X,AMD,0,111.3,91,250K_plus_review,2026-03-24,2026-spring
+Core Ultra 5 245K,Intel,0,106.8,91,250K_plus_review,2026-03-24,2026-spring
+Ryzen 7 7700X,AMD,0,99.0,86,250K_plus_review,2026-03-24,2026-spring
+Ryzen 5 7600X,AMD,0,94.4,83,250K_plus_review,2026-03-24,2026-spring
+Ryzen 7 9850X3D,AMD,1,151.4,128,9950x3d2_review,2026-04-21,2026-spring
+Ryzen 9 9950X3D2,AMD,1,150.4,126,9950x3d2_review,2026-04-21,2026-spring
+Ryzen 7 9800X3D,AMD,1,144.2,122,9950x3d2_review,2026-04-21,2026-spring
+Core i9-14900K,Intel,0,125.1,104,9950x3d2_review,2026-04-21,2026-spring
+Core i9-13900K,Intel,0,122.0,101,9950x3d2_review,2026-04-21,2026-spring
+Core i7-14700K,Intel,0,121.6,102,9950x3d2_review,2026-04-21,2026-spring
+Ryzen 9 9950X3D,AMD,1,121.4,104,9950x3d2_review,2026-04-21,2026-spring
+Core Ultra 7 270K Plus,Intel,0,120.5,103,9950x3d2_review,2026-04-21,2026-spring
+Ryzen 9 9900X3D,AMD,1,120.4,102,9950x3d2_review,2026-04-21,2026-spring
+Core i7-13700K,Intel,0,120.0,100,9950x3d2_review,2026-04-21,2026-spring
+Ryzen 7 7800X3D,AMD,1,117.0,100,9950x3d2_review,2026-04-21,2026-spring
+Ryzen 9 9950X,AMD,0,116.2,99,9950x3d2_review,2026-04-21,2026-spring
+Core Ultra 9 285K,Intel,0,110.8,94,9950x3d2_review,2026-04-21,2026-spring
+Ryzen 9 7950X3D,AMD,1,102.6,89,9950x3d2_review,2026-04-21,2026-spring
+Ryzen 7 7800X3D,AMD,1,117.0,100,7600x3d_review,2026-04-26,2026-spring
+Ryzen 7 9700X,AMD,0,115.8,98,7600x3d_review,2026-04-26,2026-spring
+Core Ultra 5 250K Plus,Intel,0,115.7,99,7600x3d_review,2026-04-26,2026-spring
+Ryzen 5 7600X3D,AMD,1,113.8,96,7600x3d_review,2026-04-26,2026-spring
+Core i5-14600K,Intel,0,112.8,93,7600x3d_review,2026-04-26,2026-spring
+Core i5-13600K,Intel,0,111.6,93,7600x3d_review,2026-04-26,2026-spring
+Ryzen 5 9600X,AMD,0,111.3,91,7600x3d_review,2026-04-26,2026-spring
+Core Ultra 5 245K,Intel,0,106.6,89,7600x3d_review,2026-04-26,2026-spring
+Core Ultra 5 225,Intel,0,99.7,82,7600x3d_review,2026-04-26,2026-spring
+Ryzen 7 7700X,AMD,0,99.0,86,7600x3d_review,2026-04-26,2026-spring
+Ryzen 5 7600X,AMD,0,94.4,83,7600x3d_review,2026-04-26,2026-spring
+Core i5-14400,Intel,0,90.1,77,7600x3d_review,2026-04-26,2026-spring
+Core Ultra 5 250K Plus,Intel,0,115.7,99,225_review,2026-05-07,2026-spring
+Ryzen 5 7600X3D,AMD,1,113.8,96,225_review,2026-05-07,2026-spring
+Core i5-14600K,Intel,0,112.8,93,225_review,2026-05-07,2026-spring
+Core i5-13600K,Intel,0,111.6,93,225_review,2026-05-07,2026-spring
+Ryzen 5 9600X,AMD,0,111.3,91,225_review,2026-05-07,2026-spring
+Core Ultra 5 245K,Intel,0,106.6,89,225_review,2026-05-07,2026-spring
+Core Ultra 5 225,Intel,0,99.7,82,225_review,2026-05-07,2026-spring
+Core i5-12600K,Intel,0,95.1,82,225_review,2026-05-07,2026-spring
+Ryzen 5 7600X,AMD,0,94.4,83,225_review,2026-05-07,2026-spring
+Core i5-13400F,Intel,0,90.2,77,225_review,2026-05-07,2026-spring
+Core i5-14400,Intel,0,90.1,77,225_review,2026-05-07,2026-spring
+Core i5-12400F,Intel,0,88.2,76,225_review,2026-05-07,2026-spring
+Core i3-14100,Intel,0,87.1,72,225_review,2026-05-07,2026-spring
+Core i3-13100F,Intel,0,85.5,72,225_review,2026-05-07,2026-spring

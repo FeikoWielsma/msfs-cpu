@@ -1,0 +1,12 @@
+# Copyrighted source material — scraped reviews, do NOT republish.
+# The pipeline reads these locally; only our transcribed CSVs are committed.
+pcgh.de/
+computerbase.de/
+new_images/
+250K_plus_review.png
+7600x3d_review.png
+9950x3d2_review.webp
+
+# Python
+__pycache__/
+*.pyc
