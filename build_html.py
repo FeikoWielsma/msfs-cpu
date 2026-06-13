@@ -136,8 +136,10 @@ TEMPLATE = r"""<!DOCTYPE html>
     margin-right:4px; vertical-align:-1px; }
   .srcgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
     gap:10px; }
-  .srcgrid .s { border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
-  .srcgrid .s b { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; }
+  .srcgrid .s { border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    min-width:0; overflow-wrap:anywhere; word-break:break-word; }
+  .srcgrid .s b { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px;
+    line-height:1.35; }
   .srcgrid .s a { color:#1b5687; text-decoration:none; }
   .srcgrid .s a:hover { text-decoration:underline; }
   .srcgrid .s small { color:var(--muted); }
