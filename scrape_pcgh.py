@@ -62,6 +62,12 @@ def meta(doc):
     return (d.group(1) if d else ""),(scene.group(1).strip() if scene else "Flight Simulator")
 
 
+def article_url(doc):
+    m = (re.search(r'<meta property="og:url" content="([^"]+)"', doc)
+         or re.search(r'<link rel="canonical" href="([^"]+)"', doc))
+    return m.group(1) if m else ""
+
+
 def slug(path):
     base = os.path.splitext(os.path.basename(path))[0].lower()
     base = re.sub(r"[^a-z0-9]+", "_", base).strip("_")
@@ -91,7 +97,7 @@ def records_for(path):
     doc = open(path, encoding="utf-8", errors="replace").read()
     rows = first_chart(doc)
     date, scene = meta(doc)
-    src = slug(path)
+    url, src = article_url(doc), slug(path)
     recs, seen = [], set()
     for name, nums in rows:
         cpu = fold_variant(clean_cpu(name))
@@ -109,6 +115,7 @@ def records_for(path):
             "review_date": date,
             "scene": scene,
             "site": SITE,
+            "url": url,
         })
     return recs
 
@@ -135,7 +142,7 @@ def main():
         all_recs += recs
 
     cols = ["cpu", "vendor", "is_x3d", "avg_fps", "low_1pct", "p02_low",
-            "source", "review_date", "scene", "site"]
+            "source", "review_date", "scene", "site", "url"]
     with open(args.out, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=cols)
         w.writeheader()

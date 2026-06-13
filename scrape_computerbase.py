@@ -67,10 +67,17 @@ def fold_variant(cpu):
     return cpu.strip()
 
 
+def article_url(doc):
+    m = (re.search(r'<meta property="og:url" content="([^"]+)"', doc)
+         or re.search(r'<link rel="canonical" href="([^"]+)"', doc))
+    return m.group(1) if m else ""
+
+
 def records(path):
     doc = open(path, encoding="utf-8", errors="replace").read()
     avg = parse_chart(doc, "durchschnitt")
     low = parse_chart(doc, "1-prozent-perzentil")
+    url = article_url(doc)
     recs, seen = [], set()
     for name, (a, note) in avg.items():
         cpu = fold_variant(re.sub(r"^(AMD|Intel)\s+", "", name))
@@ -90,6 +97,7 @@ def records(path):
             "scene": SCENE,
             "site": SITE,
             "note": note,
+            "url": url,
         })
     return recs
 
@@ -104,7 +112,7 @@ def main():
     if not recs:
         sys.exit("No FS2024 rows found — check the file / chart ids.")
     cols = ["cpu", "vendor", "is_x3d", "avg_fps", "low_1pct", "p02_low",
-            "source", "review_date", "scene", "site", "note"]
+            "source", "review_date", "scene", "site", "note", "url"]
     with open(args.out, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()

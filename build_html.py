@@ -38,6 +38,7 @@ def load(path, site, group_col):
                 "date": r["review_date"],
                 "site": site,
                 "group": r[group_col],
+                "url": r.get("url", ""),
             })
     return out
 
@@ -137,6 +138,8 @@ TEMPLATE = r"""<!DOCTYPE html>
     gap:10px; }
   .srcgrid .s { border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
   .srcgrid .s b { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; }
+  .srcgrid .s a { color:#1b5687; text-decoration:none; }
+  .srcgrid .s a:hover { text-decoration:underline; }
   .srcgrid .s small { color:var(--muted); }
   footer { color:var(--muted); font-size:12px; margin-top:30px; }
   code { background:#eef0f3; padding:1px 5px; border-radius:4px; }
@@ -475,12 +478,16 @@ function renderNorm(){
 function renderSources(){
   const map=new Map();
   for(const r of DATA){ const k=r.source;
-    if(!map.has(k)) map.set(k,{site:r.site,date:r.date,group:r.group,n:0});
+    if(!map.has(k)) map.set(k,{site:r.site,date:r.date,group:r.group,url:r.url,n:0});
     map.get(k).n++; }
   const items=[...map.entries()].sort((a,b)=> a[1].date<b[1].date?1:-1);
-  $("#sources").innerHTML=items.map(([src,m])=>`<div class="s">
-    <div><b>${src}</b></div>
-    <small>${m.site} · ${m.date}<br>${m.group} · ${m.n} CPUs</small></div>`).join("");
+  $("#sources").innerHTML=items.map(([src,m])=>{
+    const title=m.url
+      ? `<a href="${m.url}" target="_blank" rel="noopener noreferrer">${src} ↗</a>`
+      : src;
+    return `<div class="s"><div><b>${title}</b></div>
+      <small>${m.site} · ${m.date}<br>${m.group} · ${m.n} CPUs</small></div>`;
+  }).join("");
 }
 const COLS=[["cpu","CPU",0],["site","Site",0],["group","Epoch / Scene",0],
   ["avg","Avg",1],["low","1% Low",1],["p02","0.2% Low",1],
