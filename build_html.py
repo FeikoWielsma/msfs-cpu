@@ -39,6 +39,7 @@ def load(path, site, group_col):
                 "site": site,
                 "group": r[group_col],
                 "url": r.get("url", ""),
+                "title": r.get("title", ""),
             })
     return out
 
@@ -137,9 +138,10 @@ TEMPLATE = r"""<!DOCTYPE html>
   .srcgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
     gap:10px; }
   .srcgrid .s { border:1px solid var(--line); border-radius:8px; padding:10px 12px;
-    min-width:0; overflow-wrap:anywhere; word-break:break-word; }
-  .srcgrid .s b { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px;
-    line-height:1.35; }
+    min-width:0; overflow-wrap:anywhere; }
+  .srcgrid .s b { font-size:13px; line-height:1.35; }
+  .srcgrid .s .slug { font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:10px; color:var(--muted); }
   .srcgrid .s a { color:#1b5687; text-decoration:none; }
   .srcgrid .s a:hover { text-decoration:underline; }
   .srcgrid .s small { color:var(--muted); }
@@ -480,15 +482,16 @@ function renderNorm(){
 function renderSources(){
   const map=new Map();
   for(const r of DATA){ const k=r.source;
-    if(!map.has(k)) map.set(k,{site:r.site,date:r.date,group:r.group,url:r.url,n:0});
+    if(!map.has(k)) map.set(k,{site:r.site,date:r.date,group:r.group,url:r.url,title:r.title,n:0});
     map.get(k).n++; }
   const items=[...map.entries()].sort((a,b)=> a[1].date<b[1].date?1:-1);
   $("#sources").innerHTML=items.map(([src,m])=>{
-    const title=m.url
-      ? `<a href="${m.url}" target="_blank" rel="noopener noreferrer">${src} ↗</a>`
-      : src;
-    return `<div class="s"><div><b>${title}</b></div>
-      <small>${m.site} · ${m.date}<br>${m.group} · ${m.n} CPUs</small></div>`;
+    const label=m.title || src;
+    const head=m.url
+      ? `<a href="${m.url}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`
+      : label;
+    return `<div class="s"><div><b>${head}</b></div>
+      <small>${m.site} · ${m.date} · ${m.group} · ${m.n} CPUs</small></div>`;
   }).join("");
 }
 const COLS=[["cpu","CPU",0],["site","Site",0],["group","Epoch / Scene",0],

@@ -73,11 +73,18 @@ def article_url(doc):
     return m.group(1) if m else ""
 
 
+def article_title(doc):
+    m = (re.search(r'<meta property="og:title" content="([^"]+)"', doc)
+         or re.search(r"<title>([^<]*)</title>", doc))
+    t = re.sub(r"\s*-\s*ComputerBase\s*$", "", m.group(1)).strip() if m else ""
+    return html.unescape(t)
+
+
 def records(path):
     doc = open(path, encoding="utf-8", errors="replace").read()
     avg = parse_chart(doc, "durchschnitt")
     low = parse_chart(doc, "1-prozent-perzentil")
-    url = article_url(doc)
+    url, title = article_url(doc), article_title(doc)
     recs, seen = [], set()
     for name, (a, note) in avg.items():
         cpu = fold_variant(re.sub(r"^(AMD|Intel)\s+", "", name))
@@ -98,6 +105,7 @@ def records(path):
             "site": SITE,
             "note": note,
             "url": url,
+            "title": title,
         })
     return recs
 
@@ -112,7 +120,7 @@ def main():
     if not recs:
         sys.exit("No FS2024 rows found — check the file / chart ids.")
     cols = ["cpu", "vendor", "is_x3d", "avg_fps", "low_1pct", "p02_low",
-            "source", "review_date", "scene", "site", "note", "url"]
+            "source", "review_date", "scene", "site", "note", "url", "title"]
     with open(args.out, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
