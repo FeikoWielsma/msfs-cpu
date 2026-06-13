@@ -108,26 +108,72 @@ def normalize(datasets, ref):
             for n, c, d in datasets]
 
 
-def gen_predecessor(cpu):
-    """Map an Intel 14th-gen SKU to its 13th-gen predecessor (same silicon)."""
-    m = re.match(r"^(Core i\d-)14(\d{3}[A-Z]*)$", cpu)
-    return m.group(1) + "13" + m.group(2) if m else None
+BIN = {"KS": 5, "K": 4, "KF": 4, "F": 3, "T": 1}
 
 
-def apply_gen_floor(scores, maps):
-    """Floor each 14th-gen part at its 13th-gen twin's score, carrying the margin
-    measured where both were tested head-to-head. A 14th-gen part is a clock-bumped
-    rebadge of its 13th-gen twin, so it can't be slower — this corrects cross-source
-    noise without inventing a lead the shared tests don't show. Ratios survive the
-    per-dataset normalization (a constant scale cancels)."""
+def arch_key(cpu):
+    """[family, rank tuple] (bigger = faster) for an Intel SKU, else None.
+
+    13th+14th gen are one microarch (Raptor Lake); Core Ultra 2xx is Arrow Lake.
+    AMD and cross-architecture comparisons are left to the data on purpose."""
+    m = re.match(r"^Core i(\d)-(1[1234])(\d)\d{2}([A-Z]*)$", cpu)
+    if m:
+        fam = ("intel-rocket" if int(m.group(2)) <= 11
+               else "intel-alder" if int(m.group(2)) == 12 else "intel-raptor")
+        return fam, (int(m.group(1)), int(m.group(3)), int(m.group(2)), BIN.get(m.group(4), 2))
+    m = re.match(r"^Core Ultra (\d) (\d{3})([A-Z]*)", cpu)
+    if m:
+        return "intel-arrow", (int(m.group(1)), int(m.group(2)), BIN.get(m.group(3), 2))
+    return None
+
+
+def apply_arch_prior(scores, maps):
+    """Within each Intel microarchitecture, enforce that a higher-tier / higher-
+    binned part isn't ranked below a lesser sibling — it has strictly more cores,
+    cache or clock, so it can't be slower in a CPU-bound game. A thinly-tested SKU
+    can land out of order from cross-source noise; a coverage-weighted isotonic
+    regression (PAVA, in log space) snaps the family back into order while leaving
+    well-tested parts near their data. Not applied across architectures or to AMD,
+    where the spec ladder doesn't track gaming order (the 7800X3D beats the 7950X3D)."""
     import math
-    for cpu in list(scores):
-        pred = gen_predecessor(cpu)
-        if not pred or pred not in scores:
+    weight = lambda cp: max(sum(cp in m for m in maps), 1)
+    fams = {}
+    for cpu in scores:
+        k = arch_key(cpu)
+        if k:
+            fams.setdefault(k[0], []).append((k[1], cpu))
+    for members in fams.values():
+        members.sort()                                  # weakest first
+        blocks = []                                     # pool adjacent violators
+        for _, cpu in members:
+            blocks.append([math.log(scores[cpu]), weight(cpu), [cpu]])
+            while len(blocks) >= 2 and blocks[-2][0] > blocks[-1][0]:
+                v2, w2, c2 = blocks.pop()
+                v1, w1, c1 = blocks.pop()
+                blocks.append([(v1 * w1 + v2 * w2) / (w1 + w2), w1 + w2, c1 + c2])
+        for v, _, cps in blocks:
+            for cpu in cps:
+                scores[cpu] = math.exp(v)
+
+
+# Same-silicon, clock-only sibling pairs (faster, slower). AMD's ladder is left to
+# the data, but these are physically guaranteed (identical die, higher clock), so
+# the faster part is floored just above the slower — carrying the head-to-head
+# margin where it's larger, else a marginal 0.2% rather than an invented number.
+CLOCK_PAIRS = [
+    ("Ryzen 7 5800X3D", "Ryzen 7 5700X3D"),  # Vermeer + V-Cache, clock bump
+    ("Ryzen 5 7600X", "Ryzen 5 7500F"),      # Raphael, clock bump
+]
+
+
+def apply_clock_pairs(scores, maps):
+    import math
+    for fast, slow in CLOCK_PAIRS:
+        if fast not in scores or slow not in scores:
             continue
-        ratios = [m[cpu] / m[pred] for m in maps if cpu in m and pred in m]
+        ratios = [m[fast] / m[slow] for m in maps if fast in m and slow in m]
         r = math.exp(sum(math.log(x) for x in ratios) / len(ratios)) if ratios else 1.0
-        scores[cpu] = max(scores[cpu], scores[pred] * max(r, 1.0))
+        scores[fast] = max(scores[fast], scores[slow] * max(r, 1.002))
 
 
 def twoway_means(norm, ref):
@@ -138,7 +184,7 @@ def twoway_means(norm, ref):
     appearing in a stingier source (and dodges the penalty if it doesn't).
     Fitting a per-dataset offset absorbs each source's overall level, so the
     CPU effect is comparable even with missing cells. Result is rescaled so the
-    reference CPU = 100, then the generation-monotonic prior is applied.
+    reference CPU = 100, then the architectural sanity prior is applied.
     """
     import math
     data = [(c, d) for _, c, d in norm]  # we only need the {cpu: value} maps
@@ -153,14 +199,21 @@ def twoway_means(norm, ref):
             b[c] = sum(math.log(v) - a[i] for i, v in obs) / len(obs)
     base = b[ref]                               # anchor so ref == 100
     out = {c: math.exp(b[c] - base) * 100 for c in cpus}
-    apply_gen_floor(out, [d for _, d in data])
+    maps = [d for _, d in data]
+    apply_arch_prior(out, maps)
+    apply_clock_pairs(out, maps)
     return out
 
 
 def ranked_cpus(norm, ref):
     fit = twoway_means(norm, ref)
     mean = fit.__getitem__
-    return sorted(fit, key=mean), mean  # ascending: slowest at bottom of barh
+    # ascending (slowest at bottom of barh); tied isotonic siblings ordered by
+    # architectural rank so the higher part sits above its twin deterministically.
+    def sort_key(c):
+        k = arch_key(c)
+        return (fit[c], k[0] if k else "", k[1] if k else ())
+    return sorted(fit, key=sort_key), mean
 
 
 def plot_averaged(norm, vendor, ref, out_path):

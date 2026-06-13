@@ -415,10 +415,15 @@ TEMPLATE = r"""<!DOCTYPE html>
         every enabled dataset onto a shared scale using a two-way additive fit (per-dataset offset +
         per-CPU effect), so a CPU's score reflects its own speed, not which reviewer happened to test it.
         <b>·N</b> next to a score is how many datasets cover that CPU.
-        One hard prior is applied: an Intel <b>14th-gen part is a clock-bumped rebadge of its 13th-gen
-        twin</b> (same silicon — a 14600K can't be slower than a 13600K), so each is floored at its
-        predecessor's score, carrying the margin measured where both were tested head-to-head. This
-        only corrects cross-source noise; it never invents a lead that the shared tests don't show.
+        One sanity prior is then applied <b>within each Intel microarchitecture</b>: a higher-tier or
+        higher-binned part (a 14900KS over a 14900K, the Core Ultra 285K over a 235) has strictly more
+        cores, cache or clock, so it can't be slower in a CPU-bound game. Where a thinly-tested SKU's
+        noisy score violates that, a coverage-weighted <b>isotonic fit</b> snaps the family back into
+        order — well-tested parts barely move, thin ones fall into line. It's deliberately not applied
+        across architectures or to AMD's ladder, where the spec sheet doesn't track gaming order (the
+        7800X3D beats the 7950X3D) — the lone exception being a few <b>same-die, clock-only pairs</b>
+        (e.g. the 5800X3D over the 5700X3D) that are guaranteed by physics. Same-silicon siblings may
+        legitimately tie.
       </p>
       <div class="srcgrid" id="sources"></div>
     </div>
@@ -524,41 +529,88 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
     return out;
   }
 
-  // returns sorted [{cpu, vendor, x3d, raw, idx, n}]
-  // Same-tier Intel Raptor Lake Refresh (14th gen) is a clock-bumped rebadge of
-  // the matching 13th-gen part — same silicon, so it cannot be slower at stock.
-  // Map a 14th-gen SKU to its 13th-gen predecessor (Intel "Core i?-14xxx" only).
-  function genPredecessor(cpu) {
-    const m = cpu.match(/^(Core i\d-)14(\d{3}[A-Z]*)$/);
-    return m ? m[1] + "13" + m[2] : null;
+  // ---- architectural "common sense" prior ---------------------------------
+  // Within one Intel microarchitecture, a higher-tier / higher-clocked / higher-
+  // binned part has strictly more cores, cache or clock, so in a CPU-bound game
+  // it can't be slower than a lesser sibling (a 14900KS can't trail a 14900K; a
+  // thinly-tested Core Ultra 5 235 can't outrank the 285K). Sparsely-covered SKUs
+  // get noisy cross-source scores that sometimes violate this. We snap each family
+  // back to its known order with a weighted isotonic regression (monotonic least-
+  // squares fit in log space, weighted by how many datasets cover each CPU), so
+  // well-tested parts barely move and thin ones fall into line. We deliberately do
+  // NOT constrain across architectures, nor AMD — there the spec ladder doesn't
+  // track gaming order (the 7800X3D beats the 7950X3D; V-Cache and single- vs
+  // dual-CCD upend it). Where the data genuinely can't separate same-silicon
+  // siblings they tie, which is the honest answer; the sort shows the newer first.
+  const BIN = { KS: 5, K: 4, KF: 4, F: 3, T: 1 };
+  function archKey(cpu) {            // [familyKey, rankTuple] (bigger tuple = faster) or null
+    let m;
+    if ((m = cpu.match(/^Core i(\d)-(1[1234])(\d)\d{2}([A-Z]*)$/)))
+      return [+m[2] <= 11 ? "intel-rocket" : +m[2] === 12 ? "intel-alder" : "intel-raptor",
+              [+m[1], +m[3], +m[2], BIN[m[4]] ?? 2]];   // tier, sub-tier, gen, bin
+    if ((m = cpu.match(/^Core Ultra (\d) (\d{3})([A-Z]*)/)))
+      return ["intel-arrow", [+m[1], +m[2], BIN[m[3]] ?? 2]];
+    return null;
   }
-  // Floor each newer SKU at its predecessor's score, carrying the margin actually
-  // measured where both were tested head-to-head (geo-mean ratio). This stops a
-  // cross-source blend from erasing a real, known clock advantage — without
-  // inventing one: if no head-to-head exists, the floor is just "not slower".
-  function applyGenFloor(raw, series) {
+  const archCmp = (a, b) => { for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] - b[i]; return 0; };
+  function applyArchPrior(raw, series) {
+    const weight = cp => Math.max(series.filter(s => cp in s.data).length, 1);
+    const fams = {};
     for (const cpu of Object.keys(raw)) {
-      const pred = genPredecessor(cpu);
-      if (!pred || raw[pred] == null) continue;
-      const ratios = series.filter(s => cpu in s.data && pred in s.data)
-                           .map(s => s.data[cpu] / s.data[pred]);
+      const k = archKey(cpu); if (k) (fams[k[0]] ??= []).push({ cpu, key: k[1] });
+    }
+    for (const members of Object.values(fams)) {
+      members.sort((x, y) => archCmp(x.key, y.key));        // weakest first
+      const blocks = [];                                     // pool adjacent violators (PAVA)
+      for (const it of members) {
+        blocks.push({ v: Math.log(raw[it.cpu]), w: weight(it.cpu), cpus: [it.cpu] });
+        while (blocks.length >= 2 && blocks[blocks.length - 2].v > blocks[blocks.length - 1].v) {
+          const b2 = blocks.pop(), b1 = blocks.pop();
+          blocks.push({ v: (b1.v * b1.w + b2.v * b2.w) / (b1.w + b2.w),
+                        w: b1.w + b2.w, cpus: [...b1.cpus, ...b2.cpus] });
+        }
+      }
+      for (const blk of blocks) for (const cpu of blk.cpus) raw[cpu] = Math.exp(blk.v);
+    }
+  }
+  // Among equal scores (a tied isotonic block), show the architecturally higher part first.
+  function archTiebreak(a, b) {
+    const ka = archKey(a), kb = archKey(b);
+    return (ka && kb && ka[0] === kb[0]) ? archCmp(kb[1], ka[1]) : 0;
+  }
+
+  // Same-silicon, clock-only sibling pairs [faster, slower]. These don't cross a
+  // tier the per-family prior can use (AMD is otherwise left to the data), but the
+  // ordering is physically guaranteed — identical die, higher clock — so we floor
+  // the faster part just above the slower, carrying the head-to-head margin where
+  // it's larger, else nudging it marginally ahead (0.2%) rather than inventing one.
+  const CLOCK_PAIRS = [
+    ["Ryzen 7 5800X3D", "Ryzen 7 5700X3D"],  // Vermeer + V-Cache, clock bump
+    ["Ryzen 5 7600X", "Ryzen 5 7500F"],      // Raphael, clock bump
+  ];
+  function applyClockPairs(raw, series) {
+    for (const [fast, slow] of CLOCK_PAIRS) {
+      if (raw[fast] == null || raw[slow] == null) continue;
+      const ratios = series.filter(s => fast in s.data && slow in s.data)
+                           .map(s => s.data[fast] / s.data[slow]);
       const r = ratios.length
         ? Math.exp(ratios.reduce((t, x) => t + Math.log(x), 0) / ratios.length) : 1;
-      const floor = raw[pred] * Math.max(r, 1);
-      if (raw[cpu] < floor) raw[cpu] = floor;
+      raw[fast] = Math.max(raw[fast], raw[slow] * Math.max(r, 1.002));
     }
   }
 
+  // returns sorted [{cpu, vendor, x3d, raw, idx, n}]
   function computeIndex(field) {
     const series = enabledSeries().map(s => ({ ...s, data: seriesData(s, field) }));
     const valid = series.filter(s => Object.keys(s.data).length);
     const cpus = [...new Set(valid.flatMap(s => Object.keys(s.data)))];
     if (!cpus.length) return [];
     const raw = twowayFit(valid, cpus, cpus[0]);
-    applyGenFloor(raw, valid);
+    applyArchPrior(raw, valid);
+    applyClockPairs(raw, valid);
     const cnt = cp => valid.filter(s => cp in s.data).length;
     let arr = cpus.map(cp => ({ cpu: cp, vendor: VENDOR[cp], x3d: isX3D(cp), raw: raw[cp], n: cnt(cp) }));
-    arr.sort((x, y) => y.raw - x.raw);
+    arr.sort((x, y) => Math.abs(y.raw - x.raw) > 1e-9 ? y.raw - x.raw : archTiebreak(x.cpu, y.cpu));
     const anchor = (baseline && raw[baseline] != null) ? raw[baseline] : arr[0].raw;
     arr.forEach(o => o.idx = o.raw / anchor * 100);
     return arr;

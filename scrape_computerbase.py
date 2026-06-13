@@ -56,6 +56,10 @@ def parse_chart(doc, idsub):
 # Config-variant markers we discard; other trailing parens fold into the base name.
 DROP_VARIANTS = ("65 W", "cTDP", "Turbo GM", "CU")
 
+# Fix source-side naming errors so a re-scrape can't reintroduce them.
+# ComputerBase lists the 5800X3D as a "Ryzen 5"; it's a Ryzen 7.
+CORRECTIONS = {"Ryzen 5 5800X3D": "Ryzen 7 5800X3D"}
+
 
 def fold_variant(cpu):
     """Canonical CPU name, or None to drop a config variant."""
@@ -64,7 +68,8 @@ def fold_variant(cpu):
         if any(d in m.group(1) for d in DROP_VARIANTS):
             return None
         cpu = re.sub(r"\s*\([^)]*\)\s*$", "", cpu)
-    return cpu.strip()
+    cpu = cpu.strip()
+    return CORRECTIONS.get(cpu, cpu)
 
 
 def article_url(doc):
