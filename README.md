@@ -6,17 +6,22 @@ with normalization so results from different sites/test passes can be compared.
 
 **Live:** https://msfs.razortek.nl
 
+The page is mobile-first and leads with a plain-language ranking; the dataset
+and methodology machinery is tucked into expanders.
+
 ## What it does
 
+- **Performance Index** (default) — one combined ranking across all sources. Each
+  enabled review is rescaled onto a shared 0–100 scale with a **two-way additive
+  fit** (per-dataset offset + per-CPU effect), so a CPU's score reflects its own
+  speed, not which reviewer happened to test it. Tap any CPU to make it the 100%
+  baseline and read every other CPU's relative ±%. *Advanced* lets you toggle which
+  reviews feed the index and watch the ranking shift.
 - **By source** — browse one comparable dataset at a time (a Tom's Hardware test
-  *epoch* or a PCGH *scene*); hover any bar to make it the 100% baseline and read
-  every other CPU's relative ±%.
-- **Normalized (all sites)** — Tom's epochs + PCGH scenes on one axis, each scaled
-  so a chosen reference CPU (default Ryzen 7 7800X3D) = 100%. Toggle datasets on/off
-  live; average them into one bar per CPU, colored by CPU generation.
+  *epoch* or a PCGH/ComputerBase *scene*); average + 1% low bars, tap to re-baseline.
 
 Absolute FPS are **not** comparable across sites/scenes (different scenes,
-settings, resolutions) — that's exactly why the normalized view exists.
+settings, resolutions) — that's exactly why the Performance Index exists.
 
 ## Regenerating
 
@@ -29,13 +34,14 @@ python plot_msfs24.py --by-epoch     # Tom's per-epoch PNGs
 python make_megachart.py --averaged  # normalized megachart PNG
 ```
 
-Data lives in `msfs24_data.csv` (Tom's, transcribed from chart screenshots) and
-`pcgh_msfs24.csv` (scraped from saved PCGH pages by `scrape_pcgh.py`).
+Data lives in `msfs24_data.csv` (Tom's, transcribed from chart screenshots),
+`pcgh_msfs24.csv` (scraped from saved PCGH pages by `scrape_pcgh.py`) and
+`computerbase_msfs24.csv` (scraped by `scrape_computerbase.py`).
 
 ## Data sources & attribution
 
-Benchmark numbers are from **Tom's Hardware** and **PC Games Hardware (PCGH)**
-reviews, transcribed/scraped into the CSVs here. This repo contains only those
-factual data points and our own generated charts — **not** the original review
-articles, chart images, or saved pages (those are gitignored and not
-republished). Not affiliated with or endorsed by either outlet.
+Benchmark numbers are from **Tom's Hardware**, **PC Games Hardware (PCGH)** and
+**ComputerBase** reviews, transcribed/scraped into the CSVs here. This repo
+contains only those factual data points and our own generated charts — **not** the
+original review articles, chart images, or saved pages (those are gitignored and
+not republished). Not affiliated with or endorsed by any of these outlets.

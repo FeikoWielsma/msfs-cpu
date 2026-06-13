@@ -108,16 +108,63 @@ def normalize(datasets, ref):
             for n, c, d in datasets]
 
 
-def ranked_cpus(norm):
-    cpus = set().union(*[d.keys() for _, _, d in norm])
-    def mean(cpu):
-        vals = [d[cpu] for _, _, d in norm if cpu in d]
-        return sum(vals) / len(vals)
-    return sorted(cpus, key=mean), mean
+def gen_predecessor(cpu):
+    """Map an Intel 14th-gen SKU to its 13th-gen predecessor (same silicon)."""
+    m = re.match(r"^(Core i\d-)14(\d{3}[A-Z]*)$", cpu)
+    return m.group(1) + "13" + m.group(2) if m else None
+
+
+def apply_gen_floor(scores, maps):
+    """Floor each 14th-gen part at its 13th-gen twin's score, carrying the margin
+    measured where both were tested head-to-head. A 14th-gen part is a clock-bumped
+    rebadge of its 13th-gen twin, so it can't be slower — this corrects cross-source
+    noise without inventing a lead the shared tests don't show. Ratios survive the
+    per-dataset normalization (a constant scale cancels)."""
+    import math
+    for cpu in list(scores):
+        pred = gen_predecessor(cpu)
+        if not pred or pred not in scores:
+            continue
+        ratios = [m[cpu] / m[pred] for m in maps if cpu in m and pred in m]
+        r = math.exp(sum(math.log(x) for x in ratios) / len(ratios)) if ratios else 1.0
+        scores[cpu] = max(scores[cpu], scores[pred] * max(r, 1.0))
+
+
+def twoway_means(norm, ref):
+    """Two-way additive fit in log space: log(value) = dataset_offset + cpu_effect.
+
+    A plain mean across the datasets that happen to contain each CPU is biased
+    when sources test different CPU sets: a CPU gets penalised merely for
+    appearing in a stingier source (and dodges the penalty if it doesn't).
+    Fitting a per-dataset offset absorbs each source's overall level, so the
+    CPU effect is comparable even with missing cells. Result is rescaled so the
+    reference CPU = 100, then the generation-monotonic prior is applied.
+    """
+    import math
+    data = [(c, d) for _, c, d in norm]  # we only need the {cpu: value} maps
+    cpus = set().union(*[d.keys() for d in (m for _, m in data)])
+    a = [0.0] * len(data)                       # per-dataset offsets
+    b = {c: 0.0 for c in cpus}                  # per-CPU effects
+    for _ in range(200):                        # alternating least squares
+        for i, (_, d) in enumerate(data):
+            a[i] = sum(math.log(v) - b[c] for c, v in d.items()) / len(d)
+        for c in cpus:
+            obs = [(i, d[c]) for i, (_, d) in enumerate(data) if c in d]
+            b[c] = sum(math.log(v) - a[i] for i, v in obs) / len(obs)
+    base = b[ref]                               # anchor so ref == 100
+    out = {c: math.exp(b[c] - base) * 100 for c in cpus}
+    apply_gen_floor(out, [d for _, d in data])
+    return out
+
+
+def ranked_cpus(norm, ref):
+    fit = twoway_means(norm, ref)
+    mean = fit.__getitem__
+    return sorted(fit, key=mean), mean  # ascending: slowest at bottom of barh
 
 
 def plot_averaged(norm, vendor, ref, out_path):
-    cpus, mean = ranked_cpus(norm)
+    cpus, mean = ranked_cpus(norm, ref)
     vals = [mean(c) for c in cpus]
     cnts = [sum(c in d for _, _, d in norm) for c in cpus]
     gens = [gen_of(c) for c in cpus]
@@ -141,8 +188,8 @@ def plot_averaged(norm, vendor, ref, out_path):
     ax.set_xlim(0, max(vals) * 1.10)
     ax.set_xlabel(f"Mean performance relative to {ref}  (%)", fontsize=10)
     ax.set_title("Microsoft Flight Simulator 2024 — Normalized CPU Megachart "
-                 "(averaged)\nMean of all datasets (Tom's epochs + PCGH scenes) "
-                 "per CPU · ·N = datasets averaged",
+                 "(averaged)\nTwo-way fit (per-dataset offset + CPU effect) over "
+                 "Tom's epochs + PCGH scenes · ·N = datasets covering each CPU",
                  fontsize=13, fontweight="bold", loc="left")
     ax.grid(axis="x", linestyle=":", alpha=0.4, zorder=0)
     ax.set_axisbelow(True)
