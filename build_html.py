@@ -20,6 +20,7 @@ Usage:
 import argparse
 import csv
 import json
+import os
 
 
 def load(path, site, group_col):
@@ -382,6 +383,26 @@ function clearHover(){
     const rl=row.querySelector(".refline"); if(rl) rl.style.display="none";
     const dl=row.querySelector(".delta"); if(dl) dl.style.display="none";
     const vl=row.querySelector(".val"); if(vl) vl.style.opacity=1;
+    const nr=row.querySelector(".nref"); if(nr) nr.style.display="";  // restore 100% line
+  });
+}
+
+// Re-baseline the normalized-averaged chart: hovered CPU = 100%, others ±% vs it.
+function avgBaseline(idx){
+  const rows=[...$("#chart").children];
+  const base=rows[idx]._v, axisMax=rows[idx]._axisMax;
+  rows.forEach((row,i)=>{
+    const v=row._v, d=(v-base)/base*100;
+    row.classList.toggle("active",i===idx);
+    row.querySelector(".nref").style.display="none";   // hide fixed ref while re-baselining
+    const line=row.querySelector(".refline");
+    line.style.left=base/axisMax*100+"%"; line.style.display="block";
+    const del=row.querySelector(".delta"); del.style.display="block";
+    del.style.left=`calc(${v/axisMax*100}% + 6px)`;
+    if(i===idx){ del.className="delta ref"; del.textContent="100%"; }
+    else { del.className="delta "+(d>=0?"pos":"neg");
+           del.textContent=(d>=0?"+":"")+d.toFixed(1)+"%"; }
+    row.querySelector(".val").style.opacity=(i===idx)?1:0;
   });
 }
 
@@ -419,18 +440,25 @@ function renderNorm(){
     $("#legend").innerHTML=gensPresent.map(g=>
       `<span><i style="background:${GEN_COLOR[g]}"></i>${g}</span>`).join("")+
       `<span style="color:var(--muted)">red line = ${ref} (100%)</span>`;
-    cpus.forEach(cpu=>{
+    cpus.forEach((cpu,i)=>{
       const v=score(cpu), n=count(cpu), w=v/axisMax*100;
-      const row=document.createElement("div"); row.className="row";
+      const row=document.createElement("div"); row.className="row"; row.dataset.i=i;
       row.innerHTML=`<div class="name">${cpu}${cpu.toUpperCase().includes("X3D")?' <span class="star">★</span>':''}</div>
         <div class="track"><div class="nref" style="left:${100/axisMax*100}%"></div>
           <div class="bar avg" style="width:${w}%;background:${GEN_COLOR[genOf(cpu)]}"></div>
           <div class="val" style="left:calc(${w}% + 6px)">${v.toFixed(0)}<span style="color:var(--muted);font-weight:400"> ·${n}</span></div>
+          <div class="refline"></div><div class="delta"></div>
         </div>`;
+      row._v=v; row._axisMax=axisMax;
       c.appendChild(row);
     });
+    // Hover any bar to re-baseline it to 100% and show others' relative ±%.
+    c.onmousemove=e=>{ const row=e.target.closest(".row");
+      if(!row) return clearHover(); avgBaseline(+row.dataset.i); };
+    c.onmouseleave=clearHover;
     return;
   }
+  c.onmousemove=null; c.onmouseleave=null;   // per-dataset layout: no hover
   const axisMax=Math.max(...norm.flatMap(s=>Object.values(s.data)))*1.06;
   cpus.forEach(cpu=>{
     const row=document.createElement("div"); row.className="nrow";
@@ -494,13 +522,15 @@ buildSiteSelect(); render();
 PALETTE = {
     "Tom's Hardware": ["#9ecae1", "#4292c6", "#08519c", "#062f6b"],
     "PCGH": ["#8073ac", "#e08214", "#b35806", "#542788"],
+    "ComputerBase": ["#2ca25f", "#006d2c"],
 }
-SHORT = {"Tom's Hardware": "TH", "PCGH": "PCGH"}
+SHORT = {"Tom's Hardware": "TH", "PCGH": "PCGH", "ComputerBase": "CB"}
+SITE_ORDER = ["Tom's Hardware", "PCGH", "ComputerBase"]
 
 
 def build_norm_series(rows):
     series = []
-    for site in ["Tom's Hardware", "PCGH"]:
+    for site in [s for s in SITE_ORDER if any(r["site"] == s for r in rows)]:
         srows = [r for r in rows if r["site"] == site]
         groups = sorted({r["group"] for r in srows},
                         key=lambda g: min(r["date"] for r in srows
@@ -520,10 +550,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--th", default="msfs24_data.csv")
     ap.add_argument("--pcgh", default="pcgh_msfs24.csv")
+    ap.add_argument("--cbase", default="computerbase_msfs24.csv")
     ap.add_argument("--out", default="index.html")
     args = ap.parse_args()
 
     rows = load(args.th, "Tom's Hardware", "epoch") + load(args.pcgh, "PCGH", "scene")
+    if os.path.exists(args.cbase):
+        rows += load(args.cbase, "ComputerBase", "scene")
     norm_series = build_norm_series(rows)
 
     html = (TEMPLATE
@@ -532,9 +565,11 @@ def main():
             .replace("__NORM__", json.dumps(norm_series, ensure_ascii=False)))
     with open(args.out, "w", encoding="utf-8") as f:
         f.write(html)
-    n_pcgh = sum(1 for r in rows if r["site"] == "PCGH")
-    print(f"Wrote {args.out}  ({len(rows)} rows: {len(rows) - n_pcgh} TH + "
-          f"{n_pcgh} PCGH; {len(norm_series)} normalized datasets)")
+    from collections import Counter
+    by_site = Counter(r["site"] for r in rows)
+    breakdown = ", ".join(f"{n} {s}" for s, n in by_site.items())
+    print(f"Wrote {args.out}  ({len(rows)} rows: {breakdown}; "
+          f"{len(norm_series)} normalized datasets)")
 
 
 if __name__ == "__main__":

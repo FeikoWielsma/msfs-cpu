@@ -68,10 +68,23 @@ def slug(path):
     return "pcgh_" + base
 
 
+# Config-variant markers we discard entirely; anything else in trailing parens
+# (e.g. "105 W") is folded into the base CPU name.
+DROP_VARIANTS = ("65 W", "cTDP", "Turbo GM", "CU")
+
+
+def fold_variant(cpu):
+    """Canonical CPU name, or None to drop a config variant."""
+    m = re.search(r"\(([^)]*)\)\s*$", cpu)
+    if m:
+        if any(d in m.group(1) for d in DROP_VARIANTS):
+            return None
+        cpu = re.sub(r"\s*\([^)]*\)\s*$", "", cpu)   # fold e.g. "(105 W)"
+    return cpu.strip()
+
+
 def clean_cpu(name):
-    name = re.sub(r"^(AMD|Intel)\s+", "", name)
-    name = re.sub(r"\s*\(CU\)\s*$", "", name)   # drop the "(CU)" index marker only;
-    return name.strip()                          # keep power specs like "(65 W)"
+    return re.sub(r"^(AMD|Intel)\s+", "", name).strip()
 
 
 def records_for(path):
@@ -79,9 +92,12 @@ def records_for(path):
     rows = first_chart(doc)
     date, scene = meta(doc)
     src = slug(path)
-    recs = []
+    recs, seen = [], set()
     for name, nums in rows:
-        cpu = clean_cpu(name)
+        cpu = fold_variant(clean_cpu(name))
+        if cpu is None or cpu in seen:      # dropped variant, or already folded
+            continue
+        seen.add(cpu)
         recs.append({
             "cpu": cpu,
             "vendor": "AMD" if "Ryzen" in name else "Intel",

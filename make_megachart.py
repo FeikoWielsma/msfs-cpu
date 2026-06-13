@@ -23,6 +23,7 @@ Usage:
 
 import argparse
 import csv
+import os
 import re
 
 import matplotlib.pyplot as plt
@@ -38,9 +39,12 @@ GEN_COLOR = {
 }
 GEN_ORDER = list(GEN_COLOR)
 
-# Per-dataset colors (for the non-averaged layout): Tom's blues, PCGH warm.
+# Per-dataset colors (for the non-averaged layout): Tom's blues, PCGH warm,
+# ComputerBase greens.
 PALETTE = {"Tom's Hardware": ["#9ecae1", "#4292c6", "#08519c"],
-           "PCGH": ["#8073ac", "#e08214"]}
+           "PCGH": ["#8073ac", "#e08214"],
+           "ComputerBase": ["#2ca25f", "#006d2c"]}
+SITE_ORDER = ["Tom's Hardware", "PCGH", "ComputerBase"]
 
 
 def gen_of(cpu):
@@ -83,12 +87,13 @@ def dedup_newest(rows):
 def build_datasets(rows):
     """[(name, color, {cpu: avg})] — one per (site, group), chronological."""
     out = []
-    for site in ["Tom's Hardware", "PCGH"]:
+    for site in [s for s in SITE_ORDER if any(r["site"] == s for r in rows)]:
         srows = [r for r in rows if r["site"] == site]
         groups = sorted({r["group"] for r in srows},
                         key=lambda g: min(r["date"] for r in srows
                                           if r["group"] == g))
-        short = "TH" if site == "Tom's Hardware" else "PCGH"
+        short = {"Tom's Hardware": "TH", "PCGH": "PCGH",
+                 "ComputerBase": "CB"}[site]
         for i, g in enumerate(groups):
             out.append((f"{short} · {g}", PALETTE[site][i % len(PALETTE[site])],
                         dedup_newest([r for r in srows if r["group"] == g])))
@@ -188,6 +193,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--th", default="msfs24_data.csv")
     p.add_argument("--pcgh", default="pcgh_msfs24.csv")
+    p.add_argument("--cbase", default="computerbase_msfs24.csv")
     p.add_argument("--ref", default="Ryzen 7 7800X3D")
     p.add_argument("--averaged", action="store_true",
                    help="One averaged bar per CPU instead of per-dataset bars.")
@@ -195,6 +201,8 @@ def main():
     args = p.parse_args()
 
     rows = load(args.th, "Tom's Hardware", "epoch") + load(args.pcgh, "PCGH", "scene")
+    if os.path.exists(args.cbase):
+        rows += load(args.cbase, "ComputerBase", "scene")
     vendor = {}
     for r in rows:
         vendor.setdefault(r["cpu"], r["vendor"])

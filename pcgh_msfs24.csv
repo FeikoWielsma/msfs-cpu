@@ -62,8 +62,7 @@ Ryzen 7 7800X3D,AMD,1,59.8,49,45,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,202
 Core i5-14600K,Intel,0,59.5,50,38,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
 Core Ultra 7 265K,Intel,0,59.2,51,47,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
 Core Ultra 5 245K,Intel,0,58.5,43,39,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
-Ryzen 7 9700X (105 W),AMD,0,57.0,50,45,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
-Ryzen 7 9700X (65 W),AMD,0,55.3,47,44,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
+Ryzen 7 9700X,AMD,0,57.0,50,45,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
 Ryzen 7 5800X3D,AMD,1,54.9,40,39,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
 Ryzen 7 5700X3D,AMD,1,54.3,39,38,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
 Ryzen 9 9950X,AMD,0,53.2,46,39,pcgh_amd_ryzen_9_9950x3d_im_test_benchmarks,2025-03-11,Flight Simulator 24 – New York,PCGH
@@ -104,14 +103,10 @@ Core i7-14700K,Intel,0,60.9,53,47,pcgh_intel_core_ultra_neu_getestet_benchmarks,
 Core i7-13700K,Intel,0,60.8,54,48,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
 Core i9-14900K,Intel,0,60.4,54,50,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
 Core i9-13900K,Intel,0,60.1,54,50,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
-Core Ultra 9 285K,Intel,0,59.9,54,49,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
 Core i5-13600K,Intel,0,59.8,53,46,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
 Ryzen 7 7800X3D,AMD,1,59.8,49,45,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
 Core i5-14600K,Intel,0,59.5,50,38,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
-Core Ultra 7 265K,Intel,0,59.2,51,47,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
-Core Ultra 5 245K,Intel,0,58.5,43,39,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
-Ryzen 7 9700X (105 W),AMD,0,57.0,50,45,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
-Ryzen 7 9700X (65 W),AMD,0,55.3,47,44,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
+Ryzen 7 9700X,AMD,0,57.0,50,45,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
 Ryzen 7 5800X3D,AMD,1,54.9,40,39,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
 Ryzen 7 5700X3D,AMD,1,54.3,39,38,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
 Ryzen 9 9950X,AMD,0,53.2,46,39,pcgh_intel_core_ultra_neu_getestet_benchmarks,2025-02-10,Flight Simulator 24 – New York,PCGH
