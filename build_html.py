@@ -151,10 +151,10 @@ TEMPLATE = r"""<!DOCTYPE html>
   <div class="card controls">
     <div><label>Mode</label>
       <span class="seg" id="mode">
-        <button data-v="source" class="on">By source</button>
-        <button data-v="norm">Normalized (all sites)</button>
+        <button data-v="source">By source</button>
+        <button data-v="norm" class="on">Normalized (all sites)</button>
       </span></div>
-    <div id="ctl-source" class="controls" style="gap:18px">
+    <div id="ctl-source" class="controls" style="display:none; gap:18px">
       <div><label for="site">Site</label><select id="site"></select></div>
       <div><label for="view">View</label><select id="view"></select></div>
       <div><label>Metric</label>
@@ -163,13 +163,13 @@ TEMPLATE = r"""<!DOCTYPE html>
           <button data-m="low">1% Low</button>
         </span></div>
     </div>
-    <div id="ctl-norm" class="controls" style="display:none; gap:18px; align-items:flex-start">
+    <div id="ctl-norm" class="controls" style="display:flex; gap:18px; align-items:flex-start">
       <div><label for="ref">100% reference CPU</label><select id="ref"></select>
         <div id="refnote" class="small" style="color:var(--muted); font-size:12px; margin-top:4px"></div></div>
       <div><label style="display:block; margin-bottom:4px">Bars</label>
         <span class="seg" id="normdisp">
-          <button data-d="multi" class="on">Per dataset</button>
-          <button data-d="avg">Averaged (1 bar)</button>
+          <button data-d="multi">Per dataset</button>
+          <button data-d="avg" class="on">Averaged (1 bar)</button>
         </span></div>
       <div><label style="display:block; margin-bottom:4px">Datasets</label>
         <div id="series-toggles"></div></div>
@@ -204,9 +204,9 @@ const NORM_SERIES = __NORM__;   // [{name, color, site, group|null}]
 const TH_EPOCH_CUTOFF = "2026-03";
 
 const $ = s => document.querySelector(s);
-let mode="source", site=null, view=null, metric="avg", ref=null;
+let mode="norm", site=null, view=null, metric="avg", ref=null;
 let enabled = NORM_SERIES.map(()=>true);   // which datasets are on in norm mode
-let normAvg=false;                          // averaged single-bar vs per-dataset
+let normAvg=true;                           // averaged single-bar vs per-dataset
 const VENDOR={}; for(const r of DATA) if(!(r.cpu in VENDOR)) VENDOR[r.cpu]=r.vendor;
 
 // Per-generation colors (AMD reds, Intel blues; 13th+14th share a color).
