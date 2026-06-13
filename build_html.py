@@ -157,6 +157,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MSFS 2024 — Best CPUs</title>
+<script defer src="https://stats.feikowielsma.nl/script.js" data-website-id="b0988ab4-7b6a-4775-83a1-ff89fb549345"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -564,7 +565,8 @@ TEMPLATE = r"""<!DOCTYPE html>
     transcribed/scraped into <code>msfs24_data.csv</code>, <code>pcgh_msfs24.csv</code> and
     <code>computerbase_msfs24.csv</code>, then rendered to this single self-contained file by
     <code>build_html.py</code>. Absolute FPS aren't comparable across sources — the
-    Performance Index normalises them. Not affiliated with Tom's Hardware, PCGH or ComputerBase.
+    Performance Index normalises them. Not affiliated with Tom's Hardware, PCGH or ComputerBase.<br>
+    Made by <b>'Razortek'</b> from the Official MSFS Discord (<a href="https://discord.com/invite/msfs" target="_blank" rel="noopener">https://discord.com/invite/msfs</a>); you can direct opinions about this tool to <code>#hardware</code> there because he basically lives there.
   </footer>
 </div>
 
