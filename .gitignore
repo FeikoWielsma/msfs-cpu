@@ -2,6 +2,7 @@
 # The pipeline reads these locally; only our transcribed CSVs are committed.
 pcgh.de/
 computerbase.de/
+tomshardware/
 new_images/
 250K_plus_review.png
 7600x3d_review.png
@@ -10,3 +11,8 @@ new_images/
 # Python
 __pycache__/
 *.pyc
+
+# Node / Vite
+node_modules/
+dist/
+*.tsbuildinfo
