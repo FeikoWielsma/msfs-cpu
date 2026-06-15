@@ -53,10 +53,10 @@
         <div>
           <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-right: 8px;">Bar layout:</span>
           <div class="layoutseg" id="layoutSeg">
-            <button data-layout="stacked" class="on">Current (stacked)</button>
+            <button data-layout="stacked">Current (stacked)</button>
             <button data-layout="split">Split row</button>
             <button data-layout="tip">Value at tip</button>
-            <button data-layout="tinted">Tinted row</button>
+            <button data-layout="tinted" class="on">Tinted row</button>
           </div>
         </div>
         <div style="display: flex; gap: 16px; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink-2);">
@@ -69,7 +69,7 @@
         </div>
       </div>
       <p style="font-size: 12.5px; color: var(--muted); margin: 10px 0 0 0;" id="dbNote">
-        The original: CPU name + value on one line, a full-width bar beneath. Roomy, but every CPU costs two lines of height.
+        Densest. The whole row is the bar: a soft generation-tinted fill behind the label, with a crisp cap marking the exact value and the name + % overlaid in ink.
       </p>
     </div>
   </section>

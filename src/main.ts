@@ -94,7 +94,7 @@ let baseline: string | null = null; // pinned CPU (null = auto: leader = 100)
 let site = "";
 let view = "combined";
 // redesign preview state
-let layout: "stacked" | "split" | "tip" | "tinted" = "stacked";
+let layout: "stacked" | "split" | "tip" | "tinted" = "tinted";
 let showSocket = true;
 let showCores = true;
 
