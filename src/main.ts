@@ -54,7 +54,7 @@ type Metric = "avg" | "low";
 type Brand = "all" | "AMD" | "Intel";
 
 // Static presentation config (was window.TWEAKS inlined by the old generator).
-const TWEAKS = { theme: "light", bars: "generation", density: "compact" } as const;
+const TWEAKS = { theme: "dark", bars: "generation", density: "compact" } as const;
 
 // ---------- data (populated by boot() once data.json is fetched) ----------
 let DATA: Row[] = [];
