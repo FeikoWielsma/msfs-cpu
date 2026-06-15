@@ -401,8 +401,15 @@ function renderRanking(): void {
 
 function setBaselineBar(): void {
   const bar = $("#baselineBar");
-  if (baseline) { bar.classList.add("on"); $("#baselineName").textContent = baseline; }
-  else bar.classList.remove("on");
+  const head = $(".chart-head");
+  if (baseline) {
+    bar.classList.add("on");
+    head.style.display = "flex";
+    $("#baselineName").textContent = baseline;
+  } else {
+    bar.classList.remove("on");
+    head.style.display = "none";
+  }
 }
 function toggleBaseline(cpu: string): void {
   baseline = baseline === cpu ? null : cpu;
@@ -410,6 +417,7 @@ function toggleBaseline(cpu: string): void {
 }
 
 // ---------- render: by source ----------
+/* ... */
 function sourceRows(): Row[] {
   const rows = DATA.filter(r => r.site === site);
   if (view === "all") return rows.slice();
@@ -423,7 +431,8 @@ function renderSource(): void {
     .sort((a, b) => b[metric]! - a[metric]!);
   const c = $("#chart");
   c.innerHTML = "";
-  $("#chartSub").textContent = `${site} · ${rows.length} CPUs`;
+  $("#datasetCount").textContent = `${site} · ${rows.length} CPUs`;
+  $("#datasetCount").style.display = "";
   if (!rows.length) { c.innerHTML = `<div class="empty">No CPUs match these filters.</div>`; return; }
   const axisMax = Math.max(...rows.map(r => r.avg)); // leader fills the track
   const baseRow = baseline ? rows.find(r => r.cpu === baseline) : undefined;
@@ -721,15 +730,10 @@ function buildViewSelect(): void {
 function render(): void {
   renderLegend();
   if (tab === "ranking") {
-    $("#chartTitle").textContent = "Performance Index";
-    $("#chartSub").textContent = "";
     $("#datasetCount").textContent = `${enabledSeries().length} of ${NORM_SERIES.length} datasets`;
     $("#datasetCount").style.display = "";
     renderRanking();
   } else {
-    $("#chartTitle").textContent = "By source";
-    $("#datasetCount").textContent = "";
-    $("#datasetCount").style.display = "none";
     renderSource();
   }
   renderAnalysis();
