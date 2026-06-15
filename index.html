@@ -4,10 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MSFS 2024 — Best CPUs</title>
+<link rel="icon" type="image/jpeg" href="/favicon.jpg">
+<script>
+  (function() {
+    const theme = localStorage.getItem("msfs-theme") || "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
 <script defer src="https://stats.feikowielsma.nl/script.js" data-website-id="b0988ab4-7b6a-4775-83a1-ff89fb549345"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="app">
@@ -31,6 +38,7 @@
       </div>
       <span id="datasetCount" style="font-size: 13px; color: var(--muted); font-weight: 500;"></span>
       <button id="advToggleBtn" class="chip" style="margin: 0;">Advanced</button>
+      <button id="themeToggleBtn" class="chip" style="margin: 0; min-width: 90px; justify-content: center;" title="Toggle Light/Dark Theme">Dark</button>
     </div>
   </div>
 
@@ -54,9 +62,8 @@
           <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-right: 8px;">Bar layout:</span>
           <div class="layoutseg" id="layoutSeg">
             <button data-layout="stacked">Current (stacked)</button>
-            <button data-layout="split">Split row</button>
-            <button data-layout="tip">Value at tip</button>
-            <button data-layout="tinted" class="on">Tinted row</button>
+            <button data-layout="tip" class="on">Value at tip</button>
+            <button data-layout="tinted">Tinted row</button>
           </div>
         </div>
         <div style="display: flex; gap: 16px; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink-2);">

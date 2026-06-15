@@ -53,8 +53,8 @@ type Tab = "ranking" | "source";
 type Metric = "avg" | "low";
 type Brand = "all" | "AMD" | "Intel";
 
-// Static presentation config (was window.TWEAKS inlined by the old generator).
-const TWEAKS = { theme: "dark", bars: "generation", density: "compact" } as const;
+let theme = localStorage.getItem("msfs-theme") || "dark";
+const TWEAKS = { bars: "generation", density: "compact" } as const;
 
 // ---------- data (populated by boot() once data.json is fetched) ----------
 let DATA: Row[] = [];
@@ -94,7 +94,7 @@ let baseline: string | null = null; // pinned CPU (null = auto: leader = 100)
 let site = "";
 let view = "combined";
 // redesign preview state
-let layout: "stacked" | "split" | "tip" | "tinted" = "tinted";
+let layout: "stacked" | "tip" | "tinted" = "tip";
 let showSocket = true;
 let showCores = true;
 
@@ -314,6 +314,13 @@ function coresSpan(cpu: string): string {
   const cs = coreStr(sp);
   return cs ? `<span class="badge cores b-cores" title="${sp.arch}">${cs}</span>` : "";
 }
+function coreStrSpan(cpu: string, inside: boolean): string {
+  const sp = SPECS[cpu];
+  if (!sp) return "";
+  const cs = coreStr(sp);
+  const cls = inside ? "bar-cores-inside" : "bar-cores-outside";
+  return cs ? `<span class="bar-cores b-cores ${cls}" title="${sp.arch}">${cs}</span>` : "";
+}
 function x3dSpan(_cpu: string): string {
   return "";
 }
@@ -367,17 +374,19 @@ function renderRanking(): void {
              ${ref}
              <div class="fill" style="width:${w}%;${fillStyle(o.cpu)}"></div>
            </div>`;
-    } else if (layout === "split") {
-      row.innerHTML =
-        `<span class="cpu">${o.cpu}</span><span class="metacell">${socketSpan(o.cpu, o.vendor)}${x3dSpan(o.cpu)}</span>${coresSpan(o.cpu)}${baseSpan(o)}
-         <div class="track">${ref}<div class="fill" style="width:${w}%;${fillStyle(o.cpu)}"></div></div>
-         <span class="val"><span class="big num">${o.idx.toFixed(0)}<span class="unit">%</span></span></span>`;
     } else if (layout === "tip") {
       const inside = w > 16;
       const tip = `<span class="tipval${inside ? "" : " outside"}">${o.idx.toFixed(0)}%</span>`;
       row.innerHTML =
-        `<span class="cpu">${o.cpu}</span><span class="metacell">${socketSpan(o.cpu, o.vendor)}${x3dSpan(o.cpu)}</span>${coresSpan(o.cpu)}${baseSpan(o)}
-         <div class="track">${ref}<div class="fill" style="width:${w}%;${fillStyle(o.cpu)}">${inside ? tip : ""}</div>${inside ? "" : tip}</div>`;
+        `<span class="cpu">${o.cpu}</span><span class="metacell">${socketSpan(o.cpu, o.vendor)}${x3dSpan(o.cpu)}</span>${baseSpan(o)}
+         <div class="track">${ref}
+           ${coreStrSpan(o.cpu, false)}
+           <div class="fill" style="width:${w}%;${fillStyle(o.cpu)}">
+             ${inside ? tip : ""}
+             ${coreStrSpan(o.cpu, true)}
+           </div>
+           ${inside ? "" : tip}
+         </div>`;
     } else if (layout === "tinted") {
       const cap = `<div class="heatcap" style="left:calc(${w}% - 3px);background:${GEN_COLOR[genOf(o.cpu)]}"></div>`;
       row.innerHTML =
@@ -466,38 +475,33 @@ function renderSource(): void {
              <div class="fill avg" style="width:${wA}%;${fillStyle(r.cpu)}"></div>
              ${r.low != null ? `<div class="fill low" style="width:${wL}%;${fillStyle(r.cpu)}"></div>` : ""}
            </div>`;
-    } else if (layout === "split") {
-      row.innerHTML =
-        `<span class="cpu">${r.cpu}</span><span class="metacell">${socketSpan(r.cpu, r.vendor)}${x3dSpan(r.cpu)}</span>${coresSpan(r.cpu)}${baseSpan(r)}
-         <div class="track dual">
-           <div class="seg-track avg"></div><div class="seg-track low"></div>
-           <div class="fill avg" style="width:${wA}%;${fillStyle(r.cpu)}"></div>
-           ${r.low != null ? `<div class="fill low" style="width:${wL}%;${fillStyle(r.cpu)}"></div>` : ""}
-         </div>
-         <span class="val">
-           <span class="big num">${fmt(r.avg, 1)}</span>
-           ${r.low != null ? `<span class="sub num">${fmt(r.low, 0)} low</span>` : ""}
-         </span>`;
     } else if (layout === "tip") {
       const inside = wA > 20;
       const valStr = r.low != null ? `${fmt(r.avg, 1)}/${fmt(r.low, 0)}` : fmt(r.avg, 1);
       const tip = `<span class="tipval${inside ? "" : " outside"}" style="font-size: 10px; line-height: 1.1;">${valStr}</span>`;
       row.innerHTML =
-        `<span class="cpu">${r.cpu}</span><span class="metacell">${socketSpan(r.cpu, r.vendor)}${x3dSpan(r.cpu)}</span>${coresSpan(r.cpu)}${baseSpan(r)}
+        `<span class="cpu">${r.cpu}</span><span class="metacell">${socketSpan(r.cpu, r.vendor)}${x3dSpan(r.cpu)}</span>${baseSpan(r)}
          <div class="track dual">
            <div class="seg-track avg"></div><div class="seg-track low"></div>
-           <div class="fill avg" style="width:${wA}%;${fillStyle(r.cpu)}">${inside ? tip : ""}</div>
+           ${coreStrSpan(r.cpu, false)}
+           <div class="fill avg" style="width:${wA}%;${fillStyle(r.cpu)}">
+             ${inside ? tip : ""}
+             ${coreStrSpan(r.cpu, true)}
+           </div>
            ${inside ? "" : tip}
            ${r.low != null ? `<div class="fill low" style="width:${wL}%;${fillStyle(r.cpu)}"></div>` : ""}
          </div>`;
     } else if (layout === "tinted") {
-      const capA = `<div class="heatcap avg" style="left:calc(${wA}% - 3px);background:${GEN_COLOR[genOf(r.cpu)]}"></div>`;
+      const capA = `<div class="heatcap avg" style="left:calc(${wA}% - 3px);background:${GEN_COLOR[genOf(r.cpu)]};${r.low != null ? "bottom:42%;" : ""}"></div>`;
+      const capL = r.low != null ? `<div class="heatcap low" style="left:calc(${wL}% - 3px);background:${GEN_COLOR[genOf(r.cpu)]};top:58%;opacity:0.6;"></div>` : "";
       row.innerHTML =
         `<div class="heatrow dual">
-           <div class="heatfill avg" style="width:${wA}%;background:${GEN_COLOR[genOf(r.cpu)]};opacity:0.18;"></div>
-           ${r.low != null ? `<div class="heatfill low" style="width:${wL}%;background:${GEN_COLOR[genOf(r.cpu)]};opacity:0.08;top:50%;bottom:0;"></div>` : ""}
+           <div class="heatfill avg" style="width:${wA}%;background:${GEN_COLOR[genOf(r.cpu)]};opacity:0.25;${r.low != null ? "bottom:42%;" : ""}"></div>
+           ${r.low != null ? `<div class="heatfill low" style="width:${wL}%;background:${GEN_COLOR[genOf(r.cpu)]};opacity:0.12;top:58%;bottom:0;"></div>` : ""}
            ${capA}
-           <div class="heat-val-tip num" style="left:${wA}%;">${fmt(r.avg, 1)}${r.low != null ? ` / ${fmt(r.low, 0)}` : ""}</div>
+           ${capL}
+           <div class="heat-val-tip num avg" style="left:${wA}%;${r.low != null ? "top:29%;" : ""}">${fmt(r.avg, 1)}</div>
+           ${r.low != null ? `<div class="heat-val-tip num low" style="left:${wL}%;top:79%;color:var(--muted);font-size:10.5px;">${fmt(r.low, 0)}</div>` : ""}
            <div class="heatcontent">
              <span class="cpu">${r.cpu}</span><span class="metacell">${socketSpan(r.cpu, r.vendor)}${x3dSpan(r.cpu)}</span>${coresSpan(r.cpu)}${baseSpan(r)}
            </div>
@@ -816,8 +820,7 @@ function wireControls(): void {
   // redesign controls
   const NOTES = {
     stacked: "The original: CPU name + value on one line, a full-width bar beneath. Roomy, but every CPU costs two lines of height.",
-    split: "Name and badges sit in a fixed-width column on the left so every bar starts at the same x — the bar fills the rest of the row, value pinned right. One line per CPU, still a wide bar, and bar-starts stay aligned for easy scanning.",
-    tip: "Like Split, but the % rides the leading edge of its own bar instead of a separate column — the number tracks the length. Short bars flip the label outside so it stays readable.",
+    tip: "Name and badges sit on the left, but the value rides the leading edge of its own bar instead of a separate column — the number tracks the length. Short bars flip the label outside so it stays readable.",
     tinted: "Densest. The whole row is the bar: a soft generation-tinted fill behind the label, with a crisp cap marking the exact value and the name + % overlaid in ink."
   };
 
@@ -841,15 +844,31 @@ function wireControls(): void {
     showCores = (e.target as HTMLInputElement).checked;
     document.documentElement.classList.toggle("hide-cores", !showCores);
   });
+
+  const themeToggle = $("#themeToggleBtn");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      theme = theme === "dark" ? "light" : "dark";
+      localStorage.setItem("msfs-theme", theme);
+      document.documentElement.dataset.theme = theme;
+      themeToggle.textContent = theme;
+      render();
+    });
+  }
 }
 
 // ---------- tweaks ----------
 function applyTweaks(): void {
   const root = document.documentElement;
-  root.dataset.theme = TWEAKS.theme;
+  root.dataset.theme = theme;
   root.dataset.bars = TWEAKS.bars;
   root.dataset.density = TWEAKS.density;
   root.dataset.layout = layout;
+
+  const themeToggle = $("#themeToggleBtn");
+  if (themeToggle) {
+    themeToggle.textContent = theme;
+  }
 }
 
 // ---------- boot ----------
