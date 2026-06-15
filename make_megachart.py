@@ -240,10 +240,13 @@ def plot_averaged(norm, vendor, ref, out_path):
                        fontsize=8)
     ax.set_xlim(0, max(vals) * 1.10)
     ax.set_xlabel(f"Mean performance relative to {ref}  (%)", fontsize=10)
-    ax.set_title("Microsoft Flight Simulator 2024 — Normalized CPU Megachart "
-                 "(averaged)\nTwo-way fit (per-dataset offset + CPU effect) over "
-                 "Tom's epochs + PCGH scenes · ·N = datasets covering each CPU",
-                 fontsize=13, fontweight="bold", loc="left")
+    ax.set_title("Microsoft Flight Simulator 2024 — Normalized CPU Megachart (averaged)",
+                 fontsize=13, fontweight="bold", loc="left", pad=26)
+    ax.annotate("Two-way fit (per-dataset offset + CPU effect) over Tom's epochs +\n"
+                "PCGH scenes · ·N = datasets covering each CPU",
+                xy=(0, 1), xycoords="axes fraction", xytext=(0, 6),
+                textcoords="offset points", va="bottom", ha="left",
+                fontsize=9.5, color="#555")
     ax.grid(axis="x", linestyle=":", alpha=0.4, zorder=0)
     ax.set_axisbelow(True)
     for sp in ("top", "right"):
