@@ -722,10 +722,14 @@ function render(): void {
   renderLegend();
   if (tab === "ranking") {
     $("#chartTitle").textContent = "Performance Index";
-    $("#chartSub").textContent = `${metric === "avg" ? "Average FPS" : "1% Low"} · ${enabledSeries().length} of ${NORM_SERIES.length} datasets · 100% = ${baseline || "leader"}`;
+    $("#chartSub").textContent = "";
+    $("#datasetCount").textContent = `${enabledSeries().length} of ${NORM_SERIES.length} datasets`;
+    $("#datasetCount").style.display = "";
     renderRanking();
   } else {
     $("#chartTitle").textContent = "By source";
+    $("#datasetCount").textContent = "";
+    $("#datasetCount").style.display = "none";
     renderSource();
   }
   renderAnalysis();
