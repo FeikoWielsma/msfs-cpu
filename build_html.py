@@ -807,9 +807,9 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
 
     // axis covers leader (or pinned-baseline overshoot) and 100 ref line
     const maxIdx = Math.max(...all.map(o => o.idx));
-    // axis tops out at the leader so its bar fills the track; a hair of headroom
-    // only when everything sits at/under 100, to keep the 100% ref tick on-canvas.
-    const axisMax = Math.max(100 * 1.02, maxIdx);
+    // axis tops out at the leader so its bar always fills the track. maxIdx is the
+    // leader's index: 100 when it's the anchor, >100 when a slower baseline is pinned.
+    const axisMax = maxIdx;
     const redrawDelta = baseline != null;
 
     visible.forEach((o, i) => {
@@ -833,7 +833,7 @@ window.TWEAKS = {"theme": "light", "bars": "generation", "density": "compact"};
            </span>
          </div>
          <div class="track">
-           ${(100 <= axisMax) ? `<div class="reftick" style="left:${100 / axisMax * 100}%"></div>` : ""}
+           ${(maxIdx > 100) ? `<div class="reftick" style="left:${100 / axisMax * 100}%"></div>` : ""}
            <div class="fill" style="width:${w}%;${fillStyle(o.cpu, o.vendor)}"></div>
          </div>`;
       row.addEventListener("click", () => toggleBaseline(o.cpu));
