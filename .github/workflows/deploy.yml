@@ -10,6 +10,10 @@ permissions:
   pages: write
   id-token: write
 
+# Run the marketplace JS actions on Node 24 (Node 20 is deprecated on runners).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 # Allow one concurrent deployment; let an in-progress run finish.
 concurrency:
   group: pages
