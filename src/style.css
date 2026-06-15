@@ -13,9 +13,10 @@
 html[data-theme="dark"] {
   --bg:#000000; --card:#0d0e12; --card-2:#15181f;
   --ink:#ffffff; --ink-2:#cccccc; --muted:#818693; --faint:#555964;
-  --line:#222631; --line-2:#1b1d26;
+  --line:#202430; --line-2:#1c202a;
   --amd:#e63935; --amd-deep:#a32320;
   --intel:#00b4ff; --intel-deep:#0087c2;
+  --nvidia:#76b900; --nvidia-deep:#568700;
   --accent:#00b4ff; --on-accent:#000000;
   --track:#131620; --hover:#1b202e; --pin-bg:#111520;
   --pos:#2ec4b6; --pos-bg:#0e3636; --neg:#e71d36; --neg-bg:#400b12;
@@ -27,6 +28,7 @@ html[data-theme="light"] {
   --line:#dbdee6; --line-2:#e6e9f0;
   --amd:#d32f2f; --amd-deep:#a12220;
   --intel:#007cc0; --intel-deep:#005c90;
+  --nvidia:#5c8f00; --nvidia-deep:#406400;
   --accent:#007cc0; --on-accent:#ffffff;
   --track:#edf0f5; --hover:#e2e5ec; --pin-bg:#edf0f6;
   --pos:#00897b; --pos-bg:#e0f2f1; --neg:#d32f2f; --neg-bg:#ffebee;
@@ -133,6 +135,7 @@ h1 { font-family:"Bebas Neue", sans-serif; font-size:clamp(32px, 8vw, 56px); lin
 .chip.on { background:var(--accent); color:var(--on-accent); border-color:var(--accent); }
 .chip.on.amd { background:var(--amd); border-color:var(--amd); color:#fff; }
 .chip.on.intel { background:var(--intel); border-color:var(--intel); color:#fff; }
+.chip.on.nvidia { background:var(--nvidia); border-color:var(--nvidia); color:#000; }
 
 .search { position:relative; flex:1; min-width:160px; max-width:280px; }
 .search input { width:100%; font:inherit; font-size:14px; padding:9px 12px 9px 34px;
@@ -171,7 +174,7 @@ select { font:inherit; font-size:14px; font-weight:500; padding:8px 30px 8px 11p
 .chart-head h2 { font-family:"Bebas Neue", sans-serif; font-size:24px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
   color:var(--accent); margin:0; }
 .chart-head .ch-sub { font-size:13px; color:var(--muted); }
-.baseline-bar { margin-left:auto; display:none; align-items:center; gap:9px; font-size:13px;
+.baseline-bar { margin-left:auto; display:none; align-items:center; gap:9px; font-size:13px; white-space:nowrap;
   color:var(--ink-2); }
 .baseline-bar.on { display:flex; }
 .baseline-bar b { color:var(--ink); font-weight:600; }
@@ -209,8 +212,18 @@ html[data-density="compact"] .cpu { font-size:14px; }
 .badge.sock { background:var(--track); color:var(--ink-2); }
 .badge.sock.amd { background:rgba(230,57,53,.15); color:var(--amd); }
 .badge.sock.intel { background:rgba(0,180,255,.15); color:var(--intel); }
+.badge.sock.nvidia { background:rgba(118,185,0,.15); color:var(--nvidia); }
 html[data-theme="dark"] .badge.sock.amd { color:var(--amd); }
 html[data-theme="dark"] .badge.sock.intel { color:var(--intel); }
+html[data-theme="dark"] .badge.sock.nvidia { color:var(--nvidia); }
+/* VRAM capacity tiers — solid color, clearly distinct, no gradient */
+.badge.vram-8  { background:#64748b; color:#fff; }
+.badge.vram-10 { background:#16a34a; color:#fff; }
+.badge.vram-12 { background:#0284c7; color:#fff; }
+.badge.vram-16 { background:#4338ca; color:#fff; }
+.badge.vram-20 { background:#7c3aed; color:#fff; }
+.badge.vram-24 { background:#ea580c; color:#fff; }
+.badge.vram-32 { background:#e11d48; color:#fff; }
 .badge.cores { background:transparent; color:var(--muted); border:1px solid var(--line);
   font-family:"Open Sans", -apple-system, "Segoe UI", Roboto, sans-serif; font-weight:600; letter-spacing:0; }
 @media (max-width:520px) { .badge.cores { display:none; } }
@@ -249,6 +262,7 @@ html[data-density="compact"] .track { height:9px; }
   transition:width .35s cubic-bezier(.2,.7,.2,1); background:var(--accent); overflow:hidden; z-index:2; }
 .vendor-amd .fill, .fill.amd { background:linear-gradient(90deg, var(--amd-deep), var(--amd)); }
 .vendor-intel .fill, .fill.intel { background:linear-gradient(90deg, var(--intel-deep), var(--intel)); }
+.vendor-nvidia .fill, .fill.nvidia { background:linear-gradient(90deg, var(--nvidia-deep), var(--nvidia)); }
 .reftick { position:absolute; top:-4px; bottom:-4px; width:2px; background:var(--ink);
   opacity:.32; border-radius:0; z-index:4; }
 
@@ -256,14 +270,14 @@ html[data-density="compact"] .track { height:9px; }
 .track.dual { height:26px; background:transparent; }
 html[data-density="compact"] .track.dual { height:22px; }
 .track.dual .seg-track { position:absolute; left:0; right:0; background:var(--track); border-radius:1px; }
-.track.dual .seg-track.avg { top:0; height:13px; }
-.track.dual .seg-track.low { bottom:0; height:9px; }
-html[data-density="compact"] .track.dual .seg-track.avg { height:11px; }
-html[data-density="compact"] .track.dual .seg-track.low { height:8px; }
-.track.dual .fill.avg { height:13px; top:0; border-radius:1px; }
-.track.dual .fill.low { height:9px; top:auto; bottom:0; border-radius:1px; opacity:.62; }
-html[data-density="compact"] .track.dual .fill.avg { height:11px; }
-html[data-density="compact"] .track.dual .fill.low { height:8px; }
+.track.dual .seg-track.sel { top:0; height:21px; }
+.track.dual .seg-track.oth { bottom:0; height:5px; }
+html[data-density="compact"] .track.dual .seg-track.sel { height:18px; }
+html[data-density="compact"] .track.dual .seg-track.oth { height:4px; }
+.track.dual .fill.sel { height:21px; top:0; border-radius:1px; }
+.track.dual .fill.oth { height:5px; top:auto; bottom:0; border-radius:1px; opacity:.7; }
+html[data-density="compact"] .track.dual .fill.sel { height:18px; }
+html[data-density="compact"] .track.dual .fill.oth { height:4px; }
 .seg-lab { position:absolute; font-size:10px; font-weight:700; color:var(--muted);
   transform:translate(8px,-50%); white-space:nowrap; }
 .seg-lab.avg { top:7px; } .seg-lab.low { bottom:4px; }
@@ -334,8 +348,6 @@ html.hide-cores .badge.cores, html.hide-cores .b-cores { display: none !importan
 
 /* ---------- layout specific elements ---------- */
 .metacell { display:flex; align-items:center; gap:5px; min-width:0; }
-.barrow.pinned .metacell,
-.barrow.pinned .b-cores { display:none; }
 
 .bar-cores {
   position: absolute;
@@ -354,16 +366,18 @@ html.hide-cores .badge.cores, html.hide-cores .b-cores { display: none !importan
   color: var(--muted);
 }
 .bar-cores.bar-cores-inside {
-  color: rgba(0, 0, 0, 0.68);
+  color: rgba(0, 0, 0, 0.62);
 }
 .track.dual .bar-cores.bar-cores-outside {
-  top: 25%;
+  top: 40%;
 }
+/* outside value tip aligns with the thick (selected) top bar, not the full track */
+[data-layout="tip"] .track.dual .tipval.outside { top: 40%; }
 
 /* ---------- LAYOUT 2 — Tip ---------- */
 [data-layout="tip"] .barrow { display:grid; align-items:center; column-gap:10px; padding:8px 16px;
   grid-template-columns:
-    [name] clamp(104px, 14vw, 176px)
+    [name] clamp(120px, 14vw, 210px)
     [meta] 58px
     [bar] 1fr; }
 [data-layout="tip"][data-density="compact"] .barrow { padding:6px 16px; }
@@ -371,32 +385,48 @@ html.hide-cores .badge.cores, html.hide-cores .b-cores { display: none !importan
 [data-layout="tip"] .cpu { grid-column:name; justify-self:stretch; min-width:0; font-size:14px;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 [data-layout="tip"] .metacell { grid-column:meta; }
-[data-layout="tip"] .b-base { grid-column:meta / bar; align-self:center; }
 [data-layout="tip"] .track { grid-column:bar; justify-self:stretch; height:22px; border-radius:1px; position:relative; }
+/* delta pill: only in raw (source/FPS) views while a baseline is pinned — sits in its
+   own right-hand column so the numbers line up cleanly off the end of the bars. */
+[data-layout="tip"] .delta { grid-column:delta; justify-self:end; align-self:center; }
+html[data-view="source"].cmp-on[data-layout="tip"] .barrow {
+  grid-template-columns:
+    [name] clamp(120px, 14vw, 210px)
+    [meta] 58px
+    [bar] 1fr
+    [delta] 60px; }
+html[data-view="source"].cmp-on.hide-socket[data-layout="tip"] .barrow {
+  grid-template-columns: [name] clamp(120px, 14vw, 210px) [bar] 1fr [delta] 60px; }
 [data-layout="tip"][data-density="compact"] .track { height:20px; }
 [data-layout="tip"] .fill { border-radius:1px; display:flex; align-items:center; justify-content:flex-end; }
 [data-layout="tip"] .tipval { font-size:11.5px; font-weight:700; color:#fff; padding-right:7px;
   white-space:nowrap; font-family:"Open Sans", -apple-system, "Segoe UI", Roboto, sans-serif; text-shadow:0 1px 1px rgba(0,0,0,.28); z-index:3; }
-[data-layout="tip"] .tipval.outside { position:absolute; left:100%; color:var(--ink-2);
-  text-shadow:none; padding-left:7px; padding-right:0; }
+[data-layout="tip"] .tipval.outside { position:absolute; color:var(--ink-2);
+  text-shadow:none; padding-left:7px; padding-right:0; top:50%; transform:translateY(-50%); }
 
 /* grid adjustments for tip when badges are hidden */
 html.hide-socket[data-layout="tip"] .barrow {
-  grid-template-columns: [name] clamp(104px, 14vw, 176px) [bar] 1fr;
+  grid-template-columns: [name] clamp(120px, 14vw, 210px) [bar] 1fr;
 }
 
 @media (max-width:1000px) {
   [data-layout="tip"] .barrow { grid-template-columns:
-    [name] clamp(104px, 16vw, 176px) [meta] 58px [bar] 1fr; }
+    [name] clamp(120px, 16vw, 210px) [meta] 58px [bar] 1fr; }
   [data-layout="tip"] .b-cores { display:none; }
-  
+
   html.hide-socket[data-layout="tip"] .barrow {
-    grid-template-columns: [name] clamp(104px, 16vw, 176px) [bar] 1fr;
+    grid-template-columns: [name] clamp(120px, 16vw, 210px) [bar] 1fr;
   }
+  html[data-view="source"].cmp-on[data-layout="tip"] .barrow {
+    grid-template-columns: [name] clamp(120px, 16vw, 210px) [meta] 58px [bar] 1fr [delta] 56px; }
+  html[data-view="source"].cmp-on.hide-socket[data-layout="tip"] .barrow {
+    grid-template-columns: [name] clamp(120px, 16vw, 210px) [bar] 1fr [delta] 56px; }
 }
 @media (max-width:680px) {
   [data-layout="tip"] .barrow { grid-template-columns:
     [name] minmax(92px, 1fr) [meta] 58px [bar] 1.4fr; column-gap:9px; }
+  html[data-view="source"].cmp-on[data-layout="tip"] .barrow {
+    grid-template-columns: [name] minmax(92px, 1fr) [meta] 58px [bar] 1.4fr [delta] 50px; column-gap:9px; }
 }
 
 /* ---------- LAYOUT 3 — Tinted ---------- */
@@ -411,7 +441,7 @@ html.hide-socket[data-layout="tip"] .barrow {
 [data-layout="tinted"] .heatcontent { position:relative; z-index:1; display:grid; align-items:center;
   column-gap:9px; height:100%; padding:0 14px; text-shadow:0 1px 3px rgba(0,0,0,0.85);
   grid-template-columns:
-    [name] clamp(104px, 14vw, 176px)
+    [name] clamp(120px, 14vw, 210px)
     [meta] 58px [cores] 96px
     [bar] 1fr [val] auto; }
 [data-layout="tinted"] .heatcontent > * { justify-self:start; }
@@ -446,22 +476,22 @@ html.hide-socket[data-layout="tip"] .barrow {
 
 /* grid adjustments for tinted when badges are hidden */
 html.hide-socket[data-layout="tinted"] .heatcontent {
-  grid-template-columns: [name] clamp(104px, 14vw, 176px) [cores] 96px [bar] 1fr [val] auto;
+  grid-template-columns: [name] clamp(120px, 14vw, 210px) [cores] 96px [bar] 1fr [val] auto;
 }
 html.hide-cores[data-layout="tinted"] .heatcontent {
-  grid-template-columns: [name] clamp(104px, 14vw, 176px) [meta] 58px [bar] 1fr [val] auto;
+  grid-template-columns: [name] clamp(120px, 14vw, 210px) [meta] 58px [bar] 1fr [val] auto;
 }
 html.hide-socket.hide-cores[data-layout="tinted"] .heatcontent {
-  grid-template-columns: [name] clamp(104px, 14vw, 176px) [bar] 1fr [val] auto;
+  grid-template-columns: [name] clamp(120px, 14vw, 210px) [bar] 1fr [val] auto;
 }
 
 @media (max-width:1000px) {
   [data-layout="tinted"] .heatcontent { grid-template-columns:
-    [name] clamp(104px, 16vw, 176px) [meta] 58px [bar] 1fr [val] auto; }
+    [name] clamp(120px, 16vw, 210px) [meta] 58px [bar] 1fr [val] auto; }
   [data-layout="tinted"] .b-cores { display:none; }
   
   html.hide-socket[data-layout="tinted"] .heatcontent {
-    grid-template-columns: [name] clamp(104px, 16vw, 176px) [bar] 1fr [val] auto;
+    grid-template-columns: [name] clamp(120px, 16vw, 210px) [bar] 1fr [val] auto;
   }
 }
 @media (max-width:680px) {

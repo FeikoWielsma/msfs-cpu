@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Redirecting…</title>
+<script>
+  // GitHub Pages SPA fallback: turn /gpu or /cpu (and any unknown path) into a hash
+  // route on the app root so the single-page app can pick the right view.
+  var seg = location.pathname.replace(/^\//, "").replace(/\/$/, "");
+  location.replace("/" + (seg ? "#" + seg : "") + location.search);
+</script>

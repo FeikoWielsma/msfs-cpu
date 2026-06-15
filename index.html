@@ -18,12 +18,12 @@
 </head>
 <body>
 <div class="app">
+  <div class="hw-toggle" id="hwToggle" style="display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; background: var(--card-2); padding: 6px; border-radius: 20px; width: max-content; margin-left: auto; margin-right: auto; border: 1px solid var(--line);"><button data-hw="cpu" class="chip on" style="margin:0; border-radius: 14px; font-size: 14px; padding: 6px 16px; min-height: 32px; box-shadow: none;">CPU Benchmarks</button><button data-hw="gpu" class="chip" style="margin:0; border-radius: 14px; font-size: 14px; padding: 6px 16px; min-height: 32px; box-shadow: none;">GPU Benchmarks</button></div>
   <header>
     <h1>Which CPU runs MSFS&nbsp;2024 best?</h1>
-    <p class="lede">A combined ranking from <b>Tom's Hardware</b>, <b>PCGH</b> and <b>ComputerBase</b>.
-      Because each site tests different scenes, raw FPS aren't comparable — so the default
-      <b>Performance&nbsp;Index</b> rescales every review onto one shared 0–100 scale. Tap any chip to
-      compare against it.</p>
+    <p class="lede">A combined ranking from Tom's Hardware, PCGH and ComputerBase. Each site tests
+      different scenes, so their raw FPS numbers don't line up directly. The Performance Index puts
+      every review on the same 0 to 100 scale so you can compare them. Tap any chip to compare against it.</p>
   </header>
 
   <div class="tab-row" style="display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 26px 0 0; flex-wrap: wrap;">
@@ -32,6 +32,10 @@
       <button data-tab="source">By source</button>
     </nav>
     <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="seg" id="gpuModeSeg" style="display: none; margin: 0;">
+        <button data-gm="fps">FPS</button>
+        <button data-gm="index" class="on">Index</button>
+      </div>
       <div class="seg" id="metricSeg" style="margin: 0;">
         <button data-m="avg" class="on">Average FPS</button>
         <button data-m="low">1% Low</button>
@@ -55,38 +59,18 @@
       <!-- Divider -->
       <div style="border-top: 1px dashed var(--line); margin: 18px 0;"></div>
 
-      <!-- Section 2: Bar redesign options -->
-      <h3 style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px 0;">Bar redesign preview</h3>
-      <div style="display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center;">
-        <div>
-          <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-right: 8px;">Bar layout:</span>
-          <div class="layoutseg" id="layoutSeg">
-            <button data-layout="stacked">Current (stacked)</button>
-            <button data-layout="tip" class="on">Value at tip</button>
-            <button data-layout="tinted">Tinted row</button>
-          </div>
-        </div>
-        <div style="display: flex; gap: 16px; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink-2);">
-          <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
-            <input type="checkbox" id="showSocketToggle" checked> Show Socket badge
-          </label>
-          <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
-            <input type="checkbox" id="showCoresToggle" checked> Show Core count badge
-          </label>
-        </div>
+      <!-- Section 2: Display options -->
+      <h3 style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px 0;">Display options</h3>
+      <div style="display: flex; gap: 16px; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink-2);">
+        <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <input type="checkbox" id="showSocketToggle" checked> Show Socket badge
+        </label>
+        <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <input type="checkbox" id="showCoresToggle" checked> Show Core count badge
+        </label>
       </div>
-      <p style="font-size: 12.5px; color: var(--muted); margin: 10px 0 0 0;" id="dbNote">
-        Densest. The whole row is the bar: a soft generation-tinted fill behind the label, with a crisp cap marking the exact value and the name + % overlaid in ink.
-      </p>
     </div>
   </section>
-
-  <div class="chart-head" style="display: none;">
-    <div class="baseline-bar" id="baselineBar">
-      <span>Comparing vs <b id="baselineName"></b></span>
-      <button class="btn-reset" id="resetBaseline">Reset</button>
-    </div>
-  </div>
 
   <div class="chart-filters">
     <!-- by-source context row -->
@@ -95,13 +79,17 @@
       <div class="ctl-group"><span class="ctl-label" id="viewLabel">Scene</span><select id="view"></select></div>
     </div>
 
-    <!-- shared filter row -->
+    <!-- shared filter row with inline comparison indicator -->
     <div class="ctl-row">
       <div class="chips" id="brandChips">
         <button class="chip on" data-brand="all">All</button>
         <button class="chip" data-brand="AMD"><span class="dot" style="background:var(--amd)"></span>AMD</button>
         <button class="chip" data-brand="Intel"><span class="dot" style="background:var(--intel)"></span>Intel</button>
         <button class="chip" data-x3d="1">X3D</button>
+      </div>
+      <div class="baseline-bar" id="baselineBar">
+        <span>vs <b id="baselineName"></b></span>
+        <button class="btn-reset" id="resetBaseline">RESET</button>
       </div>
     </div>
   </div>
@@ -121,7 +109,7 @@
   <details class="panel" id="srcPanel">
     <summary>Sources &amp; methodology <span class="pcount" id="srcCount"></span></summary>
     <div class="panel-body">
-      <p class="methodology">
+      <p class="methodology" id="srcMethodology">
         Same game, but re-measured over time and across sites, so a CPU's FPS drift between
         epochs and scenes — absolute numbers <b>aren't comparable across sources</b>.
         <b>By source</b> keeps you inside one comparable set. The <b>Performance Index</b> rescales
@@ -146,9 +134,9 @@
     <summary>Full data table <span class="pcount" id="rowCount"></span></summary>
     <div class="panel-body">
       <div class="tblfilters">
-        <div class="ctl-group"><span class="ctl-label">Socket</span><select id="tSocket"></select></div>
-        <div class="ctl-group"><span class="ctl-label">Arch</span><select id="tArch"></select></div>
-        <label class="tchk"><input type="checkbox" id="tX3D"> X3D only</label>
+        <div class="ctl-group"><span class="ctl-label" id="tSocketLabel">Socket</span><select id="tSocket"></select></div>
+        <div class="ctl-group"><span class="ctl-label" id="tArchLabel">Arch</span><select id="tArch"></select></div>
+        <label class="tchk" id="tX3DWrap"><input type="checkbox" id="tX3D"> X3D only</label>
         <div class="search">
           <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
           <input id="tSearch" type="search" placeholder="Filter CPUs…" autocomplete="off">

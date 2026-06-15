@@ -5,9 +5,9 @@
   "type": "module",
   "description": "Which CPU runs MSFS 2024 best — combined Tom's Hardware / PCGH / ComputerBase ranking.",
   "scripts": {
-    "data": "python3 build_data.py",
+    "data": "python3 build_data.py && python3 build_gpu_data.py",
     "dev": "vite",
-    "build": "python3 build_data.py && tsc && vite build",
+    "build": "python3 build_data.py && python3 build_gpu_data.py && tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
