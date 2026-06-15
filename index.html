@@ -19,46 +19,58 @@
       compare against it.</p>
   </header>
 
-  <nav class="tabs" id="tabs">
-    <button data-tab="ranking" class="on">Performance Index</button>
-    <button data-tab="source">By source</button>
-  </nav>
-
-  <section class="controls">
-    <!-- shared filter row -->
-    <div class="ctl-row">
-      <div class="chips" id="brandChips">
-        <button class="chip on" data-brand="all">All</button>
-        <button class="chip" data-brand="AMD"><span class="dot" style="background:var(--amd)"></span>AMD</button>
-        <button class="chip" data-brand="Intel"><span class="dot" style="background:var(--intel)"></span>Intel</button>
-        <button class="chip" data-x3d="1">★ 3D V-Cache</button>
-      </div>
-      <div class="seg" id="metricSeg">
+  <div class="tab-row" style="display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 26px 0 0; flex-wrap: wrap;">
+    <nav class="tabs" id="tabs" style="margin: 0;">
+      <button data-tab="ranking" class="on">Performance Index</button>
+      <button data-tab="source">By source</button>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="seg" id="metricSeg" style="margin: 0;">
         <button data-m="avg" class="on">Average FPS</button>
         <button data-m="low">1% Low</button>
       </div>
-      <div class="search">
-        <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
-        <input id="search" type="search" placeholder="Find a CPU…" autocomplete="off">
-      </div>
+      <button id="advToggleBtn" class="chip" style="margin: 0;">Advanced</button>
     </div>
+  </div>
 
-    <!-- by-source context row -->
-    <div class="ctl-row" id="sourceCtl" style="display:none">
-      <div class="ctl-group"><span class="ctl-label">Site</span><select id="site"></select></div>
-      <div class="ctl-group"><span class="ctl-label" id="viewLabel">Scene</span><select id="view"></select></div>
-    </div>
+  <section class="controls" style="margin-top: 14px;">
+    <!-- advanced body panel (ranking) -->
+    <div id="advBodyPanel" style="display: none; border: 1px dashed var(--line); border-radius: 12px; padding: 16px; margin-top: 10px; margin-bottom: 4px;">
+      <!-- Section 1: Datasets -->
+      <h3 style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px 0;">Dataset feed</h3>
+      <p class="ds-note" style="font-size: 13px; color: var(--muted); margin: 0 0 12px; max-width: 62ch;">The index blends the datasets below with a two-way fit (each source's
+        overall difficulty is factored out, so a CPU isn't penalised for being tested by a harsher
+        reviewer). Toggle datasets to see how the ranking shifts.</p>
+      <div class="ds-list" id="dsList"></div>
 
-    <!-- advanced (ranking) -->
-    <details class="adv" id="advPanel">
-      <summary>Advanced — choose which reviews feed the index</summary>
-      <div class="adv-body">
-        <p class="ds-note">The index blends the datasets below with a two-way fit (each source's
-          overall difficulty is factored out, so a CPU isn't penalised for being tested by a harsher
-          reviewer). Toggle datasets to see how the ranking shifts.</p>
-        <div class="ds-list" id="dsList"></div>
+      <!-- Divider -->
+      <div style="border-top: 1px dashed var(--line); margin: 18px 0;"></div>
+
+      <!-- Section 2: Bar redesign options -->
+      <h3 style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px 0;">Bar redesign preview</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center;">
+        <div>
+          <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-right: 8px;">Bar layout:</span>
+          <div class="layoutseg" id="layoutSeg">
+            <button data-layout="stacked" class="on">Current (stacked)</button>
+            <button data-layout="split">Split row</button>
+            <button data-layout="tip">Value at tip</button>
+            <button data-layout="tinted">Tinted row</button>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center; font-size: 13.5px; font-weight: 600; color: var(--ink-2);">
+          <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="showSocketToggle" checked> Show Socket badge
+          </label>
+          <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="showCoresToggle" checked> Show Core count badge
+          </label>
+        </div>
       </div>
-    </details>
+      <p style="font-size: 12.5px; color: var(--muted); margin: 10px 0 0 0;" id="dbNote">
+        The original: CPU name + value on one line, a full-width bar beneath. Roomy, but every CPU costs two lines of height.
+      </p>
+    </div>
   </section>
 
   <div class="chart-head">
@@ -69,8 +81,27 @@
       <button class="btn-reset" id="resetBaseline">Reset</button>
     </div>
   </div>
-  <div class="legend" id="legend"></div>
+
+  <div class="chart-filters">
+    <!-- by-source context row -->
+    <div class="ctl-row" id="sourceCtl" style="display:none">
+      <div class="ctl-group"><span class="ctl-label">Site</span><select id="site"></select></div>
+      <div class="ctl-group"><span class="ctl-label" id="viewLabel">Scene</span><select id="view"></select></div>
+    </div>
+
+    <!-- shared filter row -->
+    <div class="ctl-row">
+      <div class="chips" id="brandChips">
+        <button class="chip on" data-brand="all">All</button>
+        <button class="chip" data-brand="AMD"><span class="dot" style="background:var(--amd)"></span>AMD</button>
+        <button class="chip" data-brand="Intel"><span class="dot" style="background:var(--intel)"></span>Intel</button>
+        <button class="chip" data-x3d="1">X3D</button>
+      </div>
+    </div>
+  </div>
+
   <div class="chart" id="chart"></div>
+  <div class="legend" id="legend" style="margin-top: 12px; margin-bottom: 2px;"></div>
 
   <details class="panel" id="analysisPanel" open>
     <summary>What actually drives MSFS&nbsp;2024 performance? <span class="pcount">from this data</span></summary>

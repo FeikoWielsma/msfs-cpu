@@ -88,11 +88,15 @@ let tab: Tab = "ranking"; // ranking | source
 let metric: Metric = "avg"; // avg | low
 let brand: Brand = "all"; // all | AMD | Intel
 let x3dOnly = false;
-let query = "";
+let selectedSockets: Set<string> = new Set();
 let baseline: string | null = null; // pinned CPU (null = auto: leader = 100)
 // by-source
 let site = "";
 let view = "combined";
+// redesign preview state
+let layout: "stacked" | "split" | "tip" | "tinted" = "stacked";
+let showSocket = true;
+let showCores = true;
 
 // generation colours (for the "Gen" bar-colour tweak)
 const GEN_COLOR: Record<string, string> = {
@@ -267,7 +271,8 @@ function computeIndex(field: Metric): IndexRow[] {
 function matchFilter(cpu: string, vendor: string): boolean {
   if (brand !== "all" && vendor !== brand) return false;
   if (x3dOnly && !isX3D(cpu)) return false;
-  if (query && !cpu.toLowerCase().includes(query)) return false;
+  const sp = SPECS[cpu];
+  if (selectedSockets.size > 0 && (!sp || !selectedSockets.has(sp.socket))) return false;
   return true;
 }
 
@@ -296,6 +301,26 @@ function badges(cpu: string, vendor: string): string {
   return h;
 }
 
+// redesign span helpers
+function socketSpan(cpu: string, vendor: string): string {
+  const sp = SPECS[cpu];
+  if (!sp) return "";
+  const tint = vendor === "AMD" ? "amd" : "intel";
+  return `<span class="badge sock ${tint} b-sock" title="${sp.arch} · ${sp.l3} MB L3 · up to ${sp.clk.toFixed(1)} GHz">${sp.socket}</span>`;
+}
+function coresSpan(cpu: string): string {
+  const sp = SPECS[cpu];
+  if (!sp) return "";
+  const cs = coreStr(sp);
+  return cs ? `<span class="badge cores b-cores" title="${sp.arch}">${cs}</span>` : "";
+}
+function x3dSpan(_cpu: string): string {
+  return "";
+}
+function baseSpan(o: { cpu: string }): string {
+  return o.cpu === baseline ? `<span class="delta base b-base">baseline</span>` : "";
+}
+
 // ---------- render: ranking ----------
 function renderRanking(): void {
   const all = computeIndex(metric);
@@ -319,25 +344,56 @@ function renderRanking(): void {
     const row = el("div", "barrow " + vendorClass(o.vendor));
     row.dataset.cpu = o.cpu;
     if (o.cpu === baseline) row.classList.add("pinned");
-    const d = o.idx - 100;
-    let deltaHtml = "";
-    if (o.cpu === baseline) deltaHtml = `<span class="delta base">100% · baseline</span>`;
-    else if (redrawDelta) deltaHtml = `<span class="delta ${d >= 0 ? "pos" : "neg"}">${d >= 0 ? "+" : ""}${d.toFixed(1)}%</span>`;
-    row.innerHTML =
-      `<div class="br-top">
-           <span class="rank num">${i + 1}</span>
-           <span class="cpu">${o.cpu}</span>
-           <span class="meta">${badges(o.cpu, o.vendor)}</span>
-           <span class="val">
-             ${deltaHtml}
-             <span class="big num">${o.idx.toFixed(0)}<span class="unit">%</span></span>
-             <span class="sub num">·${o.n}</span>
-           </span>
-         </div>
-         <div class="track">
-           ${maxIdx > 100 ? `<div class="reftick" style="left:${(100 / axisMax) * 100}%"></div>` : ""}
-           <div class="fill" style="width:${w}%;${fillStyle(o.cpu)}"></div>
+
+    const ref = maxIdx > 100 ? `<div class="reftick" style="left:${(100 / axisMax) * 100}%"></div>` : "";
+
+    if (layout === "stacked") {
+      const d = o.idx - 100;
+      let deltaHtml = "";
+      if (o.cpu === baseline) deltaHtml = `<span class="delta base">100% · baseline</span>`;
+      else if (redrawDelta) deltaHtml = `<span class="delta ${d >= 0 ? "pos" : "neg"}">${d >= 0 ? "+" : ""}${d.toFixed(1)}%</span>`;
+      row.innerHTML =
+        `<div class="br-top">
+             <span class="rank num">${i + 1}</span>
+             <span class="cpu">${o.cpu}</span>
+             <span class="meta">${badges(o.cpu, o.vendor)}</span>
+             <span class="val">
+               ${deltaHtml}
+               <span class="big num">${o.idx.toFixed(0)}<span class="unit">%</span></span>
+               <span class="sub num">·${o.n}</span>
+             </span>
+           </div>
+           <div class="track">
+             ${ref}
+             <div class="fill" style="width:${w}%;${fillStyle(o.cpu)}"></div>
+           </div>`;
+    } else if (layout === "split") {
+      row.innerHTML =
+        `<span class="cpu">${o.cpu}</span><span class="metacell">${socketSpan(o.cpu, o.vendor)}${x3dSpan(o.cpu)}</span>${coresSpan(o.cpu)}${baseSpan(o)}
+         <div class="track">${ref}<div class="fill" style="width:${w}%;${fillStyle(o.cpu)}"></div></div>
+         <span class="val"><span class="big num">${o.idx.toFixed(0)}<span class="unit">%</span></span></span>`;
+    } else if (layout === "tip") {
+      const inside = w > 16;
+      const tip = `<span class="tipval${inside ? "" : " outside"}">${o.idx.toFixed(0)}%</span>`;
+      row.innerHTML =
+        `<span class="cpu">${o.cpu}</span><span class="metacell">${socketSpan(o.cpu, o.vendor)}${x3dSpan(o.cpu)}</span>${coresSpan(o.cpu)}${baseSpan(o)}
+         <div class="track">${ref}<div class="fill" style="width:${w}%;${fillStyle(o.cpu)}">${inside ? tip : ""}</div>${inside ? "" : tip}</div>`;
+    } else if (layout === "tinted") {
+      const cap = `<div class="heatcap" style="left:calc(${w}% - 3px);background:${GEN_COLOR[genOf(o.cpu)]}"></div>`;
+      row.innerHTML =
+        `<div class="heatrow">
+           <div class="heatfill" style="width:${w}%;background:${GEN_COLOR[genOf(o.cpu)]}"></div>${cap}${ref}
+           <div class="heat-tip-val num" style="left:${w}%;">${o.idx.toFixed(0)}%</div>
+           <div class="heatcontent">
+             <span class="cpu" style="display: flex; align-items: baseline; gap: 6px;">
+               <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${o.cpu}</span>
+               <span class="sub num" style="font-size: 11px; color: var(--muted); font-weight: 500; flex: none;">·${o.n}</span>
+             </span>
+             <span class="metacell">${socketSpan(o.cpu, o.vendor)}${x3dSpan(o.cpu)}</span>${coresSpan(o.cpu)}${baseSpan(o)}
+           </div>
          </div>`;
+    }
+
     row.addEventListener("click", () => toggleBaseline(o.cpu));
     c.appendChild(row);
   });
@@ -383,22 +439,62 @@ function renderSource(): void {
       if (r.cpu === baseline) deltaHtml = `<span class="delta base">baseline</span>`;
       else { const d = ((r[metric]! - base) / base) * 100; deltaHtml = `<span class="delta ${d >= 0 ? "pos" : "neg"}">${d >= 0 ? "+" : ""}${d.toFixed(1)}%</span>`; }
     }
-    row.innerHTML =
-      `<div class="br-top">
-           <span class="rank num">${i + 1}</span>
-           <span class="cpu">${r.cpu}</span>
-           <span class="meta">${badges(r.cpu, r.vendor)}</span>
-           <span class="val">
-             ${deltaHtml}
-             <span class="big num">${fmt(r.avg, 1)}</span>
-             ${r.low != null ? `<span class="sub num">${fmt(r.low, 0)} low</span>` : ""}
-           </span>
-         </div>
+
+    if (layout === "stacked") {
+      row.innerHTML =
+        `<div class="br-top">
+             <span class="rank num">${i + 1}</span>
+             <span class="cpu">${r.cpu}</span>
+             <span class="meta">${badges(r.cpu, r.vendor)}</span>
+             <span class="val">
+               ${deltaHtml}
+               <span class="big num">${fmt(r.avg, 1)}</span>
+               ${r.low != null ? `<span class="sub num">${fmt(r.low, 0)} low</span>` : ""}
+             </span>
+           </div>
+           <div class="track dual">
+             <div class="seg-track avg"></div><div class="seg-track low"></div>
+             <div class="fill avg" style="width:${wA}%;${fillStyle(r.cpu)}"></div>
+             ${r.low != null ? `<div class="fill low" style="width:${wL}%;${fillStyle(r.cpu)}"></div>` : ""}
+           </div>`;
+    } else if (layout === "split") {
+      row.innerHTML =
+        `<span class="cpu">${r.cpu}</span><span class="metacell">${socketSpan(r.cpu, r.vendor)}${x3dSpan(r.cpu)}</span>${coresSpan(r.cpu)}${baseSpan(r)}
          <div class="track dual">
            <div class="seg-track avg"></div><div class="seg-track low"></div>
            <div class="fill avg" style="width:${wA}%;${fillStyle(r.cpu)}"></div>
            ${r.low != null ? `<div class="fill low" style="width:${wL}%;${fillStyle(r.cpu)}"></div>` : ""}
+         </div>
+         <span class="val">
+           <span class="big num">${fmt(r.avg, 1)}</span>
+           ${r.low != null ? `<span class="sub num">${fmt(r.low, 0)} low</span>` : ""}
+         </span>`;
+    } else if (layout === "tip") {
+      const inside = wA > 20;
+      const valStr = r.low != null ? `${fmt(r.avg, 1)}/${fmt(r.low, 0)}` : fmt(r.avg, 1);
+      const tip = `<span class="tipval${inside ? "" : " outside"}" style="font-size: 10px; line-height: 1.1;">${valStr}</span>`;
+      row.innerHTML =
+        `<span class="cpu">${r.cpu}</span><span class="metacell">${socketSpan(r.cpu, r.vendor)}${x3dSpan(r.cpu)}</span>${coresSpan(r.cpu)}${baseSpan(r)}
+         <div class="track dual">
+           <div class="seg-track avg"></div><div class="seg-track low"></div>
+           <div class="fill avg" style="width:${wA}%;${fillStyle(r.cpu)}">${inside ? tip : ""}</div>
+           ${inside ? "" : tip}
+           ${r.low != null ? `<div class="fill low" style="width:${wL}%;${fillStyle(r.cpu)}"></div>` : ""}
          </div>`;
+    } else if (layout === "tinted") {
+      const capA = `<div class="heatcap avg" style="left:calc(${wA}% - 3px);background:${GEN_COLOR[genOf(r.cpu)]}"></div>`;
+      row.innerHTML =
+        `<div class="heatrow dual">
+           <div class="heatfill avg" style="width:${wA}%;background:${GEN_COLOR[genOf(r.cpu)]};opacity:0.18;"></div>
+           ${r.low != null ? `<div class="heatfill low" style="width:${wL}%;background:${GEN_COLOR[genOf(r.cpu)]};opacity:0.08;top:50%;bottom:0;"></div>` : ""}
+           ${capA}
+           <div class="heat-val-tip num" style="left:${wA}%;">${fmt(r.avg, 1)}${r.low != null ? ` / ${fmt(r.low, 0)}` : ""}</div>
+           <div class="heatcontent">
+             <span class="cpu">${r.cpu}</span><span class="metacell">${socketSpan(r.cpu, r.vendor)}${x3dSpan(r.cpu)}</span>${coresSpan(r.cpu)}${baseSpan(r)}
+           </div>
+         </div>`;
+    }
+
     row.addEventListener("click", () => toggleBaseline(r.cpu));
     c.appendChild(row);
   });
@@ -417,7 +513,6 @@ function renderLegend(): void {
     } else if (mode === "vendor") {
       items = `<span><i style="background:var(--amd)"></i>AMD</span><span><i style="background:var(--intel)"></i>Intel</span>`;
     }
-    items += `<span><i style="background:var(--ink);opacity:.32"></i>100% reference${baseline ? " (" + baseline + ")" : " (leader)"}</span>`;
     lg.innerHTML = items;
   } else {
     lg.innerHTML = mode === "vendor"
@@ -571,6 +666,19 @@ function buildTableFilters(): void {
   $<HTMLInputElement>("#tX3D").onchange = e => { tFilter.x3d = (e.target as HTMLInputElement).checked; renderTable(); };
   $("#tSearch").addEventListener("input", e => { tFilter.q = (e.target as HTMLInputElement).value.trim().toLowerCase(); renderTable(); });
 }
+function buildMainSocketFilter(): void {
+  const order = (vals: (string | undefined)[], pref: string[]): string[] =>
+    [...new Set(vals)].filter((x): x is string => Boolean(x))
+      .sort((a, b) => (pref.indexOf(a) + 1 || 99) - (pref.indexOf(b) + 1 || 99) || (a < b ? -1 : 1));
+  const sockets = order(DATA.map(r => spec(r.cpu).socket), ["AM5", "AM4", "LGA1851", "LGA1700", "LGA1200"]);
+  const container = $("#brandChips");
+  sockets.forEach(s => {
+    const btn = el("button", "chip") as HTMLButtonElement;
+    btn.dataset.socket = s;
+    btn.textContent = s;
+    container.appendChild(btn);
+  });
+}
 
 // ---------- datasets (advanced) ----------
 function buildDatasetList(): void {
@@ -631,9 +739,19 @@ function wireControls(): void {
     tab = b.dataset.tab as Tab;
     [...$("#tabs").children].forEach(x => x.classList.toggle("on", x === b));
     $("#sourceCtl").style.display = tab === "source" ? "flex" : "none";
-    $("#advPanel").style.display = tab === "ranking" ? "" : "none";
+    $("#advToggleBtn").style.display = tab === "ranking" ? "" : "none";
+    if (tab === "source") {
+      $("#advBodyPanel").style.display = "none";
+      $("#advToggleBtn").classList.remove("on");
+    }
     baseline = null;
     render();
+  });
+  $("#advToggleBtn").addEventListener("click", () => {
+    const btn = $("#advToggleBtn");
+    const panel = $("#advBodyPanel");
+    const isOpen = btn.classList.toggle("on");
+    panel.style.display = isOpen ? "block" : "none";
   });
   $("#metricSeg").addEventListener("click", e => {
     const b = (e.target as HTMLElement).closest("button");
@@ -645,20 +763,76 @@ function wireControls(): void {
   $("#brandChips").addEventListener("click", e => {
     const b = (e.target as HTMLElement).closest("button");
     if (!b) return;
-    if (b.dataset.x3d) {
+    
+    if (b.dataset.brand === "all") {
+      brand = "all";
+      selectedSockets.clear();
+      x3dOnly = false;
+    } else if (b.dataset.brand) {
+      const newBrand = b.dataset.brand as Brand;
+      brand = brand === newBrand ? "all" : newBrand;
+    } else if (b.dataset.x3d) {
       x3dOnly = !x3dOnly;
-      b.classList.toggle("on", x3dOnly);
-    } else {
-      brand = b.dataset.brand as Brand;
-      [...$("#brandChips").querySelectorAll("[data-brand]")].forEach(x => {
-        x.classList.remove("on", "amd", "intel");
-        if (x === b) { x.classList.add("on"); if (brand === "AMD") x.classList.add("amd"); if (brand === "Intel") x.classList.add("intel"); }
-      });
+    } else if (b.dataset.socket) {
+      const socket = b.dataset.socket;
+      if (selectedSockets.has(socket)) {
+        selectedSockets.delete(socket);
+      } else {
+        selectedSockets.add(socket);
+      }
     }
+    
+    const chips = [...$("#brandChips").children];
+    const hasActiveFilters = brand !== "all" || selectedSockets.size > 0 || x3dOnly;
+    
+    chips.forEach(x => {
+      const btn = x as HTMLButtonElement;
+      if (btn.dataset.brand === "all") {
+        btn.classList.toggle("on", !hasActiveFilters);
+      } else if (btn.dataset.brand) {
+        const isMatch = btn.dataset.brand === brand;
+        btn.classList.toggle("on", isMatch);
+        btn.classList.toggle("amd", isMatch && brand === "AMD");
+        btn.classList.toggle("intel", isMatch && brand === "Intel");
+      } else if (btn.dataset.x3d) {
+        btn.classList.toggle("on", x3dOnly);
+      } else if (btn.dataset.socket) {
+        btn.classList.toggle("on", btn.dataset.socket ? selectedSockets.has(btn.dataset.socket) : false);
+      }
+    });
+    
     render();
   });
-  $("#search").addEventListener("input", e => { query = (e.target as HTMLInputElement).value.trim().toLowerCase(); render(); });
   $("#resetBaseline").addEventListener("click", () => { baseline = null; render(); });
+
+  // redesign controls
+  const NOTES = {
+    stacked: "The original: CPU name + value on one line, a full-width bar beneath. Roomy, but every CPU costs two lines of height.",
+    split: "Name and badges sit in a fixed-width column on the left so every bar starts at the same x — the bar fills the rest of the row, value pinned right. One line per CPU, still a wide bar, and bar-starts stay aligned for easy scanning.",
+    tip: "Like Split, but the % rides the leading edge of its own bar instead of a separate column — the number tracks the length. Short bars flip the label outside so it stays readable.",
+    tinted: "Densest. The whole row is the bar: a soft generation-tinted fill behind the label, with a crisp cap marking the exact value and the name + % overlaid in ink."
+  };
+
+  $("#layoutSeg").addEventListener("click", e => {
+    const b = (e.target as HTMLElement).closest("button");
+    if (!b) return;
+    layout = b.dataset.layout as typeof layout;
+    [...$("#layoutSeg").children].forEach(x => x.classList.toggle("on", x === b));
+    const noteEl = $("#dbNote");
+    if (noteEl) noteEl.innerHTML = NOTES[layout] || "";
+    document.documentElement.dataset.layout = layout;
+    render();
+  });
+
+  $("#showSocketToggle").addEventListener("change", e => {
+    showSocket = (e.target as HTMLInputElement).checked;
+    document.documentElement.classList.toggle("hide-socket", !showSocket);
+  });
+
+  $("#showCoresToggle").addEventListener("change", e => {
+    showCores = (e.target as HTMLInputElement).checked;
+    document.documentElement.classList.toggle("hide-cores", !showCores);
+  });
 }
 
 // ---------- tweaks ----------
@@ -667,6 +841,7 @@ function applyTweaks(): void {
   root.dataset.theme = TWEAKS.theme;
   root.dataset.bars = TWEAKS.bars;
   root.dataset.density = TWEAKS.density;
+  root.dataset.layout = layout;
 }
 
 // ---------- boot ----------
@@ -685,6 +860,7 @@ async function boot(): Promise<void> {
   buildDatasetList();
   buildSiteSelect();
   buildTableFilters();
+  buildMainSocketFilter();
   renderSources();
   renderTable();
   render();
