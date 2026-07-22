@@ -524,6 +524,14 @@ const FACTORS: FactorDef[] = [
     pairs: [["Ryzen 9 9950X3D", "Ryzen 7 9800X3D"], ["Ryzen 9 7950X3D", "Ryzen 7 7800X3D"]] },
   { name: "Higher clock", sub: "identical silicon, more MHz",
     pairs: [["Ryzen 7 9850X3D", "Ryzen 7 9800X3D"], ["Core i9-14900KS", "Core i9-14900K"]] },
+  // The cleanest matched pairs in the whole set: Tom's 5800X3D re-review ran
+  // the same three LGA1700 chips on DDR5 and on DDR4-3200, so nothing varies
+  // but the memory. Only resolves while a dataset carrying the DDR4 rows is
+  // enabled; otherwise the row drops out like any other unmatched factor.
+  { name: "DDR5 vs DDR4", sub: "identical CPU and platform — memory generation only",
+    pairs: [["Core i7-14700K", "Core i7-14700K (DDR4-3200)"],
+            ["Core i7-13700K", "Core i7-13700K (DDR4-3200)"],
+            ["Core i7-12700K", "Core i7-12700K (DDR4-3200)"]] },
   { name: "Best X3D vs best Intel", sub: "8-core X3D vs the Intel flagships",
     pairs: [["Ryzen 7 9800X3D", "Core i9-14900K"], ["Ryzen 7 9800X3D", "Core Ultra 9 285K"]] },
 ];
