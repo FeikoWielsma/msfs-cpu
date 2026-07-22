@@ -97,3 +97,30 @@ Core i5-14400,Intel,0,90.1,77,225_review,2026-05-07,2026-spring,https://www.toms
 Core i5-12400F,Intel,0,88.2,76,225_review,2026-05-07,2026-spring,https://www.tomshardware.com/pc-components/cpus/intel-core-ultra-5-225-review,Intel Core Ultra 5 225 Review
 Core i3-14100,Intel,0,87.1,72,225_review,2026-05-07,2026-spring,https://www.tomshardware.com/pc-components/cpus/intel-core-ultra-5-225-review,Intel Core Ultra 5 225 Review
 Core i3-13100F,Intel,0,85.5,72,225_review,2026-05-07,2026-spring,https://www.tomshardware.com/pc-components/cpus/intel-core-ultra-5-225-review,Intel Core Ultra 5 225 Review
+Core i7-14700K,Intel,0,121.6,102,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Core Ultra 7 270K Plus,Intel,0,120.5,103,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Core i7-13700K,Intel,0,120.1,101,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Ryzen 7 7800X3D,AMD,1,117.0,100,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Ryzen 7 9700X,AMD,0,115.8,98,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Ryzen 5 7600X3D,AMD,1,113.3,97,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Core i7-14700K (DDR4-3200),Intel,0,107.0,88,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Core i7-13700K (DDR4-3200),Intel,0,106.0,87,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Core i7-12700K,Intel,0,102.7,89,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Ryzen 7 5800X3D,AMD,1,96.0,82,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Ryzen 5 7600X,AMD,0,94.4,83,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Core i7-12700K (DDR4-3200),Intel,0,93.7,79,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Ryzen 7 5700X,AMD,0,78.3,65,5800x3d_re_review,2026-06-25,2026-spring,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-5800x3d-2026-cpu-review,AMD Ryzen 7 5800X3D re-review: Maxing out DDR4's gaming potential
+Ryzen 7 9800X3D,AMD,1,148.7,127,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Core i7-14700K,Intel,0,126.0,106,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Core Ultra 7 270K Plus,Intel,0,120.5,103,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Core i5-14600K,Intel,0,118.2,99,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Ryzen 7 7800X3D,AMD,1,117.5,101,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Ryzen 7 9700X,AMD,0,115.8,98,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Core Ultra 5 250K Plus,Intel,0,115.7,99,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Ryzen 7 7700X3D,AMD,1,114.9,96,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Ryzen 5 7600X3D,AMD,1,114.1,97,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Core i7-12700K,Intel,0,105.6,90,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Ryzen 7 7700X,AMD,0,101.1,88,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Core i5-12600K,Intel,0,99.0,84,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Ryzen 7 5800X3D,AMD,1,96.0,82,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
+Ryzen 7 5700X,AMD,0,78.3,65,7700x3d_review,2026-07-16,2026-summer,https://www.tomshardware.com/pc-components/cpus/amd-ryzen-7-7700x3d-cpu-review,AMD Ryzen 7 7700X3D Review
