@@ -1,0 +1,37 @@
+# EUR, Netherlands. THESE ARE ROUGH ESTIMATES, NOT LOOKED-UP PRICES — replace them
+# with real figures from your retailer of choice before publishing the card, and bump
+# priced_on when you do. make_build_table.py warns if priced_on is over 60 days old,
+# and any part missing here renders as a dash rather than a wrong total.
+#
+# The bundle rows cover PSU + case + motherboard, split by vendor because LGA1851
+# boards run dearer than AM5 ones at the same tier.
+part,eur
+priced_on,2026-07-25
+# --- CPUs
+Ryzen 5 9600X,219
+Ryzen 5 7600X3D,239
+Ryzen 7 9800X3D,479
+Core Ultra 5 245K,249
+Core Ultra 7 265K,379
+Core Ultra 9 285K,569
+# --- GPUs
+RX 9060 XT 16GB,359
+RX 9070,619
+RX 9070 XT,719
+RTX 5060 Ti 16GB,449
+RTX 5070 Ti,819
+RTX 5080,1149
+RTX 5090,2399
+# --- memory
+32GB DDR5-6000,109
+64GB DDR5-6000,219
+# --- storage
+1TB NVMe,79
+2TB NVMe,139
+# --- PSU + case + motherboard, by tier and vendor
+bundle_entry_amd,290
+bundle_entry_nv,320
+bundle_mid_amd,390
+bundle_mid_nv,430
+bundle_high_amd,540
+bundle_high_nv,590

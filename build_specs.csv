@@ -1,0 +1,38 @@
+# MSFS 2024 build matrix — edit this file to change the picks, then run:
+#     python make_build_table.py && python make_tierlist_cards.py build
+#
+# res    1080p | 1440p | 4K       (the GPU index is looked up per resolution)
+# tier   entry | mid | high
+# vendor amd | nv                 (nv column pairs an Intel CPU with a GeForce card)
+#
+# 1080p and 1440p deliberately carry the SAME parts. The cheapest current 16 GB cards
+# already cover both, so there is no honest hardware difference to draw — what changes
+# is what those parts deliver, which the per-resolution index chips show (a 9060 XT
+# reads 63 at 1080p and 54 at 1440p). Inventing different picks would be dressing.
+#
+# 4K is where the picks genuinely move: the entry card steps up to a 9070 / 5070 Ti
+# because a 9060 XT lands at 41 there. AMD's high-end build repeats across all three
+# resolutions because the 9070 XT is its current ceiling.
+#
+# GPU picks are measured. CPU picks are JUDGEMENT — the CPU index is single-resolution,
+# so pairing a chip to a resolution is inference, not measurement.
+# RAM must match the CPU socket (AM5/LGA1851 = DDR5); make_build_table.py enforces it.
+res,tier,vendor,cpu,gpu,ram,storage
+1080p,entry,amd,Ryzen 5 9600X,RX 9060 XT 16GB,32GB DDR5-6000,1TB NVMe
+1080p,entry,nv,Core Ultra 5 245K,RTX 5060 Ti 16GB,32GB DDR5-6000,1TB NVMe
+1080p,mid,amd,Ryzen 5 7600X3D,RX 9070,32GB DDR5-6000,2TB NVMe
+1080p,mid,nv,Core Ultra 7 265K,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
+1080p,high,amd,Ryzen 7 9800X3D,RX 9070 XT,64GB DDR5-6000,2TB NVMe
+1080p,high,nv,Core Ultra 9 285K,RTX 5080,64GB DDR5-6000,2TB NVMe
+1440p,entry,amd,Ryzen 5 9600X,RX 9060 XT 16GB,32GB DDR5-6000,1TB NVMe
+1440p,entry,nv,Core Ultra 5 245K,RTX 5060 Ti 16GB,32GB DDR5-6000,1TB NVMe
+1440p,mid,amd,Ryzen 5 7600X3D,RX 9070,32GB DDR5-6000,2TB NVMe
+1440p,mid,nv,Core Ultra 7 265K,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
+1440p,high,amd,Ryzen 7 9800X3D,RX 9070 XT,64GB DDR5-6000,2TB NVMe
+1440p,high,nv,Core Ultra 9 285K,RTX 5080,64GB DDR5-6000,2TB NVMe
+4K,entry,amd,Ryzen 5 7600X3D,RX 9070,32GB DDR5-6000,2TB NVMe
+4K,entry,nv,Core Ultra 5 245K,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
+4K,mid,amd,Ryzen 7 9800X3D,RX 9070 XT,32GB DDR5-6000,2TB NVMe
+4K,mid,nv,Core Ultra 7 265K,RTX 5080,32GB DDR5-6000,2TB NVMe
+4K,high,amd,Ryzen 7 9800X3D,RX 9070 XT,64GB DDR5-6000,2TB NVMe
+4K,high,nv,Core Ultra 9 285K,RTX 5090,64GB DDR5-6000,2TB NVMe

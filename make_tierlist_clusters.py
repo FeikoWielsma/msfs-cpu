@@ -13,7 +13,9 @@ Tier bands are a fixed fraction of the leader and identical across resolutions, 
 letter means the same thing on all three cards. That is what makes them comparable:
 1080p puts 4 cards in S and 2 in E, 4K puts 1 in S and 11 in E.
 """
-import json, math, os
+import os
+
+from msfs_index import gpu_index, GPU_SPECS as SPECS, GPU_VENDOR as VENDOR
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CARD = os.path.join(HERE, 'tierlist_card_gpu.html')
@@ -21,12 +23,6 @@ BEGIN, END = '// <<< CLUSTERS', '// >>> CLUSTERS'
 
 GAP, CAP = 5.0, 5
 BANDS = [('S', 90), ('A', 68), ('B', 48), ('C', 36), ('D', 20), ('E', 0)]
-
-d = json.load(open(os.path.join(HERE, 'public', 'gpu_data.json'), encoding='utf-8'))
-ROWS, NORM, SPECS = d['rows'], d['norm'], d['specs']
-VENDOR = {}
-for r in ROWS:
-    VENDOR.setdefault(r['cpu'], r['vendor'])
 
 # full name shown on the detail card, short name on the compact one. VRAM suffixes are
 # dropped where the coloured tag already states it, and kept on 16GB parts that need to
@@ -70,45 +66,6 @@ MARKS = {
 }
 
 
-def dedup_newest(rows):
-    best = {}
-    for r in rows:
-        c = best.get(r['cpu'])
-        if not c or r['date'] > c['date']:
-            best[r['cpu']] = r
-    return list(best.values())
-
-
-def series_data(spec, field='avg'):
-    groups = spec.get('groups') or [spec['group']]
-    rows = dedup_newest([r for r in ROWS if r['site'] == spec['site'] and r['group'] in groups])
-    return {r['cpu']: r[field] for r in rows if r.get(field) is not None}
-
-
-def twoway(series, cards, ref):
-    """The same two-way additive fit in log space the site uses: log(v) = run + card."""
-    a = [0.0] * len(series)
-    b = {c: 0.0 for c in cards}
-    for _ in range(200):
-        for i, s in enumerate(series):
-            e = list(s.items())
-            a[i] = sum(math.log(v) - b[c] for c, v in e) / len(e)
-        for c in cards:
-            obs = [(s, i) for i, s in enumerate(series) if c in s]
-            b[c] = sum(math.log(s[c]) - a[i] for s, i in obs) / len(obs)
-    return {c: math.exp(b[c] - b[ref]) * 100 for c in cards}
-
-
-def index_for(res):
-    """Index for one resolution, leader = 100. Normalised per resolution, so the
-    numbers are never comparable across them."""
-    valid = [sd for sd in (series_data(s) for s in NORM if s['resolution'] == res) if sd]
-    cards = list(dict.fromkeys(c for s in valid for c in s))
-    raw = twoway(valid, cards, cards[0])
-    top = max(raw.values())
-    return {c: raw[c] / top * 100 for c in cards}
-
-
 def tier_of(v):
     return next(t for t, lo in BANDS if v >= lo)
 
@@ -127,7 +84,7 @@ def clusters(idx):
 
 
 def js_for(res):
-    idx = index_for(res)
+    idx = gpu_index(res)
     unknown = [c for c in idx if c not in NAMES]
     assert not unknown, f'no display name for {unknown} - add it to NAMES'
     lines, prev_t = [], None

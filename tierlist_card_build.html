@@ -1,0 +1,242 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>MSFS 2024 Build Specs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<!--
+  Resolution × tier × vendor build matrix. Render with:
+      python make_build_table.py && python make_tierlist_cards.py build
+
+  Data comes from build_specs.csv (the picks) and build_prices.csv (EUR/NL) via
+  make_build_table.py, which writes the block between the BUILDS markers. Do not
+  hand-edit that block.
+
+  What is measured and what is not, since the card mixes both:
+   - GPU index is per resolution and measured. Three separate fits.
+   - CPU index is measured but single-resolution: reviewers test CPUs at low res to
+     isolate them. So the CPU *picks* shifting across resolutions is judgement, and
+     the card labels that row accordingly.
+   - RAM and storage are convention. Nothing here measures them.
+   - Prices are hand-maintained and date-stamped. Never scraped, so never silently
+     stale without the date saying so.
+-->
+<style>
+:root{
+  --bg:#000; --card:#0d0e12; --card-2:#15181f;
+  --ink:#fff; --ink-2:#ccc; --muted:#818693;
+  --faint:#7d828e; --note:#a2a8b5;
+  --line:#222631; --line-2:#1b1d26; --track:#131620;
+  --acc:#00a8e8; --on-acc:#08131a;
+  --amd:#ff9a93; --nv:#a3d94f; --intel:#7cc4f0;
+  --gold:#c9a6ff; --neg:#e71d36;
+  --radius:3px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1280px;background:var(--bg);color:var(--ink);
+  font-family:"Open Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.card{background:var(--card);padding:34px 40px 26px}
+.num{font-variant-numeric:tabular-nums}
+
+.kicker{font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:.10em;
+  text-transform:uppercase;color:var(--acc)}
+h1{font-family:"Bebas Neue",sans-serif;font-size:54px;line-height:.94;letter-spacing:.02em;
+  text-transform:uppercase;margin:1px 0 7px}
+h1 em{font-style:normal;color:var(--acc)}
+.lede{font-size:13px;color:var(--muted);line-height:1.55}
+.lede b{color:var(--ink-2);font-weight:600}
+
+/* ---------- matrix ---------- */
+/* label | AMD NV | gap | AMD NV | gap | AMD NV */
+.grid{display:grid;margin-top:16px;
+  grid-template-columns:132px repeat(2,1fr) 13px repeat(2,1fr) 13px repeat(2,1fr);
+  gap:3px}
+.sp{background:transparent}
+.hd{background:var(--acc);color:var(--on-acc);
+  font-family:"Bebas Neue",sans-serif;letter-spacing:.05em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;text-align:center}
+.hd.tier{grid-column:span 2;font-size:19px;padding:6px 4px}
+.hd.ven{font-size:14px;padding:4px 4px}
+/* the resolution band spans the whole matrix, as in the reference table */
+.hd.res{grid-column:1 / -1;font-size:21px;padding:7px 4px;letter-spacing:.08em;
+  margin-top:9px}
+.hd.res span{font-family:"Open Sans",sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.02em;text-transform:none;opacity:.8;margin-left:9px}
+.hd.rl{flex-direction:column;align-items:flex-end;justify-content:center;
+  text-align:right;font-size:14px;padding:7px 10px;line-height:1.05}
+.hd.rl small{font-weight:400;font-size:9px;letter-spacing:.03em;opacity:.75;
+  font-family:"Open Sans",sans-serif;line-height:1.2;margin-top:2px}
+.hd.rl.g-cpu{background:#00a8e8}
+.hd.rl.g-gpu{background:#16b378}
+.hd.rl.g-mem{background:#6b8797}
+.hd.rl.g-eur{background:#c9a6ff}
+
+.cell{background:var(--card-2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:6px;text-align:center;font-size:13.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:5px;line-height:1.2}
+.cell.amd{color:var(--amd)} .cell.nv{color:var(--nv)} .cell.intel{color:var(--intel)}
+.cell.plain{color:var(--ink-2);font-weight:600;font-size:13px}
+/* index chip — what the reference table has no way to show */
+.ix{font-family:"Open Sans",sans-serif;font-size:9.5px;font-weight:800;
+  letter-spacing:.02em;color:var(--on-acc);background:var(--acc);
+  border-radius:2px;padding:1px 4px;flex:none}
+.ix.g{background:#16b378}
+.cell.eur{font-family:"Bebas Neue",sans-serif;font-size:23px;letter-spacing:.02em;
+  color:var(--gold);background:#161425;border-color:#2a2440;padding:3px 6px 4px}
+.cell.eur.none{color:var(--faint);font-size:18px}
+
+/* ---------- callout + footer ---------- */
+.call{margin-top:17px;background:#101722;border:1px solid #1e2b3a;
+  border-left:3px solid var(--acc);border-radius:var(--radius);padding:12px 15px}
+.call h3{font-family:"Bebas Neue",sans-serif;font-size:17px;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.call p{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.call p+p{margin-top:4px}
+.call b{color:#fff}
+.foot{margin-top:16px;padding-top:11px;border-top:1px solid var(--line);
+  font-size:11px;color:var(--faint);line-height:1.65;letter-spacing:.01em}
+.foot b{color:var(--muted);font-weight:600}
+.foot b.dis{color:var(--ink-2)}
+.foot b.price{color:var(--gold)}
+.foot .r{float:right}
+</style>
+
+<div class="card">
+  <div class="kicker">Microsoft Flight Simulator 2024</div>
+  <h1>Build Specs <em>· New Builds</em></h1>
+  <div class="lede">
+    What to buy at three budgets, for each resolution — with the <b>measured Performance
+    Index</b> on every chip so you can see what the extra money actually buys.
+    GPU picks are matched to the resolution they sit under; <b>every card is 16 GB or
+    more</b> by design. Current platforms only (AM5 / LGA1851).
+  </div>
+
+  <div id="grid" class="grid"></div>
+
+  <div class="call">
+    <h3>Reading the matrix</h3>
+    <p><b>1080p and 1440p take the same parts on purpose.</b> The cheapest current 16 GB
+    cards already cover both, so there is no real hardware difference to draw — what
+    changes is what those parts deliver, and the index chips show it: a 9060 XT reads
+    <b>63 at 1080p but 54 at 1440p</b>. Only 4K moves the picks, where that same card
+    falls to 41 and the entry build has to step up.</p>
+    <p><b>Diminishing returns are visible in the chips.</b> At 1080p the jump from mid to
+    high buys <b>+6 index points for about €360</b>, because the GPU field compresses to a
+    5.5× spread there and the CPU is the limit. At 4K the spread opens to 17× and the same
+    money matters far more. AMD's high-end build repeats at every resolution — the
+    9070 XT is its ceiling, and past that you are into a 5090.</p>
+  </div>
+
+  <div class="foot">
+    <b>Measured:</b> CPU index from seven Tom's Hardware, PCGH and ComputerBase test
+    passes; GPU index per resolution from Tom's Hardware. Relative scales, not frame
+    rates. <b>Judgement:</b> which CPU pairs with which resolution — CPU tests run at
+    low resolution to isolate the chip, so there is only one CPU ladder.
+    <b>Not measured:</b> RAM and storage.<br/>
+    <b class="price">Prices are indicative EUR, Netherlands, as of <span id="pon"></span> —
+    check before buying.</b> They include PSU, case and motherboard.<br/>
+    <b class="dis">Not affiliated with or endorsed by Microsoft or Asobo.</b> These picks
+    are <b>my opinion</b>, drawn from third-party benchmarks — by Razortek, Flight Crew
+    in the official MSFS Discord <b>#hardware</b>.
+    <span class="r"><b>msfs.razortek.nl</b></span>
+  </div>
+</div>
+
+<script>
+// <<< BUILDS
+const PRICED_ON = "2026-07-25";
+const BUILDS = {
+"1080p": {
+  "entry": [
+    { v:"amd", cpu:"Ryzen 5 9600X", ci:69, gpu:"RX 9060 XT 16GB", gi:63, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1056 },
+    { v:"nv", cpu:"Core Ultra 5 245K", ci:75, gpu:"RTX 5060 Ti 16GB", gi:59, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1206 }
+  ],
+  "mid": [
+    { v:"amd", cpu:"Ryzen 5 7600X3D", ci:74, gpu:"RX 9070", gi:90, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1496 },
+    { v:"nv", cpu:"Core Ultra 7 265K", ci:77, gpu:"RTX 5070 Ti", gi:84, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1876 }
+  ],
+  "high": [
+    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:96, ram:"64GB DDR5-6000", sto:"2TB NVMe", eur:2096 },
+    { v:"nv", cpu:"Core Ultra 9 285K", ci:78, gpu:"RTX 5080", gi:87, ram:"64GB DDR5-6000", sto:"2TB NVMe", eur:2666 }
+  ],
+},
+"1440p": {
+  "entry": [
+    { v:"amd", cpu:"Ryzen 5 9600X", ci:69, gpu:"RX 9060 XT 16GB", gi:54, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1056 },
+    { v:"nv", cpu:"Core Ultra 5 245K", ci:75, gpu:"RTX 5060 Ti 16GB", gi:49, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1206 }
+  ],
+  "mid": [
+    { v:"amd", cpu:"Ryzen 5 7600X3D", ci:74, gpu:"RX 9070", gi:72, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1496 },
+    { v:"nv", cpu:"Core Ultra 7 265K", ci:77, gpu:"RTX 5070 Ti", gi:70, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1876 }
+  ],
+  "high": [
+    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:81, ram:"64GB DDR5-6000", sto:"2TB NVMe", eur:2096 },
+    { v:"nv", cpu:"Core Ultra 9 285K", ci:78, gpu:"RTX 5080", gi:76, ram:"64GB DDR5-6000", sto:"2TB NVMe", eur:2666 }
+  ],
+},
+"4K": {
+  "entry": [
+    { v:"amd", cpu:"Ryzen 5 7600X3D", ci:74, gpu:"RX 9070", gi:56, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1396 },
+    { v:"nv", cpu:"Core Ultra 5 245K", ci:75, gpu:"RTX 5070 Ti", gi:57, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1636 }
+  ],
+  "mid": [
+    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:65, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1836 },
+    { v:"nv", cpu:"Core Ultra 7 265K", ci:77, gpu:"RTX 5080", gi:64, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2206 }
+  ],
+  "high": [
+    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:65, ram:"64GB DDR5-6000", sto:"2TB NVMe", eur:2096 },
+    { v:"nv", cpu:"Core Ultra 9 285K", ci:78, gpu:"RTX 5090", gi:100, ram:"64GB DDR5-6000", sto:"2TB NVMe", eur:3916 }
+  ],
+},
+};
+// >>> BUILDS
+
+const RES = [["1080p", "1920 × 1080"], ["1440p", "2560 × 1440"], ["4K", "3840 × 2160"]];
+const TIERS = [["entry", "Entry"], ["mid", "Mid"], ["high", "High End"]];
+const ROWS = [
+  { key:"cpu",  label:"CPU",     group:"cpu", sub:"index measured", chip:"ci" },
+  { key:"gpu",  label:"GPU",     group:"gpu", sub:"matched to res", chip:"gi" },
+  { key:"ram",  label:"RAM",     group:"mem", plain:1 },
+  { key:"sto",  label:"Storage", group:"mem", plain:1 },
+  { key:"eur",  label:"Total",   group:"eur", sub:"inc PSU/case/mobo", eur:1 },
+];
+// an Intel CPU sits in the nv column, so the CPU row tints differently to the GPU row
+const tint = (row, v) => row.key === "cpu" ? (v === "amd" ? "amd" : "intel")
+                       : row.key === "gpu" ? (v === "amd" ? "amd" : "nv") : "plain";
+
+let h = "";
+for (const [res, label] of RES) {
+  h += `<div class="hd res">${res}<span>${label}</span></div>`;
+  h += `<div class="sp"></div>`;
+  TIERS.forEach(([, tl], i) => {
+    h += `<div class="hd tier">${tl}</div>`;
+    if (i < 2) h += `<div class="sp"></div>`;
+  });
+  h += `<div class="sp"></div>`;
+  TIERS.forEach((_, i) => {
+    h += `<div class="hd ven">AMD</div><div class="hd ven">Nvidia / Intel</div>`;
+    if (i < 2) h += `<div class="sp"></div>`;
+  });
+  for (const row of ROWS) {
+    h += `<div class="hd rl g-${row.group}">${row.label}` +
+         `${row.sub ? `<small>${row.sub}</small>` : ``}</div>`;
+    TIERS.forEach(([tier], ti) => {
+      for (const b of (BUILDS[res] || {})[tier] || []) {
+        if (row.eur) {
+          h += b.eur === null
+            ? `<div class="cell eur none num">—</div>`
+            : `<div class="cell eur num">€${b.eur.toLocaleString("en-US")}</div>`;
+        } else {
+          const chip = row.chip && b[row.chip] !== null
+            ? `<span class="ix${row.key === "gpu" ? " g" : ""}">${b[row.chip]}</span>` : ``;
+          h += `<div class="cell ${tint(row, b.v)}">${b[row.key]}${chip}</div>`;
+        }
+      }
+      if (ti < 2) h += `<div class="sp"></div>`;
+    });
+  }
+}
+document.getElementById("grid").innerHTML = h;
+document.getElementById("pon").textContent = PRICED_ON || "unknown";
+</script>

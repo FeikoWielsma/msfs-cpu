@@ -74,9 +74,32 @@ own style:
 
 ```sh
 python make_tierlist_clusters.py     # gpu_data.json → cluster rows in the GPU card
-python make_tierlist_cards.py        # both cards → 8 PNGs (needs Chrome + Pillow)
+python make_build_table.py           # the two build CSVs → rows in the build card
+python make_tierlist_cards.py        # all cards → PNGs (needs Chrome + Pillow)
 python make_tierlist_cards.py 4K     # just the variants matching "4K"
 ```
+
+`msfs_index.py` holds the shared index maths — the Python counterpart of the two-way
+log fit in `src/main.ts`, including the Intel arch prior and the clock-pair floors.
+Both generators import it, so there is one implementation to keep in step with the
+site. If the site's normalisation changes, change it here too or the cards will
+quietly disagree with the ranking.
+
+### Build table
+
+`msfs24_build_specs.png` is a resolution × tier × vendor matrix of complete builds
+with prices. Two CSVs drive it and they are the only files to edit:
+
+- **`build_specs.csv`** — the picks, one row per build. GPU choices are measured
+  against that row's resolution; CPU choices are judgement, since CPU reviews run at
+  low resolution to isolate the chip and there is only one CPU ladder.
+- **`build_prices.csv`** — `part,eur` plus `priced_on` and per-tier PSU/case/mobo
+  bundles. **EUR, Netherlands, hand-maintained.** Refresh the figures and bump
+  `priced_on`; the generator warns past 60 days.
+
+`make_build_table.py` is deliberately noisy. A part with no price renders as a dash
+rather than a wrong total, an unrecognised part name is reported as a likely typo, and
+a socket/memory mismatch (DDR4 next to an AM5 chip) fails the check.
 
 The PNGs are written to `public/cards/`, which Vite copies verbatim into `dist/`, so
 the normal Pages deploy publishes them — no extra workflow step. They are then
