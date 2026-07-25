@@ -173,6 +173,7 @@ def main():
             'gpu': gpu, 'gi': gi, 'gd': gd, 'gn': gpu_cov.get(gpu, 0),
             'ram': ram, 'sto': sto, 'total': total, 'approx': approx,
             'vram': GPU_SPECS.get(gpu, {}).get('vram') or VRAM_EXTRA.get(gpu),
+            'cbest': False, 'gbest': False,
         }
 
     for res in RES:
@@ -180,6 +181,29 @@ def main():
             for ven in VENDORS:
                 if (res, tier, ven) not in builds:
                     warn('build_specs.csv has no row for %s/%s/%s' % (res, tier, ven))
+
+    # Better value per row, judged independently for CPU and GPU. The two vendor columns
+    # are alternatives, not packages — nothing stops an Intel chip driving a Radeon card,
+    # and at these prices that mix is usually the cheaper build. The CPU is judged on
+    # chip + memory because the socket drags the RAM cost with it: a 7800X3D obliges
+    # DDR5 at 400 EUR where a 12600KF takes DDR4 at 240.
+    for res in RES:
+        for tier in TIERS:
+            pair = [builds.get((res, tier, v)) for v in VENDORS]
+            if not all(pair):
+                continue
+            for kind, idx_key, cost in (('cbest', 'ci', lambda b: pf(prices, b['cpu']) + pf(prices, b['ram'])),
+                                        ('gbest', 'gi', lambda b: pf(prices, b['gpu']))):
+                scores = []
+                for b in pair:
+                    c, i = cost(b), b[idx_key]
+                    scores.append(i / c if c and i else None)
+                if None in scores:
+                    continue
+                hi, lo = max(scores), min(scores)
+                if lo <= 0 or hi / lo < 1.02:      # too close to call, so call neither
+                    continue
+                pair[scores.index(hi)][kind] = True
 
     js = ['const PRICED_ON = %s;' % js_str(priced_on),
           'const BUILDS = {']
@@ -192,11 +216,13 @@ def main():
                 if not b:
                     continue
                 cells.append(
-                    '    { v:"%s", cpu:%s, ci:%s, cd:%s, gpu:%s, gi:%s, gd:%s,'
-                    ' vram:%s, ram:%s, sto:%s, eur:%s, approx:%s }'
+                    '    { v:"%s", cpu:%s, ci:%s, cd:%s, cbest:%s, gpu:%s, gi:%s,'
+                    ' gd:%s, gbest:%s, vram:%s, ram:%s, sto:%s, eur:%s, approx:%s }'
                     % (ven, js_str(b['cpu']), fmt(b['ci']),
-                       'true' if b['cd'] else 'false', js_str(b['gpu']),
+                       'true' if b['cd'] else 'false',
+                       'true' if b['cbest'] else 'false', js_str(b['gpu']),
                        fmt(b['gi']), 'true' if b['gd'] else 'false',
+                       'true' if b['gbest'] else 'false',
                        fmt(b['vram']), js_str(b['ram']), js_str(b['sto']),
                        'null' if b['total'] is None else b['total'],
                        'true' if b['approx'] else 'false'))
@@ -238,6 +264,11 @@ def main():
             print('  ! ' + w, file=sys.stderr)
     else:
         print('no warnings — every part priced, indexed and socket-consistent')
+
+
+def pf(prices, part):
+    """Price of a part, or None if it is not priced."""
+    return prices.get(part)
 
 
 def fmt(v):
