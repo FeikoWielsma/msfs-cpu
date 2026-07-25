@@ -71,6 +71,13 @@ h1 em{font-style:normal;color:var(--acc)}
   text-align:right;font-size:15px;padding:9px 11px;line-height:1.05}
 .hd.rl small{font-weight:400;font-size:9.5px;letter-spacing:.03em;opacity:.75;
   font-family:"Open Sans",sans-serif;line-height:1.25;margin-top:3px}
+/* Row groups, so the label column is scannable: chip rows, graphics rows, and the one
+   row that is not measured. Cyan↔green is ΔE 17.9 (a teal read only 11.8, under the 15
+   floor and too close to tell apart); the slate is deliberately near-grey to mark the
+   unmeasured row. All three keep the same near-black ink at 4.9:1 or better. */
+.hd.rl.g-cpu{background:#00a8e8}
+.hd.rl.g-gpu{background:#16b378}
+.hd.rl.g-ram{background:#6b8797}
 .cell{background:var(--card-2);border:1px solid var(--line);border-radius:var(--radius);
   padding:8px 6px;text-align:center;font-size:14px;font-weight:700;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -85,6 +92,8 @@ h1 em{font-style:normal;color:var(--acc)}
   letter-spacing:.06em;text-transform:uppercase;color:var(--faint);display:block;
   margin-top:-2px}
 .cell.carried{color:var(--ink-2);font-weight:600}
+/* one cell across the AMD / NVIDIA pair, for rows where both are identical */
+.cell.span2{grid-column:span 2}
 .cell.star{box-shadow:inset 0 0 0 1px rgba(201,166,255,.55)}
 .cell .mk{color:var(--gold);font-size:10.5px;margin-left:3px;
   text-shadow:0 0 5px rgba(180,130,255,.6)}
@@ -145,24 +154,26 @@ h1 em{font-style:normal;color:var(--acc)}
    worth buying, ideal is the measured ceiling. Values are the index, not FPS. */
 const A = "amd", N = "nv", I = "intel";
 const ROWS = [
-  { label:"CPU", cells:[
+  { label:"CPU", group:"cpu", cells:[
     ["Ryzen 5 5600", A], ["Core i5-12400F", I],
     ["Ryzen 7 5800X3D", A, "AM4 — best drop-in"], ["Core i5-14600K", I],
     ["Ryzen 7 9800X3D", A], ["Core Ultra 9 285K", I, "Intel's ceiling"],
   ]},
-  { label:"CPU index", sub:"100 = fastest tested", idx:1,
+  { label:"CPU index", sub:"100 = fastest tested", group:"cpu", idx:1,
     cells:[[51],[59],[69],[76],[98],[78]] },
-  { label:"GPU", cells:[
+  { label:"GPU", group:"gpu", cells:[
     ["RX 7600 XT 16GB", A], ["RTX 4060 Ti 16GB", N],
     ["RX 9060 XT 16GB", A, null, 1], ["RTX 5060 Ti 16GB", N],
     ["RX 9070 XT", A, null, 1], ["RTX 5090", N],
   ]},
-  { label:"GPU index", sub:"1440p ultra · 5090 = 100", idx:1,
+  { label:"GPU index", sub:"1440p ultra · 5090 = 100", group:"gpu", idx:1,
     cells:[[37],[41],[54],[49],[81],[100]] },
-  { label:"Min VRAM", sub:"measured",
+  /* VRAM cannot merge: the ideal column differs, 16 GB on a 9070 XT vs 32 on a 5090 */
+  { label:"Min VRAM", sub:"measured", group:"gpu",
     cells:[["16 GB"],["16 GB"],["16 GB"],["16 GB"],["16 GB"],["32 GB"]] },
-  { label:"System RAM", sub:"not measured", carried:1,
-    cells:[["16 GB"],["16 GB"],["32 GB"],["32 GB"],["64 GB"],["64 GB"]] },
+  /* identical across each vendor pair, so one cell per tier */
+  { label:"System RAM", sub:"not measured", group:"ram", carried:1, span:1,
+    cells:[["16 GB"],["32 GB"],["64 GB"]] },
 ];
 const TIERS = ["Minimum", "Recommended", "Ideal"];
 const VEN = ["AMD", "Nvidia / Intel"];
@@ -179,17 +190,21 @@ TIERS.forEach((_, i) => {
   if (i < 2) h += `<div class="sp"></div>`;
 });
 for (const r of ROWS) {
-  h += `<div class="hd rl">${r.label}${r.sub ? `<small>${r.sub}</small>` : ``}</div>`;
+  h += `<div class="hd rl g-${r.group}">${r.label}` +
+       `${r.sub ? `<small>${r.sub}</small>` : ``}</div>`;
   r.cells.forEach((c, i) => {
     const [val, ven, note, star] = c;
     if (r.idx) {
       h += `<div class="cell idx num">${val}</div>`;
     } else {
-      const cls = [ven || "", r.carried ? "carried" : "", star ? "star" : ""].join(" ");
+      const cls = [ven || "", r.carried ? "carried" : "", star ? "star" : "",
+                   r.span ? "span2" : ""].join(" ");
       h += `<div class="cell ${cls}">${val}${star ? `<span class="mk">★</span>` : ``}` +
            `${note ? `<i>${note}</i>` : ``}</div>`;
     }
-    if (i === 1 || i === 3) h += `<div class="sp"></div>`;
+    // spacer after each tier block — every 2 cells normally, every 1 when merged
+    const last = r.span ? 2 : 5;
+    if (i < last && (r.span || i === 1 || i === 3)) h += `<div class="sp"></div>`;
   });
 }
 g.innerHTML = h;
