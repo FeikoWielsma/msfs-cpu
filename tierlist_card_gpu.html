@@ -1,0 +1,395 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>MSFS 2024 GPU Tier List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<!--
+  Six renders from one source of truth (GPU_DATA + RES_META at the bottom), via
+  ?res=1080p|1440p|4K and an optional &compact. Render them all with
+      python make_tierlist_cards.py
+  which measures each card's height rather than hardcoding it.
+  Clusters are generated from public/gpu_data.json by the companion script, not
+  hand-written: cards within 5 index points merge into one row, capped at 5 members.
+  Tier bands are a fixed fraction of the leader (S>=90, A>=68, B>=48, C>=36, D>=20)
+  and identical across resolutions, so a letter means the same thing on all three —
+  which is why 1080p puts 4 cards in S and 4K puts 11 in E.
+  The index is normalised PER RESOLUTION; numbers never cross between cards.
+-->
+<style>
+:root{
+  --bg:#000; --card:#0d0e12; --card-2:#15181f;
+  --ink:#fff; --ink-2:#ccc; --muted:#818693;
+  --faint:#7d828e; --note:#a2a8b5;
+  --line:#222631; --line-2:#1b1d26; --track:#131620;
+  /* --acc is set per resolution by JS: green 1080p, blue 1440p, red 4K. A single
+     hue for magnitude — clusters are mixed-vendor, so a categorical vendor hue
+     would be wrong, and Nvidia green fails CVD against AMD red anyway. */
+  --acc:#2490d4;
+  --pos:#2ec4b6; --pos-bg:#0e3636; --neg:#e71d36;
+  --radius:4px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1000px;background:var(--bg);color:var(--ink);
+  font-family:"Open Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.card{background:var(--card);padding:38px 44px 30px}
+.num{font-variant-numeric:tabular-nums}
+
+.kicker{font-family:"Bebas Neue",sans-serif;font-size:17px;letter-spacing:.10em;
+  text-transform:uppercase;color:var(--acc)}
+h1{font-family:"Bebas Neue",sans-serif;font-size:62px;line-height:.92;letter-spacing:.02em;
+  text-transform:uppercase;margin:2px 0 9px}
+h1 em{font-style:normal;color:var(--acc)}
+/* no max-width: the card is 912px of content and a narrower measure just wraps
+   early, costing a line of height for an empty right-hand gutter */
+.lede{font-size:13.5px;color:var(--muted);line-height:1.55}
+.lede b{color:var(--ink-2);font-weight:600}
+.sub,.only-c{display:none}
+.hrule{height:1px;background:var(--line);margin:24px 0 6px}
+
+.scale{display:grid;grid-template-columns:44px 1fr 74px;align-items:center;
+  font-size:10.5px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;padding-bottom:7px}
+.scale .ticks{position:relative;height:11px}
+.scale .ticks span{position:absolute;transform:translateX(-50%);top:0}
+
+.tier{display:grid;grid-template-columns:44px 1fr;gap:0 14px;
+  border-top:1px solid var(--line-2);padding:11px 0}
+.tier:first-of-type{border-top:1px solid var(--line)}
+.tl{font-family:"Bebas Neue",sans-serif;font-size:44px;line-height:1;letter-spacing:.02em;
+  text-align:center;padding-top:2px}
+.tier.t-s .tl{color:var(--ink)}
+.tier.t-a .tl{color:#e6e8ee}
+.tier.t-b .tl{color:var(--ink-2)}
+.tier.t-c .tl{color:var(--muted)}
+.tier.t-d .tl{color:#6a6f7c}
+.tier.t-e .tl{color:var(--neg)}
+.rows{display:flex;flex-direction:column;gap:9px}
+
+.row{display:grid;grid-template-columns:1fr 74px;align-items:center;column-gap:14px}
+.rl{margin-bottom:5px}
+.name{font-size:15px;font-weight:700;letter-spacing:-.005em}
+/* Light brand tints on the names. Redundant with the RTX / RX / Arc prefix the name
+   already carries, so identity is never colour-alone — which is what makes the
+   green↔red pair acceptable here (deutan ΔE 7.7, the 6–8 band that needs secondary
+   encoding). All three are >9:1 as text on this surface. */
+.b-nv{color:#a3d94f} .b-amd{color:#ff9a93} .b-intel{color:#7cc4f0}
+.dot{color:var(--faint);font-weight:400;margin:0 1px}
+/* VRAM tags. A status ramp, not decoration: 8 GB is critical, 10–12 GB is caution,
+   16 GB+ needs no tag. Both carry a text label so the colour is never the only cue,
+   and they clear CVD separation from each other (deutan ΔE 12.8) and from the 4K
+   accent red (ΔE 15.5). */
+sup.vr{font-size:8.5px;font-weight:800;letter-spacing:.03em;vertical-align:3px;margin-left:2px}
+sup.v8{color:#ff7d8d}
+sup.v12{color:#f2c14e}
+.note{font-size:12.5px;color:var(--note);letter-spacing:-.002em;margin-left:7px}
+.bar{grid-column:1;position:relative;height:13px;background:var(--track);border-radius:2px;
+  overflow:hidden}
+.gl{position:absolute;top:0;bottom:0;width:1px;background:var(--line);opacity:.55}
+.fill{position:absolute;left:0;top:0;height:100%;border-radius:2px 4px 4px 2px;background:var(--acc)}
+.fill.ext{opacity:.34}
+.mean{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);
+  border-radius:1px;box-shadow:0 0 0 1.5px var(--card)}
+.val{grid-row:1 / span 2;grid-column:2;text-align:right;font-size:16px;font-weight:700;
+  letter-spacing:-.01em;color:var(--acc)}
+.val small{display:block;font-size:10px;font-weight:600;color:var(--faint);letter-spacing:.04em;
+  text-transform:uppercase;margin-top:1px}
+
+.warn{margin-top:20px;background:#1a0d10;border:1px solid #3a1a20;border-left:3px solid var(--neg);
+  border-radius:var(--radius);padding:14px 17px}
+.warn h3{font-family:"Bebas Neue",sans-serif;font-size:19px;letter-spacing:.04em;
+  text-transform:uppercase;color:#ff6b7f;margin-bottom:5px}
+.warn p{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.warn p+p{margin-top:6px}
+.warn b{color:#fff}
+
+.tldr{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:9px 26px}
+.tldr h3{font-family:"Bebas Neue",sans-serif;font-size:19px;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink-2);grid-column:1 / -1;margin-bottom:-1px}
+.tldr div{font-size:12.5px;color:var(--muted);line-height:1.55;padding-left:13px;position:relative}
+.tldr div::before{content:"";position:absolute;left:0;top:6px;width:4px;height:4px;
+  border-radius:50%;background:var(--faint)}
+.tldr b{color:var(--ink);font-weight:700}
+.tldr i{color:var(--ink-2);font-style:normal}
+
+.foot{display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:24px;padding-top:13px;border-top:1px solid var(--line);
+  font-size:11px;color:var(--faint);letter-spacing:.02em}
+.foot b{color:var(--muted);font-weight:600}
+
+/* ============================================================
+   COMPACT — 900px wide, no prose. Type ~1.7% of canvas width.
+   ============================================================ */
+html.compact body{width:900px}
+html.compact .card{padding:19px 24px 15px}
+html.compact .kicker{font-size:14px;letter-spacing:.09em}
+html.compact h1{font-size:34px;line-height:1;margin:0 0 3px}
+html.compact .hrule{margin:9px 0 0}
+html.compact .lede,
+html.compact .scale,
+html.compact .only-d,
+html.compact .tldr{display:none}
+html.compact .only-c{display:block}
+html.compact .sub{display:block;font-size:12.5px;color:var(--note);line-height:1.4}
+
+html.compact .tier{grid-template-columns:34px 1fr;gap:0 11px;padding:5px 0}
+html.compact .tier:first-of-type{padding-top:7px}
+html.compact .tl{font-size:31px;padding-top:0}
+html.compact .rows{gap:5px}
+/* one line per cluster: names | bar | index — the 2-line form runs 0.86 aspect,
+   which Discord height-limits; this brings it under 0.727 and a wider preview. */
+/* 400px, not 330: the widest cluster is 5 cards plus three VRAM tags
+   (4K C-tier), which overflowed and got overlapped by the bar at 330. */
+html.compact .row{grid-template-columns:400px 1fr 46px;column-gap:11px}
+html.compact .rl{margin-bottom:0}
+html.compact .name{font-size:15.5px;white-space:nowrap}
+html.compact sup.vr{font-size:8px;vertical-align:3px}
+html.compact .note{display:none}
+html.compact .bar{grid-column:2;height:11px}
+html.compact .val{grid-row:1;grid-column:3;font-size:17px}
+html.compact .val small{display:none}
+
+html.compact .warn{margin-top:10px;padding:7px 11px}
+html.compact .warn h3{font-size:15px;margin-bottom:1px}
+html.compact .warn p{font-size:12px;line-height:1.4}
+html.compact .foot{margin-top:9px;padding-top:7px;font-size:10.5px}
+</style>
+
+<div class="card">
+  <div class="kicker">Microsoft Flight Simulator 2024</div>
+  <h1>GPU Tier List <em>· <span id="hRes"></span> Ultra</em></h1>
+  <!-- .sub must stay ONE line: ~852px of content width at 12.5px fits ~128 chars.
+       Keep it under that or it silently steals a whole line of card height. -->
+  <div class="sub">Performance Index · 5090 = 100 · rows = interchangeable ·
+    <span class="b-nv">GeForce</span> · <span class="b-amd">Radeon</span> ·
+    <span class="b-intel">Arc</span> · <b style="color:#ff7d8d">8G</b> avoid ·
+    <b style="color:#f2c14e">12G</b> tight · rest 16 GB+</div>
+  <div class="lede">
+    Tom's Hardware GPU test passes at <b><span class="hRes2"></span> Ultra</b>, rescaled
+    onto one 0–100 scale with the 5090 at 100. Cards within a few points of each other are
+    <b>grouped into one row</b> — inside a row they are interchangeable.
+    <b>The bar spans the cluster's slowest to fastest card; the white tick is its average.</b>
+    Names are tinted by brand — <span class="b-nv">GeForce</span>,
+    <span class="b-amd">Radeon</span>, <span class="b-intel">Arc</span> — and tagged by
+    memory: <sup class="vr v8">8G</sup> and <sup class="vr v12">12G</sup>, untagged means
+    16 GB or more. The index is normalised per resolution, so these numbers are
+    <b>not comparable to the other two cards</b>.
+  </div>
+  <div class="hrule"></div>
+
+  <div class="scale">
+    <span></span>
+    <div class="ticks"><span style="left:25%">25</span><span style="left:50%">50</span>
+      <span style="left:75%">75</span><span style="left:100%">100</span></div>
+    <span style="text-align:right">Index</span>
+  </div>
+
+  <div id="tiers"></div>
+
+  <div class="warn">
+    <h3>⛔ 8 GB is the trap — not the GPU, the VRAM</h3>
+    <p class="only-c">Same GPU, 16 GB vs 8 GB, measured here:
+      <b><span class="hPen"></span> at <span class="hRes3"></span></b>.
+      Every <b style="color:#ff7d8d">8G</b> card above is a cliff waiting to happen.
+      <span class="hHint"></span></p>
+    <p class="only-d">The same GPU with double the memory is worth
+      <b><span class="hPen"></span></b> at this resolution — measured on three matched
+      pairs (5060 Ti, 9060 XT and 4060 Ti, 16 GB vs 8 GB). Across the three resolutions
+      that penalty runs <b>+29% at 1080p, +59% at 1440p and +120% at 4K</b>: the higher
+      you go, the more the memory decides it rather than the chip.</p>
+    <p class="only-d"><span class="hHint"></span> ⚠ Small gaps are ties — one source,
+      and 24 of 35 cards come from a single test pass.</p>
+  </div>
+
+  <div class="tldr">
+    <h3>What the data says</h3>
+    <div><b>VRAM beats everything</b> at these settings. Do not buy an 8 GB card for
+      MSFS 2024 at any price.</div>
+    <div>At this resolution the field spans <b><span class="hSpread"></span></b> from the
+      fastest card to the slowest.</div>
+    <div><span class="hHint"></span></div>
+    <div>Resolution decides how much the GPU matters at all: the spread runs
+      <b>5.5× at 1080p, 8.7× at 1440p and 17× at 4K</b>.</div>
+    <div>AMD is competitive up high — the <b>9070 XT and 7900 XTX</b> sit alongside the
+      4090 and 5080 rather than behind them.</div>
+    <div>Tier letters mean the same thing on all three cards: a fixed share of the
+      fastest card, so <b>S at 4K is far rarer than S at 1080p</b>.</div>
+  </div>
+
+  <div class="foot">
+    <span>Data: <b>Tom's Hardware</b> — <span class="hRes4"></span> Ultra, transcribed
+      and normalised, not affiliated</span>
+    <span><b>msfs.razortek.nl/#gpu</b></span>
+  </div>
+</div>
+
+<script>
+/* Per-resolution index, clusters generated from public/gpu_data.json (gap 5, cap 5).
+   mean = cluster average (sets the tier); lo/hi = slowest and fastest card in it.
+   Third card arg is VRAM in GB, present only when <= 12 — that is what earns a tag. */
+const nv=(n,s,g)=>({n,s,v:"nv",g}), amd=(n,s,g)=>({n,s,v:"amd",g}),
+      intel=(n,s,g)=>({n,s,v:"intel",g});
+// GENERATED — do not hand-edit between the markers.
+// Regenerate with: python make_tierlist_clusters.py
+const GPU_DATA = {
+// <<< CLUSTERS
+"1080p": [
+  { t:"S", rows:[
+    { cards:[nv("RTX 5090","5090"), nv("RTX 4090","4090"), amd("RX 7900 XTX","7900XTX"), amd("RX 9070 XT","9070XT")],
+      lo:96, hi:100, mean:98 },
+  ]},
+  { t:"A", rows:[
+    { cards:[amd("RX 9070","9070"), amd("RX 7900 XT","7900XT"), nv("RTX 5080","5080"), nv("RTX 4080 Super","4080S"), nv("RTX 5070 Ti","5070Ti")],
+      lo:84, hi:90, mean:87 },
+    { cards:[nv("RTX 4070 Ti Super","4070TiS"), nv("RTX 4070 Ti","4070Ti",12), nv("RTX 4070 Super","4070S",12), nv("RTX 5070","5070",12)],
+      lo:68, hi:76, mean:72 },
+  ]},
+  { t:"B", rows:[
+    { cards:[amd("RX 7800 XT","7800XT"), amd("RX 9060 XT 16GB","9060XT16"), amd("RX 7700 XT","7700XT",12), nv("RTX 4070","4070",12), nv("RTX 5060 Ti 16GB","5060Ti16")],
+      lo:59, hi:67, mean:62 },
+  ]},
+  { t:"C", rows:[
+    { cards:[nv("RTX 4060 Ti 16GB","4060Ti16"), nv("RTX 4060 Ti","4060Ti",8), nv("RTX 5060 Ti","5060Ti",8), nv("RTX 5060","5060",8), amd("RX 7600 XT","7600XT")],
+      lo:44, hi:48, mean:47 },
+    { cards:[intel("Arc B580","B580",12), amd("RX 9060 XT","9060XT",8), nv("RTX 5050","5050",8), nv("RTX 3060","3060",12), intel("Arc A770 16GB","A770")],
+      lo:38, hi:39, mean:38 },
+    { cards:[nv("RTX 4060","4060",8), nv("RTX 3060 Ti","3060Ti",8)],
+      lo:36, hi:37, mean:37 },
+  ]},
+  { t:"D", rows:[
+    { cards:[intel("Arc B570","B570",10)],
+      lo:34, hi:34, mean:34 },
+    { cards:[intel("Arc A750","A750",8)],
+      lo:28, hi:28, mean:28 },
+    { cards:[amd("RX 6600","6600",8)],
+      lo:21, hi:21, mean:21 },
+  ]},
+  { t:"E", rows:[
+    { cards:[amd("RX 7600","7600",8), nv("RTX 3050","3050",8)],
+      lo:18, hi:20, mean:19 },
+  ]},
+],
+"1440p": [
+  { t:"S", rows:[
+    { cards:[nv("RTX 5090","5090")],
+      lo:100, hi:100, mean:100 },
+  ]},
+  { t:"A", rows:[
+    { cards:[nv("RTX 4090","4090")],
+      lo:86, hi:86, mean:86 },
+    { cards:[amd("RX 9070 XT","9070XT"), amd("RX 7900 XTX","7900XTX")],
+      lo:81, hi:81, mean:81 },
+    { cards:[nv("RTX 5080","5080"), amd("RX 7900 XT","7900XT"), amd("RX 9070","9070"), nv("RTX 4080 Super","4080S"), nv("RTX 5070 Ti","5070Ti")],
+      lo:70, hi:76, mean:72 },
+  ]},
+  { t:"B", rows:[
+    { cards:[nv("RTX 4070 Ti Super","4070TiS"), nv("RTX 4070 Ti","4070Ti",12), nv("RTX 4070 Super","4070S",12), nv("RTX 5070","5070",12), amd("RX 7800 XT","7800XT")],
+      lo:54, hi:63, mean:57 },
+    { cards:[amd("RX 9060 XT 16GB","9060XT16"), amd("RX 7700 XT","7700XT",12), nv("RTX 5060 Ti 16GB","5060Ti16")],
+      lo:49, hi:54, mean:51 },
+  ]},
+  { t:"C", rows:[
+    { cards:[nv("RTX 4070","4070",12)],
+      lo:47, hi:47, mean:47 },
+    { cards:[nv("RTX 4060 Ti 16GB","4060Ti16"), nv("RTX 5060 Ti","5060Ti",8), nv("RTX 5060","5060",8), amd("RX 7600 XT","7600XT")],
+      lo:37, hi:41, mean:39 },
+  ]},
+  { t:"D", rows:[
+    { cards:[intel("Arc B580","B580",12), nv("RTX 3060","3060",12), intel("Arc A770 16GB","A770"), nv("RTX 4060 Ti","4060Ti",8), amd("RX 9060 XT","9060XT",8)],
+      lo:25, hi:33, mean:30 },
+    { cards:[nv("RTX 5050","5050",8), intel("Arc A750","A750",8)],
+      lo:21, hi:22, mean:22 },
+  ]},
+  { t:"E", rows:[
+    { cards:[nv("RTX 4060","4060",8), intel("Arc B570","B570",10), amd("RX 7600","7600",8), nv("RTX 3050","3050",8), amd("RX 6600","6600",8)],
+      lo:13, hi:17, mean:15 },
+    { cards:[nv("RTX 3060 Ti","3060Ti",8)],
+      lo:12, hi:12, mean:12 },
+  ]},
+],
+"4K": [
+  { t:"S", rows:[
+    { cards:[nv("RTX 5090","5090")],
+      lo:100, hi:100, mean:100 },
+  ]},
+  { t:"A", rows:[
+    { cards:[nv("RTX 4090","4090")],
+      lo:78, hi:78, mean:78 },
+  ]},
+  { t:"B", rows:[
+    { cards:[amd("RX 7900 XTX","7900XTX"), amd("RX 9070 XT","9070XT"), nv("RTX 5080","5080"), nv("RTX 4080 Super","4080S"), amd("RX 7900 XT","7900XT")],
+      lo:58, hi:68, mean:63 },
+    { cards:[nv("RTX 5070 Ti","5070Ti"), amd("RX 9070","9070"), nv("RTX 4070 Ti Super","4070TiS"), nv("RTX 4070 Ti","4070Ti",12)],
+      lo:49, hi:57, mean:53 },
+  ]},
+  { t:"C", rows:[
+    { cards:[nv("RTX 4070 Super","4070S",12), amd("RX 7800 XT","7800XT"), nv("RTX 5070","5070",12), amd("RX 9060 XT 16GB","9060XT16"), nv("RTX 5060 Ti 16GB","5060Ti16")],
+      lo:39, hi:45, mean:42 },
+    { cards:[amd("RX 7700 XT","7700XT",12), nv("RTX 4070","4070",12)],
+      lo:36, hi:38, mean:37 },
+  ]},
+  { t:"D", rows:[
+    { cards:[nv("RTX 4060 Ti 16GB","4060Ti16")],
+      lo:33, hi:33, mean:33 },
+    { cards:[amd("RX 7600 XT","7600XT"), amd("RX 9060 XT","9060XT",8), intel("Arc B580","B580",12), nv("RTX 3060","3060",12), intel("Arc A770 16GB","A770")],
+      lo:23, hi:28, mean:25 },
+  ]},
+  { t:"E", rows:[
+    { cards:[nv("RTX 5060 Ti","5060Ti",8), intel("Arc A750","A750",8), nv("RTX 5060","5060",8), nv("RTX 5050","5050",8), nv("RTX 3060 Ti","3060Ti",8)],
+      lo:14, hi:19, mean:16 },
+    { cards:[amd("RX 7600","7600",8), nv("RTX 4060","4060",8), amd("RX 6600","6600",8), nv("RTX 4060 Ti","4060Ti",8), nv("RTX 3050","3050",8)],
+      lo:11, hi:14, mean:12 },
+    { cards:[intel("Arc B570","B570",10)],
+      lo:6, hi:6, mean:6 },
+  ]},
+],
+// >>> CLUSTERS
+};
+/* acc: green / blue / red so the three cards are told apart at a glance.
+   All three clear 3:1 on the card surface, and the 4K red clears CVD separation
+   from the red 8G tag (deutan ΔE 15.5) so the two reds stay distinguishable. */
+const RES_META = {
+  "1080p": { acc:"#55a83c", pen:"+29%", spread:"5.5×",
+    hint:"MSFS is <b>CPU-bound at 1080p</b> — the top four cards land within 4% of each other, so your CPU is the limit, not the GPU." },
+  "1440p": { acc:"#2490d4", pen:"+59%", spread:"8.7×",
+    hint:"Best value sits in B: the <b>9060 XT 16GB matches a 5070 and a 7800 XT</b>." },
+  "4K":    { acc:"#d6452f", pen:"+120%", spread:"17×",
+    hint:"At 4K the memory wall dominates: <b>only the 5090 reaches S</b>, and <b>11 cards fall into E — every one of them 8 GB</b>." },
+};
+
+const q = location.search;
+const COMPACT = q.includes("compact");
+const RES = (q.match(/res=(1080p|1440p|4K)/) || [,"1440p"])[1];
+const M = RES_META[RES];
+if (COMPACT) document.documentElement.className = "compact";
+document.documentElement.style.setProperty("--acc", M.acc);
+document.getElementById("hRes").textContent = RES;
+for (const c of ["hRes2","hRes3","hRes4"])
+  document.querySelectorAll("." + c).forEach(e => (e.textContent = RES));
+document.querySelectorAll(".hPen").forEach(e => (e.textContent = M.pen));
+document.querySelectorAll(".hSpread").forEach(e => (e.textContent = M.spread));
+document.querySelectorAll(".hHint").forEach(e => (e.innerHTML = M.hint));
+
+const GL = [25,50,75];
+const vramTag = g => !g || g > 12 ? ``
+  : `<sup class="vr ${g <= 8 ? "v8" : "v12"}">${g}G</sup>`;
+const names = cards => cards
+  .map(c => `<span class="b-${c.v}">${COMPACT ? c.s : c.n}${vramTag(c.g)}</span>`)
+  .join(`<span class="dot"> · </span>`);
+document.getElementById("tiers").innerHTML = GPU_DATA[RES].map(g => `
+  <div class="tier t-${g.t.toLowerCase()}">
+    <div class="tl">${g.t}</div>
+    <div class="rows">${g.rows.map(r => `
+      <div class="row">
+        <div class="rl"><span class="name">${names(r.cards)}</span></div>
+        <div class="bar">
+          ${GL.map(p => `<div class="gl" style="left:${p}%"></div>`).join("")}
+          <div class="fill ext" style="width:${r.hi}%"></div>
+          <div class="fill" style="width:${r.lo}%"></div>
+          <div class="mean" style="left:${r.mean}%"></div>
+        </div>
+        <div class="val num">${r.mean}<small>${r.lo}–${r.hi}</small></div>
+      </div>`).join("")}
+    </div>
+  </div>`).join("");
+</script>

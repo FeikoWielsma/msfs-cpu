@@ -1,0 +1,276 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>MSFS 2024 CPU Tier List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<!--
+  Two renders from one source of truth (the TIERS array at the bottom): the plain URL
+  for the detail card, ?compact for the thumbnail one. Render both with
+      python make_tierlist_cards.py
+  which measures each card's height rather than hardcoding it.
+  Compact exists because Discord height-constrains inline previews: a tall portrait
+  card is shown ~300px wide, a 16:9 one ~550px. Type is sized as a % of canvas
+  width, so the compact card uses a narrower canvas to double the effective px.
+-->
+<style>
+:root{
+  --bg:#000; --card:#0d0e12; --card-2:#15181f;
+  --ink:#fff; --ink-2:#ccc; --muted:#818693;
+  /* lifted from the site's #555964, which is only 2.7:1 on this card — too low for
+     11px text. #7d828e is 5.0:1, .note at #a2a8b5 is 8.0:1. */
+  --faint:#7d828e; --note:#a2a8b5;
+  --line:#222631; --line-2:#1b1d26; --track:#131620;
+  /* re-stepped for the dark card: both pass the 6 checks vs #0d0e12 */
+  --amd:#f2564c; --intel:#2490d4; --trap:#6b7280;
+  --pos:#2ec4b6; --pos-bg:#0e3636; --neg:#e71d36;
+  --radius:4px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1000px;background:var(--bg);color:var(--ink);
+  font-family:"Open Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.card{background:var(--card);padding:38px 44px 30px}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- header ---------- */
+.kicker{font-family:"Bebas Neue",sans-serif;font-size:17px;letter-spacing:.10em;
+  text-transform:uppercase;color:var(--intel)}
+h1{font-family:"Bebas Neue",sans-serif;font-size:62px;line-height:.92;letter-spacing:.02em;
+  text-transform:uppercase;margin:2px 0 9px}
+/* no max-width: the card is 912px of content and a narrower measure just wraps
+   early, costing a line of height for an empty right-hand gutter */
+.lede{font-size:13.5px;color:var(--muted);line-height:1.55}
+.lede b{color:var(--ink-2);font-weight:600}
+/* .sub is the compact card's one-line stand-in for .lede; .only-c / .only-d
+   swap the long and short copy between the two modes. */
+.sub,.only-c{display:none}
+.hrule{height:1px;background:var(--line);margin:24px 0 6px}
+
+/* ---------- scale ---------- */
+.scale{display:grid;grid-template-columns:44px 1fr 74px;align-items:center;
+  font-size:10.5px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;padding-bottom:7px}
+.scale .ticks{position:relative;height:11px}
+.scale .ticks span{position:absolute;transform:translateX(-50%);top:0}
+
+/* ---------- tier blocks ---------- */
+.tier{display:grid;grid-template-columns:44px 1fr;gap:0 14px;
+  border-top:1px solid var(--line-2);padding:11px 0}
+.tier:first-of-type{border-top:1px solid var(--line)}
+.tl{font-family:"Bebas Neue",sans-serif;font-size:44px;line-height:1;letter-spacing:.02em;
+  text-align:center;padding-top:2px}
+.tier.t-s .tl{color:var(--ink)}
+.tier.t-a .tl{color:#e6e8ee}
+.tier.t-b .tl{color:var(--ink-2)}
+.tier.t-c .tl{color:var(--muted)}
+.tier.t-d .tl{color:#6a6f7c}
+.tier.t-e .tl{color:var(--neg)}
+.rows{display:flex;flex-direction:column;gap:7px}
+
+/* ---------- a generation row ---------- */
+.row{display:grid;grid-template-columns:1fr 74px;align-items:center;column-gap:14px}
+.rl{display:flex;align-items:baseline;gap:7px;margin-bottom:5px}
+.name{font-size:15px;font-weight:700;letter-spacing:-.005em}
+.badge{font-size:9.5px;font-weight:700;letter-spacing:.04em;padding:2px 5px;border-radius:2px;
+  text-transform:uppercase;position:relative;top:-1px}
+.badge.x3d{background:var(--pos-bg);color:var(--pos)}
+.badge.ddr{background:var(--track);color:var(--muted)}
+.note{font-size:12.5px;color:var(--note);letter-spacing:-.002em}
+.bar{grid-column:1;position:relative;height:13px;background:var(--track);border-radius:2px;
+  overflow:hidden}
+.gl{position:absolute;top:0;bottom:0;width:1px;background:var(--line);opacity:.55}
+/* solid = slowest SKU in the group; translucent = up to the fastest */
+.fill{position:absolute;left:0;top:0;height:100%;border-radius:2px 4px 4px 2px}
+.fill.ext{opacity:.34}
+/* the group average — this is what sets the tier */
+.mean{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);
+  border-radius:1px;box-shadow:0 0 0 1.5px var(--card)}
+.val{grid-row:1 / span 2;grid-column:2;text-align:right;font-size:16px;font-weight:700;
+  letter-spacing:-.01em}
+.val small{display:block;font-size:10px;font-weight:600;color:var(--faint);letter-spacing:.04em;
+  text-transform:uppercase;margin-top:1px}
+.v-amd{color:var(--amd)} .v-intel{color:var(--intel)} .v-trap{color:var(--trap)}
+
+/* ---------- warning ---------- */
+.warn{margin-top:20px;background:#1a0d10;border:1px solid #3a1a20;border-left:3px solid var(--neg);
+  border-radius:var(--radius);padding:14px 17px}
+.warn h3{font-family:"Bebas Neue",sans-serif;font-size:19px;letter-spacing:.04em;
+  text-transform:uppercase;color:#ff6b7f;margin-bottom:5px}
+.warn p{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.warn p+p{margin-top:6px}
+.warn b{color:#fff}
+.warn .chips{color:var(--neg);font-weight:700}
+
+/* ---------- takeaways ---------- */
+.tldr{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:9px 26px}
+.tldr h3{font-family:"Bebas Neue",sans-serif;font-size:19px;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink-2);grid-column:1 / -1;margin-bottom:-1px}
+.tldr div{font-size:12.5px;color:var(--muted);line-height:1.55;padding-left:13px;position:relative}
+.tldr div::before{content:"";position:absolute;left:0;top:6px;width:4px;height:4px;
+  border-radius:50%;background:var(--faint)}
+.tldr b{color:var(--ink);font-weight:700}
+.tldr i{color:var(--ink-2);font-style:normal}
+
+/* ---------- footer ---------- */
+.foot{display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:24px;padding-top:13px;border-top:1px solid var(--line);
+  font-size:11px;color:var(--faint);letter-spacing:.02em}
+.foot b{color:var(--muted);font-weight:600}
+
+/* ============================================================
+   COMPACT — 860x484 (16:9). One line per row, no prose.
+   Type is ~2x larger relative to canvas width than the detail card.
+   ============================================================ */
+html.compact body{width:860px}
+html.compact .card{padding:19px 24px 15px}
+html.compact .kicker{font-size:14px;letter-spacing:.09em}
+html.compact h1{font-size:34px;line-height:1;margin:0 0 3px}
+html.compact .hrule{margin:9px 0 0}
+/* the 25/50/75 tick labels are unreadable at thumbnail scale — the in-bar
+   gridlines carry the structure instead, and dropping the row buys ~20px */
+html.compact .lede,
+html.compact .scale,
+html.compact .only-d,
+html.compact .tldr{display:none}
+html.compact .only-c{display:block}
+html.compact .sub{display:block;font-size:12.5px;color:var(--note);line-height:1.4}
+
+html.compact .scale{grid-template-columns:34px 1fr 46px;font-size:9.5px;padding:6px 0 5px}
+html.compact .tier{grid-template-columns:34px 1fr;gap:0 11px;padding:5px 0}
+html.compact .tier:first-of-type{padding-top:7px}
+html.compact .tl{font-size:31px;padding-top:0}
+html.compact .rows{gap:4px}
+/* one line: name | bar | value */
+html.compact .row{grid-template-columns:196px 1fr 46px;column-gap:11px}
+html.compact .rl{margin-bottom:0;gap:5px}
+html.compact .name{font-size:16.5px}
+html.compact .badge{font-size:8.5px;padding:1px 4px}
+html.compact .badge.ddr{font-size:9px}
+html.compact .note{display:none}
+html.compact .bar{grid-column:2;height:12px}
+html.compact .val{grid-row:1;grid-column:3;font-size:17px}
+html.compact .val small{display:none}
+
+html.compact .warn{margin-top:10px;padding:7px 11px;border-left-width:3px}
+html.compact .warn h3{font-size:15px;margin-bottom:1px}
+html.compact .warn p{font-size:12px;line-height:1.4}
+html.compact .foot{margin-top:9px;padding-top:7px;font-size:10.5px}
+</style>
+
+<div class="card">
+  <div class="kicker">Microsoft Flight Simulator 2024</div>
+  <h1>CPU Tier List</h1>
+  <div class="sub">Performance Index · 7 reviews normalised · grouped by generation
+    &amp; V-Cache · bar spans slowest→fastest SKU, tick is the average</div>
+  <div class="lede">
+    Ranked by <b>Performance Index</b> — seven Tom's Hardware, PCGH and ComputerBase
+    test passes rescaled onto one 0–100 scale, so a chip's score reflects its own speed
+    and not which reviewer tested it. Grouped by generation and V-Cache.
+    <b>Each bar spans the group's slowest to fastest SKU; the white tick is its average,
+    which is what sets the tier.</b>
+  </div>
+  <div class="hrule"></div>
+
+  <div class="scale">
+    <span></span>
+    <div class="ticks"><span style="left:25%">25</span><span style="left:50%">50</span>
+      <span style="left:75%">75</span><span style="left:100%">100</span></div>
+    <span style="text-align:right">Index</span>
+  </div>
+
+  <div id="tiers"></div>
+
+  <div class="warn">
+    <h3>⛔ Do not buy — the 16 MB L3 Cezanne traps</h3>
+    <p class="only-c"><span class="chips">5500 · 5700 (non-X!) · 5600G · 5700G</span> — half
+    the 5600's cache, so ≤ a 3600. The <b>5700X</b> is a different chip (32 MB, C tier).</p>
+    <p class="only-d"><span class="chips">Ryzen 5 5500 · Ryzen 7 5700 (non-X) · 5600G · 5700G</span></p>
+    <p class="only-d">None of these appear in any benchmark set, so they get no score — but
+    they carry <b>half the 5600's cache</b> (16 vs 32 MB) plus PCIe 3.0. Cache is the
+    single strongest factor measured here (32 → 96 MB is worth +10–20%), so they land
+    <b>at or below the Ryzen 5 3600</b>.</p>
+    <p class="only-d">⚠ <b>“5700” and “5700X” are different chips.</b> The 5700X is Vermeer
+    with 32 MB and lands in C tier. The plain 5700 is Cezanne with 16 MB — avoid it.</p>
+  </div>
+
+  <div class="tldr">
+    <h3>What the data says</h3>
+    <div><b>V-Cache is worth +19–30%</b> over the same generation without it — a full
+      generation of uplift, or more.</div>
+    <div>Arrow Lake, Raptor Lake and Zen 4 X3D flagships land <b>within 1%</b> of each
+      other. That fight is a wash.</div>
+    <div><b>Cores do nothing.</b> The 16-core 5950X scores <i>below</i> the 8-core
+      5800X. Buy cache, not core count.</div>
+    <div><b>DDR4 costs Alder Lake ~7%</b> — measured on a 12700K run on both. Enough to
+      drop it a whole tier.</div>
+    <div>On AM4? V-Cache, any of it: <b>5800X3D 69 › 5700X3D 66 › 5600X3D 61</b>.
+      Nothing else on the socket is worth the money.</div>
+    <div>Absolute FPS are not comparable across sites — different scenes and settings.
+      That is exactly why the index exists.</div>
+  </div>
+
+  <div class="foot">
+    <span>Data: <b>Tom's Hardware · PC Games Hardware · ComputerBase</b> — transcribed,
+      normalised, not affiliated</span>
+    <span><b>msfs.razortek.nl</b></span>
+  </div>
+</div>
+
+<script>
+/* mean = the group average from the cross-source fit; it is what sets the tier.
+   lo / hi = slowest and fastest SKU in the group. Rows are ordered by mean. */
+const TIERS = [
+  { t:"S", rows:[
+    { name:"Ryzen 9000 X3D", v:"amd", x3d:1, lo:84, hi:100, mean:94, note:"9800X3D · 9850X3D · 9950X3D2" },
+  ]},
+  { t:"A", rows:[
+    { name:"Core Ultra 2xx", v:"intel", lo:66, hi:78, mean:75, note:"285K down to the 225" },
+    { name:"Ryzen 7000 X3D", v:"amd", x3d:1, lo:71, hi:78, mean:75, note:"7800X3D leads, not the 7950X3D" },
+    { name:"Ryzen 9000", v:"amd", lo:69, hi:75, mean:73, note:"9700X ≈ 9950X" },
+    { name:"Core 13/14th", v:"intel", lo:57, hi:79, mean:70, note:"K-SKUs high, i3s at the floor" },
+  ]},
+  { t:"B", rows:[
+    { name:"Ryzen 5000 X3D", v:"amd", x3d:1, lo:61, hi:69, mean:66, note:"5800X3D tops it — nearly A tier" },
+    { name:"Core 12th", v:"intel", ddr:"DDR5", lo:59, hi:65, mean:63 },
+    { name:"Ryzen 7000", v:"amd", lo:58, hi:69, mean:63, note:"7950X on top, 7600X low" },
+  ]},
+  { t:"C", rows:[
+    { name:"Core 12th", v:"intel", ddr:"DDR4", lo:55, hi:62, mean:60, note:"−7% vs DDR5 — a whole tier lost" },
+    { name:"Ryzen 5000", v:"amd", lo:51, hi:59, mean:54, note:"5800X on top, 5600 / 5700X low" },
+  ]},
+  { t:"D", rows:[
+    { name:"Ryzen 3000", v:"amd", lo:47, hi:53, mean:52, note:"Old, but still fine" },
+  ]},
+  { t:"E", rows:[
+    /* `short` is used in compact mode, where the full chip list wraps to two lines
+       and breaks bar alignment. The warning strip below names them all anyway. */
+    { name:"5500 · 5700 (non-X) · 5600G · 5700G", short:"Cezanne 16 MB traps",
+      v:"trap", lo:0, hi:47, note:"Never benchmarked — estimated, see below" },
+  ]},
+];
+const GL = [25,50,75];
+const COMPACT = location.search.includes("compact");
+if (COMPACT) document.documentElement.className = "compact";
+document.getElementById("tiers").innerHTML = TIERS.map(g => `
+  <div class="tier t-${g.t.toLowerCase()}">
+    <div class="tl">${g.t}</div>
+    <div class="rows">${g.rows.map(r => `
+      <div class="row">
+        <div class="rl">
+          <span class="name">${COMPACT && r.short ? r.short : r.name}</span>
+          ${r.x3d ? `<span class="badge x3d">3D V-Cache</span>` : ``}
+          ${r.ddr ? `<span class="badge ddr">${r.ddr}</span>` : ``}
+          ${r.note ? `<span class="note">${r.note}</span>` : ``}
+        </div>
+        <div class="bar">
+          ${GL.map(p => `<div class="gl" style="left:${p}%"></div>`).join("")}
+          <div class="fill ext" style="width:${r.hi}%;background:var(--${r.v})"></div>
+          <div class="fill" style="width:${r.lo}%;background:var(--${r.v})"></div>
+          ${r.mean ? `<div class="mean" style="left:${r.mean}%"></div>` : ``}
+        </div>
+        <div class="val num v-${r.v}">${r.mean ?? "≤47"}
+          <small>${r.mean ? r.lo + "–" + r.hi : "est."}</small></div>
+      </div>`).join("")}
+    </div>
+  </div>`).join("");
+</script>
