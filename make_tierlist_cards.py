@@ -36,6 +36,7 @@ CARDS = [
     ('msfs24_gpu_tierlist_compact.png',        'tierlist_card_gpu.html', '?res=1440p&compact',   900),
     ('msfs24_gpu_tierlist_4k.png',             'tierlist_card_gpu.html', '?res=4K',             1000),
     ('msfs24_gpu_tierlist_4k_compact.png',     'tierlist_card_gpu.html', '?res=4K&compact',      900),
+    ('msfs24_spec_table.png',                  'tierlist_card_spec.html', '',                   1080),
 ]
 
 CHROMES = [
