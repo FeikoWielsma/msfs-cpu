@@ -5,34 +5,37 @@
 # tier   entry | mid | high
 # vendor amd | nv                 (nv column pairs an Intel CPU with a GeForce card)
 #
-# 1080p and 1440p deliberately carry the SAME parts. The cheapest current 16 GB cards
-# already cover both, so there is no honest hardware difference to draw — what changes
-# is what those parts deliver, which the per-resolution index chips show (a 9060 XT
-# reads 63 at 1080p and 54 at 1440p). Inventing different picks would be dressing.
+# Picks respond to 2026 pricing, which is unusual in two ways:
 #
-# 4K is where the picks genuinely move: the entry card steps up to a 9070 / 5070 Ti
-# because a 9060 XT lands at 41 there. AMD's high-end build repeats across all three
-# resolutions because the 9070 XT is its current ceiling.
+# 1. 32GB of DDR5 costs about as much as a mid-range CPU, so every build takes 32GB and
+#    none take 64GB — a 64GB kit now costs more than a 9800X3D.
+# 2. Intel's ladder is flat for this game: a 250K Plus is within 2 index points of a
+#    285K for 330 EUR less. So the Intel column uses the cheap chip at entry and mid,
+#    and only steps up once. Spending it on the GPU buys far more.
+#
+# 1080p and 1440p carry the SAME parts on purpose: the cheapest current 16 GB cards
+# cover both, so the difference shows in the per-resolution index chips (a 9060 XT
+# reads 63 at 1080p, 54 at 1440p) rather than in invented picks. Only 4K moves them.
 #
 # GPU picks are measured. CPU picks are JUDGEMENT — the CPU index is single-resolution,
 # so pairing a chip to a resolution is inference, not measurement.
 # RAM must match the CPU socket (AM5/LGA1851 = DDR5); make_build_table.py enforces it.
 res,tier,vendor,cpu,gpu,ram,storage
 1080p,entry,amd,Ryzen 5 9600X,RX 9060 XT 16GB,32GB DDR5-6000,1TB NVMe
-1080p,entry,nv,Core Ultra 5 245K,RTX 5060 Ti 16GB,32GB DDR5-6000,1TB NVMe
-1080p,mid,amd,Ryzen 5 7600X3D,RX 9070,32GB DDR5-6000,2TB NVMe
-1080p,mid,nv,Core Ultra 7 265K,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
-1080p,high,amd,Ryzen 7 9800X3D,RX 9070 XT,64GB DDR5-6000,2TB NVMe
-1080p,high,nv,Core Ultra 9 285K,RTX 5080,64GB DDR5-6000,2TB NVMe
+1080p,entry,nv,Core Ultra 5 250K Plus,RTX 5060 Ti 16GB,32GB DDR5-6000,1TB NVMe
+1080p,mid,amd,Ryzen 7 7800X3D,RX 9070,32GB DDR5-6000,2TB NVMe
+1080p,mid,nv,Core Ultra 5 250K Plus,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
+1080p,high,amd,Ryzen 7 9800X3D,RX 9070 XT,32GB DDR5-6000,2TB NVMe
+1080p,high,nv,Core Ultra 7 270K Plus,RTX 5080,32GB DDR5-6000,2TB NVMe
 1440p,entry,amd,Ryzen 5 9600X,RX 9060 XT 16GB,32GB DDR5-6000,1TB NVMe
-1440p,entry,nv,Core Ultra 5 245K,RTX 5060 Ti 16GB,32GB DDR5-6000,1TB NVMe
-1440p,mid,amd,Ryzen 5 7600X3D,RX 9070,32GB DDR5-6000,2TB NVMe
-1440p,mid,nv,Core Ultra 7 265K,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
-1440p,high,amd,Ryzen 7 9800X3D,RX 9070 XT,64GB DDR5-6000,2TB NVMe
-1440p,high,nv,Core Ultra 9 285K,RTX 5080,64GB DDR5-6000,2TB NVMe
-4K,entry,amd,Ryzen 5 7600X3D,RX 9070,32GB DDR5-6000,2TB NVMe
-4K,entry,nv,Core Ultra 5 245K,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
+1440p,entry,nv,Core Ultra 5 250K Plus,RTX 5060 Ti 16GB,32GB DDR5-6000,1TB NVMe
+1440p,mid,amd,Ryzen 7 7800X3D,RX 9070,32GB DDR5-6000,2TB NVMe
+1440p,mid,nv,Core Ultra 5 250K Plus,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
+1440p,high,amd,Ryzen 7 9800X3D,RX 9070 XT,32GB DDR5-6000,2TB NVMe
+1440p,high,nv,Core Ultra 7 270K Plus,RTX 5080,32GB DDR5-6000,2TB NVMe
+4K,entry,amd,Ryzen 7 7800X3D,RX 9070,32GB DDR5-6000,2TB NVMe
+4K,entry,nv,Core Ultra 5 250K Plus,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
 4K,mid,amd,Ryzen 7 9800X3D,RX 9070 XT,32GB DDR5-6000,2TB NVMe
-4K,mid,nv,Core Ultra 7 265K,RTX 5080,32GB DDR5-6000,2TB NVMe
-4K,high,amd,Ryzen 7 9800X3D,RX 9070 XT,64GB DDR5-6000,2TB NVMe
-4K,high,nv,Core Ultra 9 285K,RTX 5090,64GB DDR5-6000,2TB NVMe
+4K,mid,nv,Core Ultra 7 270K Plus,RTX 5080,32GB DDR5-6000,2TB NVMe
+4K,high,amd,Ryzen 7 9800X3D,RX 9070 XT,32GB DDR5-6000,2TB NVMe
+4K,high,nv,Core Ultra 9 285K,RTX 5090,32GB DDR5-6000,2TB NVMe

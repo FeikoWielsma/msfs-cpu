@@ -42,7 +42,9 @@ def read_csv(path):
 
 
 def load_prices():
-    prices, priced_on = {}, None
+    """-> ({part: eur}, {part: src}, priced_on). src distinguishes a real looked-up
+    figure from a placeholder, so a total built on guesses can be marked as one."""
+    prices, src, priced_on = {}, {}, None
     for row in read_csv(PRICES_CSV):
         part, val = row['part'].strip(), row['eur'].strip()
         if part == 'priced_on':
@@ -50,6 +52,7 @@ def load_prices():
             continue
         try:
             prices[part] = int(round(float(val)))
+            src[part] = (row.get('src') or '').strip() or 'est'
         except ValueError:
             warn('price for %r is not a number: %r' % (part, val))
     if not priced_on:
@@ -61,13 +64,17 @@ def load_prices():
                 warn('prices are %d days old (priced_on %s) — refresh them' % (age, priced_on))
         except ValueError:
             warn('priced_on is not an ISO date: %r' % priced_on)
-    return prices, priced_on
+    est = sorted(p for p, s in src.items() if s != 'tweakers')
+    if est:
+        warn('%d part(s) still on estimated prices, so their totals show a ~ prefix: %s'
+             % (len(est), ', '.join(est)))
+    return prices, src, priced_on
 
 
 def main():
     cpu_idx, prices_by_res = cpu_index(), {r: gpu_index(r) for r in RES}
     cpu_cov, gpu_cov = coverage('cpu'), coverage('gpu')
-    prices, priced_on = load_prices()
+    prices, price_src, priced_on = load_prices()
 
     builds = {}
     for row in read_csv(SPECS_CSV):
@@ -100,11 +107,13 @@ def main():
         for p in missing:
             warn('no price for %r (needed by %s/%s/%s)' % (p, res, tier, ven))
         total = None if missing else sum(prices[p] for p in parts)
+        # approximate if any component price is still a placeholder
+        approx = any(price_src.get(p, 'est') != 'tweakers' for p in parts if p in prices)
 
         builds[(res, tier, ven)] = {
             'cpu': cpu, 'ci': ci, 'cn': cpu_cov.get(cpu, 0),
             'gpu': gpu, 'gi': gi, 'gn': gpu_cov.get(gpu, 0),
-            'ram': ram, 'sto': sto, 'total': total,
+            'ram': ram, 'sto': sto, 'total': total, 'approx': approx,
         }
 
     for res in RES:
@@ -124,10 +133,12 @@ def main():
                 if not b:
                     continue
                 cells.append(
-                    '    { v:"%s", cpu:%s, ci:%s, gpu:%s, gi:%s, ram:%s, sto:%s, eur:%s }'
+                    '    { v:"%s", cpu:%s, ci:%s, gpu:%s, gi:%s, ram:%s, sto:%s,'
+                    ' eur:%s, approx:%s }'
                     % (ven, js_str(b['cpu']), fmt(b['ci']), js_str(b['gpu']),
                        fmt(b['gi']), js_str(b['ram']), js_str(b['sto']),
-                       'null' if b['total'] is None else b['total']))
+                       'null' if b['total'] is None else b['total'],
+                       'true' if b['approx'] else 'false'))
             js.append('  "%s": [\n%s\n  ],' % (tier, ',\n'.join(cells)))
         js.append('},')
     js.append('};')
