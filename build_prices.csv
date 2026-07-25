@@ -1,15 +1,16 @@
 # EUR, Netherlands.
 #
-# src=tweakers  real figures from Tweakers.net price data (2026-07-25)
-# src=est       still a rough estimate — REPLACE THESE. Any build containing one has
-#               its total shown with a ~ prefix, so the card never passes an estimate
-#               off as a looked-up price.
+# src=tweakers    real figures from Tweakers.net price data (2026-07-25)
+# src=aliexpress  grey-import only, no NL retail channel
+# src=est         still a rough estimate — REPLACE THESE. Any build containing one has
+#                 its total shown with a ~ prefix, so the card never passes an estimate
+#                 off as a looked-up price.
 #
 # Bundle rows cover PSU + case + motherboard, split by vendor because LGA1851 boards
-# run dearer than AM5 ones at the same tier.
+# run dearer than AM5 ones at the same tier. These are the last estimates left.
 part,eur,src
 priced_on,2026-07-25,
-# --- CPUs (all Tweakers)
+# --- CPUs
 Ryzen 7 9800X3D,399,tweakers
 Ryzen 7 7800X3D,324,tweakers
 Ryzen 7 5800X3D,358,tweakers
@@ -19,8 +20,8 @@ Ryzen 5 7500X3D,209,tweakers
 Ryzen 5 7500F,130,tweakers
 Ryzen 5 5600,131,tweakers
 Ryzen 5 5600X,146,tweakers
-# AliExpress-only Chinese-market SKU. Priced here for reference but not used in the
-# matrix: no benchmark set covers it, so it would carry no index chip.
+# AliExpress-only Chinese-market SKU. Priced for reference but not used in the matrix:
+# no benchmark set covers it, so it would carry no index chip.
 Ryzen 5 5500X3D,150,aliexpress
 Core Ultra 9 285K,549,tweakers
 Core Ultra 7 270K Plus,314,tweakers
@@ -28,21 +29,39 @@ Core Ultra 5 250K Plus,219,tweakers
 Core i7-14700K,392,tweakers
 Core i5-14600K,229,tweakers
 Core i5-12400F,145,tweakers
-# --- memory. The 2026 market: 32GB of DDR5 now costs more than most of the CPUs above.
+# --- GPUs. Radeon is markedly better value at every tier at these prices; the 9070 XT
+# at 669 is both cheaper and faster than a 5070 Ti at 949.
+RX 9070 XT,669,tweakers
+RX 9060 XT 16GB,414,tweakers
+RX 9060 XT 8GB,341,tweakers
+RX 7600,283,tweakers
+RTX 5090,4249,tweakers
+RTX 5080,1216,tweakers
+RTX 5070 Ti,949,tweakers
+RTX 5070,629,tweakers
+RTX 5060 Ti 16GB,562,tweakers
+RTX 5060 Ti 8GB,345,tweakers
+RTX 5060,319,tweakers
+RTX 5050,279,tweakers
+Arc B580,289,tweakers
+Arc B570,267,tweakers
+# Priced but unusable in the matrix — no benchmark coverage (9070 GRE) or no longer
+# reasonably available / priced far above their index (the rest).
+RX 9070 GRE,555,tweakers
+RX 7600 XT,536,tweakers
+RX 7700 XT,500,tweakers
+RX 7800 XT,900,tweakers
+RX 7900 XT,736,tweakers
+RX 7900 XTX,1325,tweakers
+RTX 4090,3489,tweakers
+RTX 4080,1589,tweakers
+# --- memory. The 2026 market: 32GB of DDR5 costs more than most CPUs above.
 32GB DDR5-6000,400,tweakers
-32GB DDR4-3600,240,tweakers
-# --- GPUs — NOT YET PRICED, these are guesses
-RX 9060 XT 16GB,359,est
-RX 9070,619,est
-RX 9070 XT,719,est
-RTX 5060 Ti 16GB,449,est
-RTX 5070 Ti,819,est
-RTX 5080,1149,est
-RTX 5090,2399,est
-# --- storage — NOT YET PRICED
-1TB NVMe,79,est
-2TB NVMe,139,est
-# --- PSU + case + motherboard — NOT YET PRICED
+32GB DDR4-3200,240,tweakers
+# --- storage
+1TB NVMe,140,tweakers
+2TB NVMe,240,tweakers
+# --- PSU + case + motherboard — THE LAST ESTIMATES
 bundle_entry_amd,290,est
 bundle_entry_nv,320,est
 bundle_mid_amd,390,est

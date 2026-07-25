@@ -82,6 +82,12 @@ h1 em{font-style:normal;color:var(--acc)}
   letter-spacing:.02em;color:var(--on-acc);background:var(--acc);
   border-radius:2px;padding:1px 4px;flex:none}
 .ix.g{background:#16b378}
+/* VRAM tags, same ramp as the GPU tier cards: 8 GB critical, 10-12 GB caution.
+   An 8 GB pick has to be visible as a compromise, not slip past as a bargain. */
+.vr{font-family:"Open Sans",sans-serif;font-size:9px;font-weight:800;letter-spacing:.02em;
+  border-radius:2px;padding:1px 4px;flex:none}
+.vr.v8{background:#4a1520;color:#ff8f9d}
+.vr.v12{background:#3a2e10;color:#f2c14e}
 .cell.eur{font-family:"Bebas Neue",sans-serif;font-size:23px;letter-spacing:.02em;
   color:var(--gold);background:#161425;border-color:#2a2440;padding:3px 6px 4px}
 .cell.eur.none{color:var(--faint);font-size:18px}
@@ -108,9 +114,10 @@ h1 em{font-style:normal;color:var(--acc)}
   <div class="lede">
     What to buy at three budgets, for each resolution — with the <b>measured Performance
     Index</b> on every chip so you can see what the extra money actually buys.
-    GPU picks are matched to the resolution they sit under; <b>every card is 16 GB or
-    more</b> by design. Entry builds stay on <b>DDR4 platforms</b> because of what memory
-    now costs; mid and high move to AM5 / LGA1851.
+    GPU picks are matched to the resolution they sit under, and <b>16 GB is the floor
+    everywhere except the 1080p entry build</b>, where 8 GB is the mildest it ever gets.
+    Entry stays on <b>DDR4 platforms</b> because of what memory now costs; mid and high
+    move to AM5 / LGA1851.
   </div>
 
   <div id="grid" class="grid"></div>
@@ -122,10 +129,17 @@ h1 em{font-style:normal;color:var(--acc)}
     LGA1700</b> deliberately. Nobody puts €400 of memory in an €1,100 build. Mid and high
     move to DDR5 where the platform earns it. Nothing takes 64 GB: that kit now costs more
     than a 9800X3D.</p>
-    <p><b>Cheapest way into V-Cache: a Ryzen 5 5500X3D, about €150.</b> AliExpress only —
-    there is no retail channel — and no benchmark set here covers it, so it gets no index
-    chip and no row. For scale, a 5600X3D reads <b>61</b> and the 5500X3D clocks lower, so
-    expect a little under that. On a €240 DDR4 kit it is a lot of cache for the money.</p>
+    <p><b>Radeon is better value at every tier right now.</b> A <b>9070 XT at €669 is both
+    cheaper and faster than a 5070 Ti at €949</b> (81 against 70 at 1440p), so it is the
+    AMD pick from mid upward — and because AMD has only two viable cards at these prices,
+    mid and high share it and differ by CPU. A 9070 GRE at €555 would slot between them
+    but no benchmark covers it, so it cannot be indexed and is left out.</p>
+    <p><b>8 GB is a 1080p-only compromise, and only on the Nvidia side.</b> A
+    <b>5060 8 GB at €319</b> saves €243 over a 5060 Ti 16 GB and the penalty at 1080p is
+    the mildest it gets (+29%, against +59% at 1440p). On AMD it is a trap: the 8 GB
+    9060 XT costs <b>€341 against €414</b> for the 16 GB, and that €73 buys <b>+66%</b> at
+    1080p. Cheapest way into V-Cache at all is a <b>5500X3D, about €150</b> — AliExpress
+    only, and unbenchmarked, so it gets no row; a 5600X3D reads 61 and it clocks lower.</p>
     <p><b>Intel's ladder is flat for this game, so don't climb it.</b> A
     <b>250K Plus (€219) scores 76</b> and a <b>285K (€549) scores 78</b> — €330 for two
     index points, which is why the 285K appears nowhere on this card. The Intel column
@@ -161,44 +175,44 @@ const PRICED_ON = "2026-07-25";
 const BUILDS = {
 "1080p": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 5 5600", ci:51, gpu:"RX 9060 XT 16GB", gi:63, ram:"32GB DDR4-3600", sto:"1TB NVMe", eur:1099, approx:true },
-    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5060 Ti 16GB", gi:59, ram:"32GB DDR4-3600", sto:"1TB NVMe", eur:1233, approx:true }
+    { v:"amd", cpu:"Ryzen 5 5600", ci:51, gpu:"RX 9060 XT 16GB", gi:63, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1215, approx:true },
+    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5060", gi:47, vram:8, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1164, approx:true }
   ],
   "mid": [
-    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070", gi:90, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1872, approx:true },
-    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5070 Ti", gi:84, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2007, approx:true }
+    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070 XT", gi:96, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2023, approx:true },
+    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5070 Ti", gi:84, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2238, approx:true }
   ],
   "high": [
-    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:96, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2197, approx:true },
-    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5080", gi:87, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2592, approx:true }
+    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:96, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2248, approx:true },
+    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5080", gi:87, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2760, approx:true }
   ],
 },
 "1440p": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 5 5600", ci:51, gpu:"RX 9060 XT 16GB", gi:54, ram:"32GB DDR4-3600", sto:"1TB NVMe", eur:1099, approx:true },
-    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5060 Ti 16GB", gi:49, ram:"32GB DDR4-3600", sto:"1TB NVMe", eur:1233, approx:true }
+    { v:"amd", cpu:"Ryzen 5 5600", ci:51, gpu:"RX 9060 XT 16GB", gi:54, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1215, approx:true },
+    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5060 Ti 16GB", gi:49, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1407, approx:true }
   ],
   "mid": [
-    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070", gi:72, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1872, approx:true },
-    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5070 Ti", gi:70, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2007, approx:true }
+    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070 XT", gi:81, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2023, approx:true },
+    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5070 Ti", gi:70, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2238, approx:true }
   ],
   "high": [
-    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:81, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2197, approx:true },
-    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5080", gi:76, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2592, approx:true }
+    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:81, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2248, approx:true },
+    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5080", gi:76, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2760, approx:true }
   ],
 },
 "4K": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 7 5800X3D", ci:69, gpu:"RX 9070", gi:56, ram:"32GB DDR4-3600", sto:"2TB NVMe", eur:1646, approx:true },
-    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5070 Ti", gi:57, ram:"32GB DDR4-3600", sto:"2TB NVMe", eur:1663, approx:true }
+    { v:"amd", cpu:"Ryzen 7 5800X3D", ci:69, gpu:"RX 9070 XT", gi:65, vram:16, ram:"32GB DDR4-3200", sto:"2TB NVMe", eur:1797, approx:true },
+    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5070 Ti", gi:57, vram:16, ram:"32GB DDR4-3200", sto:"2TB NVMe", eur:1894, approx:true }
   ],
   "mid": [
-    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070 XT", gi:65, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1972, approx:true },
-    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5080", gi:64, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2337, approx:true }
+    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070 XT", gi:65, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2023, approx:true },
+    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5080", gi:64, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2505, approx:true }
   ],
   "high": [
-    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:65, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2197, approx:true },
-    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5090", gi:100, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:3842, approx:true }
+    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:65, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2248, approx:true },
+    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5090", gi:100, vram:32, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:5793, approx:true }
   ],
 },
 };
@@ -243,7 +257,10 @@ for (const [res, label] of RES) {
         } else {
           const chip = row.chip && b[row.chip] !== null
             ? `<span class="ix${row.key === "gpu" ? " g" : ""}">${b[row.chip]}</span>` : ``;
-          h += `<div class="cell ${tint(row, b.v)}">${b[row.key]}${chip}</div>`;
+          // flag a thin-VRAM card on the GPU row so a compromise reads as one
+          const vr = row.key === "gpu" && b.vram !== null && b.vram <= 12
+            ? `<span class="vr ${b.vram <= 8 ? "v8" : "v12"}">${b.vram}G</span>` : ``;
+          h += `<div class="cell ${tint(row, b.v)}">${b[row.key]}${vr}${chip}</div>`;
         }
       }
       if (ti < 2) h += `<div class="sp"></div>`;

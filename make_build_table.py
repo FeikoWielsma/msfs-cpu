@@ -12,7 +12,8 @@ it does not know.
 """
 import csv, datetime, os, sys
 
-from msfs_index import cpu_index, gpu_index, CPU_SPECS, CPU_VENDOR, coverage
+from msfs_index import (cpu_index, gpu_index, CPU_SPECS, CPU_VENDOR, GPU_SPECS,
+                        coverage)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CARD = os.path.join(HERE, 'tierlist_card_build.html')
@@ -114,6 +115,7 @@ def main():
             'cpu': cpu, 'ci': ci, 'cn': cpu_cov.get(cpu, 0),
             'gpu': gpu, 'gi': gi, 'gn': gpu_cov.get(gpu, 0),
             'ram': ram, 'sto': sto, 'total': total, 'approx': approx,
+            'vram': GPU_SPECS.get(gpu, {}).get('vram'),
         }
 
     for res in RES:
@@ -133,10 +135,11 @@ def main():
                 if not b:
                     continue
                 cells.append(
-                    '    { v:"%s", cpu:%s, ci:%s, gpu:%s, gi:%s, ram:%s, sto:%s,'
-                    ' eur:%s, approx:%s }'
+                    '    { v:"%s", cpu:%s, ci:%s, gpu:%s, gi:%s, vram:%s, ram:%s,'
+                    ' sto:%s, eur:%s, approx:%s }'
                     % (ven, js_str(b['cpu']), fmt(b['ci']), js_str(b['gpu']),
-                       fmt(b['gi']), js_str(b['ram']), js_str(b['sto']),
+                       fmt(b['gi']), fmt(b['vram']), js_str(b['ram']),
+                       js_str(b['sto']),
                        'null' if b['total'] is None else b['total'],
                        'true' if b['approx'] else 'false'))
             js.append('  "%s": [\n%s\n  ],' % (tier, ',\n'.join(cells)))
