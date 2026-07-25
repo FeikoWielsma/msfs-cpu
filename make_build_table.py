@@ -22,6 +22,29 @@ PRICES_CSV = os.path.join(HERE, 'build_prices.csv')
 BEGIN, END = '// <<< BUILDS', '// >>> BUILDS'
 
 RES = ['1080p', '1440p', '4K']
+
+# Cards with no MSFS benchmark coverage, placed on our index by interpolating
+# TechPowerUp's relative-performance aggregate between two cards we DO measure. Derived,
+# not measured — the card marks these chips with a ° and says so in the footer.
+#
+#   RX 9070 GRE: TPU has it at 100 with the RX 7800 XT at 92 and the RX 9070 at 117
+#   (1080p) / 118 (1440p). Interpolating that 0.32 / 0.31 fraction onto our own figures
+#   for those two anchors -- 67 to 90 at 1080p, 54 to 72 at 1440p -- lands it here.
+#   No 4K figure: TPU's chart does not cover it, and a 12 GB card at 4K in this game
+#   would break the aggregate anyway.
+DERIVED_GPU = {
+    'RX 9070 GRE': {'1080p': 74, '1440p': 60},
+}
+
+# Priced, plausible, but beaten on value by something already in the matrix. Listed
+# under it because "why isn't X in here?" is the question that always follows.
+# (part, reason) — index shown is at 1440p.
+NOT_PICKED = [
+    ('RX 9070 GRE', 'a 9070 XT is +35% for €114 more'),
+    ('RTX 5070', 'a 9060 XT 16GB matches it for €215 less'),
+    ('RX 7900 XT', 'a 9070 XT beats it and costs €67 less'),
+    ('RTX 5060 Ti 8GB', 'the 16GB twin is +23% for €217'),
+]
 TIERS = ['entry', 'mid', 'high']
 VENDORS = ['amd', 'nv']
 STALE_DAYS = 60
@@ -88,11 +111,14 @@ def main():
 
         # index lookups — a miss means a typo, so say so rather than showing no chip
         ci = cpu_idx.get(cpu)
-        gi = prices_by_res[res].get(gpu)
+        gi, gd = prices_by_res[res].get(gpu), False
+        if gi is None:                       # fall back to a TPU-derived figure
+            gi = DERIVED_GPU.get(gpu, {}).get(res)
+            gd = gi is not None
         if ci is None:
             warn('CPU %r is not in the index data (typo?)' % cpu)
         if gi is None:
-            warn('GPU %r is not in the %s index data (typo?)' % (gpu, res))
+            warn('GPU %r has no index for %s — measured or derived (typo?)' % (gpu, res))
 
         # socket vs memory generation
         socket = CPU_SPECS.get(cpu, {}).get('socket')
@@ -113,7 +139,7 @@ def main():
 
         builds[(res, tier, ven)] = {
             'cpu': cpu, 'ci': ci, 'cn': cpu_cov.get(cpu, 0),
-            'gpu': gpu, 'gi': gi, 'gn': gpu_cov.get(gpu, 0),
+            'gpu': gpu, 'gi': gi, 'gd': gd, 'gn': gpu_cov.get(gpu, 0),
             'ram': ram, 'sto': sto, 'total': total, 'approx': approx,
             'vram': GPU_SPECS.get(gpu, {}).get('vram'),
         }
@@ -135,16 +161,36 @@ def main():
                 if not b:
                     continue
                 cells.append(
-                    '    { v:"%s", cpu:%s, ci:%s, gpu:%s, gi:%s, vram:%s, ram:%s,'
-                    ' sto:%s, eur:%s, approx:%s }'
+                    '    { v:"%s", cpu:%s, ci:%s, gpu:%s, gi:%s, gd:%s, vram:%s,'
+                    ' ram:%s, sto:%s, eur:%s, approx:%s }'
                     % (ven, js_str(b['cpu']), fmt(b['ci']), js_str(b['gpu']),
-                       fmt(b['gi']), fmt(b['vram']), js_str(b['ram']),
-                       js_str(b['sto']),
+                       fmt(b['gi']), 'true' if b['gd'] else 'false',
+                       fmt(b['vram']), js_str(b['ram']), js_str(b['sto']),
                        'null' if b['total'] is None else b['total'],
                        'true' if b['approx'] else 'false'))
             js.append('  "%s": [\n%s\n  ],' % (tier, ',\n'.join(cells)))
         js.append('},')
     js.append('};')
+
+    # the "priced but not picked" strip, indexed at 1440p
+    ref = prices_by_res['1440p']
+    js.append('const NOT_PICKED = [')
+    for part, reason in NOT_PICKED:
+        idx, derived = ref.get(part), False
+        if idx is None:
+            idx = DERIVED_GPU.get(part, {}).get('1440p')
+            derived = idx is not None
+        if idx is None:
+            warn('NOT_PICKED entry %r has no 1440p index' % part)
+            continue
+        if part not in prices:
+            warn('NOT_PICKED entry %r has no price' % part)
+            continue
+        js.append('  { p:%s, eur:%d, gi:%d, gd:%s, vram:%s, why:%s },'
+                  % (js_str(part), prices[part], round(idx),
+                     'true' if derived else 'false',
+                     fmt(GPU_SPECS.get(part, {}).get('vram')), js_str(reason)))
+    js.append('];')
     block = '\n'.join(js)
 
     html = open(CARD, encoding='utf-8').read()
