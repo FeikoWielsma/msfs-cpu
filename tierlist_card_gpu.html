@@ -82,13 +82,13 @@ h1 em{font-style:normal;color:var(--acc)}
 sup.vr{font-size:8.5px;font-weight:800;letter-spacing:.03em;vertical-align:3px;margin-left:2px}
 sup.v8{color:#ff7d8d}
 sup.v12{color:#f2c14e}
-/* Gold accolades. Deliberately glyphs, not pills: a mark belongs to one card, and a
-   pill mid-list ("RX 9070 [BEST VALUE] · RTX 4080 Super") reads badly. The glow is
-   what separates them from the amber 12G tag, which sits at a similar hue. */
-.mk{font-size:11.5px;margin-left:3px;color:#ffd166;
-  text-shadow:0 0 5px rgba(255,200,80,.55), 0 0 11px rgba(255,190,60,.3)}
-.mk.ult{font-size:12.5px;
-  text-shadow:0 0 6px rgba(255,205,90,.75), 0 0 15px rgba(255,190,60,.45)}
+/* Value pick: a purple star plus a purple backglow across the whole card name, so the
+   pick reads at a glance without a pill mid-list ("RX 9070 [BEST VALUE] · RTX 4080
+   Super"). Purple deliberately sits outside the brand tints and the VRAM tags, so it
+   never looks like part of either system. #c9a6ff is 9.5:1 as text here. */
+.mk{font-size:11.5px;margin-left:3px;color:#c9a6ff;
+  text-shadow:0 0 5px rgba(180,130,255,.6), 0 0 12px rgba(160,100,255,.35)}
+.glow-value{text-shadow:0 0 7px rgba(178,128,255,.5), 0 0 17px rgba(150,95,255,.28)}
 .note{font-size:12.5px;color:var(--note);letter-spacing:-.002em;margin-left:7px}
 .bar{grid-column:1;position:relative;height:13px;background:var(--track);border-radius:2px;
   overflow:hidden}
@@ -170,8 +170,7 @@ html.compact .foot{margin-top:9px;padding-top:7px;font-size:10.5px}
   <div class="sub">Performance Index · 5090 = 100 · <span class="b-nv">GeForce</span> ·
     <span class="b-amd">Radeon</span> · <span class="b-intel">Arc</span> ·
     <b style="color:#ff7d8d">8G</b> avoid · <b style="color:#f2c14e">12G</b> tight ·
-    rest 16 GB+ · <span class="mk">★</span> value ·
-    <span class="mk ult">◆</span> fastest</div>
+    rest 16 GB+ · <span class="mk value">★</span> best value</div>
   <div class="lede">
     Tom's Hardware GPU test passes at <b><span class="hRes2"></span> Ultra</b>, rescaled
     onto one 0–100 scale with the 5090 at 100. Cards within a few points of each other are
@@ -181,9 +180,8 @@ html.compact .foot{margin-top:9px;padding-top:7px;font-size:10.5px}
     <span class="b-amd">Radeon</span>, <span class="b-intel">Arc</span> — and tagged by
     memory: <sup class="vr v8">8G</sup> and <sup class="vr v12">12G</sup>, untagged means
     16 GB or more.<br/>
-    <span class="mk ult">◆</span> is the outright fastest card and
-    <span class="mk">★</span> marks the <b>best value for money</b> — an editorial pick,
-    since the dataset holds no prices.<br/>
+    <span class="mk value">★</span> marks the <b>best value for money</b> — an editorial
+    pick, since the dataset holds no prices.<br/>
     The index is normalised per resolution, so these
     numbers are <b>not comparable to other resolutions</b>.
   </div>
@@ -247,7 +245,7 @@ const GPU_DATA = {
 // <<< CLUSTERS
 "1080p": [
   { t:"S", rows:[
-    { cards:[nv("RTX 5090","5090",0,"ult"), nv("RTX 4090","4090"), amd("RX 7900 XTX","7900XTX"), amd("RX 9070 XT","9070XT",0,"value")],
+    { cards:[nv("RTX 5090","5090"), nv("RTX 4090","4090"), amd("RX 7900 XTX","7900XTX"), amd("RX 9070 XT","9070XT",0,"value")],
       lo:96, hi:100, mean:98 },
   ]},
   { t:"A", rows:[
@@ -283,7 +281,7 @@ const GPU_DATA = {
 ],
 "1440p": [
   { t:"S", rows:[
-    { cards:[nv("RTX 5090","5090",0,"ult")],
+    { cards:[nv("RTX 5090","5090")],
       lo:100, hi:100, mean:100 },
   ]},
   { t:"A", rows:[
@@ -321,7 +319,7 @@ const GPU_DATA = {
 ],
 "4K": [
   { t:"S", rows:[
-    { cards:[nv("RTX 5090","5090",0,"ult")],
+    { cards:[nv("RTX 5090","5090")],
       lo:100, hi:100, mean:100 },
   ]},
   { t:"A", rows:[
@@ -385,11 +383,12 @@ document.querySelectorAll(".hHint").forEach(e => (e.innerHTML = M.hint));
 const GL = [25,50,75];
 const vramTag = g => !g || g > 12 ? ``
   : `<sup class="vr ${g <= 8 ? "v8" : "v12"}">${g}G</sup>`;
-const MARK = { value:["★","best value for money"], ult:["◆","fastest card, any resolution"] };
 const markTag = m => !m ? ``
-  : `<span class="mk ${m}" title="${MARK[m][1]}">${MARK[m][0]}</span>`;
+  : `<span class="mk ${m}" title="best value for money">★</span>`;
+// a marked card gets glow-<mark> on its whole name span, not just the star
 const names = cards => cards
-  .map(c => `<span class="b-${c.v}">${COMPACT ? c.s : c.n}${vramTag(c.g)}${markTag(c.m)}</span>`)
+  .map(c => `<span class="b-${c.v}${c.m ? " glow-" + c.m : ""}">` +
+            `${COMPACT ? c.s : c.n}${vramTag(c.g)}${markTag(c.m)}</span>`)
   .join(`<span class="dot"> · </span>`);
 document.getElementById("tiers").innerHTML = GPU_DATA[RES].map(g => `
   <div class="tier t-${g.t.toLowerCase()}">

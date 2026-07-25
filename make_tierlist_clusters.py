@@ -57,13 +57,13 @@ NAMES = {
 VMAP = {'Nvidia': 'nv', 'AMD': 'amd', 'Intel': 'intel'}
 VORDER = {'Nvidia': 0, 'AMD': 1, 'Intel': 2}   # listing order within a row
 
-# Gold accolades, rendered as a glyph after the card name. Editorial picks, not
-# computed — there is no price data in the dataset, so 'value' is a judgement call
+# Value picks, rendered as a purple star plus a glow on the card's name. Editorial,
+# not computed — there is no price data in the dataset, so this is a judgement call
 # about what the index is worth per pound, and it is labelled as such on the card.
 # A mark attaches to one card, never a whole row: clusters are mixed (the 9070 XT
 # shares a row with the 4090 at 1440p), so marking the row would mis-attribute it.
+# No 'fastest' mark — the 5090 already sits alone at the top of S on 100.
 MARKS = {
-    'RTX 5090': 'ult',            # fastest at every resolution, by a wide margin
     'RX 9070 XT': 'value',
     'RX 9070': 'value',
     'RX 9060 XT 16GB': 'value',
