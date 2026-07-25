@@ -22,9 +22,10 @@
 # 4. Intel's CPU ladder is flat for this game (250K Plus is within 2 points of a 285K
 #    for 330 EUR less), so the Intel column tops out at a 270K Plus.
 #
-# 1080p and 1440p share the mid and high parts on purpose — the same cards cover both,
-# and the per-resolution index chips show what changes. Entry differs because 8GB is
-# survivable at 1080p (+29% penalty) and not at 1440p (+59%).
+# 1080p tops out DELIBERATELY LOW. The GPU field compresses to a 5.5x spread there and
+# the CPU becomes the limit, so 1080p high runs the best CPU with an RX 9070 / 5070 Ti
+# rather than a 9070 XT or 5080 — a flagship card at 1080p is money that does nothing.
+# 1440p and 4K climb properly, because there the GPU decides it.
 #
 # GPU picks are measured. CPU picks are JUDGEMENT — the CPU index is single-resolution,
 # so pairing a chip to a resolution is inference, not measurement.
@@ -34,17 +35,17 @@
 res,tier,vendor,cpu,gpu,ram,storage
 1080p,entry,amd,Ryzen 5 5600,RX 9060 XT 16GB,32GB DDR4-3200,1TB NVMe
 1080p,entry,nv,Core i5-12600KF,RTX 5060,32GB DDR4-3200,1TB NVMe
-1080p,mid,amd,Ryzen 7 7800X3D,RX 9070 XT,32GB DDR5-6000,1TB NVMe
-1080p,mid,nv,Core Ultra 5 250K Plus,RTX 5070 Ti,32GB DDR5-6000,1TB NVMe
-1080p,high,amd,Ryzen 7 9800X3D,RX 9070 XT,32GB DDR5-6000,2TB NVMe
-1080p,high,nv,Core Ultra 7 270K Plus,RTX 5080,32GB DDR5-6000,2TB NVMe
+1080p,mid,amd,Ryzen 7 7800X3D,RX 9070 GRE,32GB DDR5-6000,1TB NVMe
+1080p,mid,nv,Core Ultra 5 250K Plus,RTX 5070,32GB DDR5-6000,1TB NVMe
+1080p,high,amd,Ryzen 7 9800X3D,RX 9070,32GB DDR5-6000,2TB NVMe
+1080p,high,nv,Core Ultra 7 270K Plus,RTX 5070 Ti,32GB DDR5-6000,2TB NVMe
 1440p,entry,amd,Ryzen 5 5600,RX 9060 XT 16GB,32GB DDR4-3200,1TB NVMe
 1440p,entry,nv,Core i5-12600KF,RTX 5060 Ti 16GB,32GB DDR4-3200,1TB NVMe
 1440p,mid,amd,Ryzen 7 7800X3D,RX 9070,32GB DDR5-6000,1TB NVMe
 1440p,mid,nv,Core Ultra 5 250K Plus,RTX 5070 Ti,32GB DDR5-6000,1TB NVMe
 1440p,high,amd,Ryzen 7 9800X3D,RX 9070 XT,32GB DDR5-6000,2TB NVMe
 1440p,high,nv,Core Ultra 7 270K Plus,RTX 5080,32GB DDR5-6000,2TB NVMe
-4K,entry,amd,Ryzen 7 5800X3D,RX 9070 XT,32GB DDR4-3200,1TB NVMe
+4K,entry,amd,Ryzen 7 5800X3D,RX 9070,32GB DDR4-3200,1TB NVMe
 4K,entry,nv,Core i5-12400F,RTX 5070 Ti,32GB DDR4-3200,1TB NVMe
 4K,mid,amd,Ryzen 7 7800X3D,RX 9070 XT,32GB DDR5-6000,1TB NVMe
 4K,mid,nv,Core Ultra 5 250K Plus,RTX 5080,32GB DDR5-6000,1TB NVMe

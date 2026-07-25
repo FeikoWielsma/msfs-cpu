@@ -48,10 +48,10 @@ CPU_ALIAS = {
 # under it because "why isn't X in here?" is the question that always follows.
 # (part, reason) — index shown is at 1440p.
 NOT_PICKED = [
-    ('RX 9070 GRE', 'a 9070 XT is +35% for €114 more'),
-    ('RTX 5070', 'a 9060 XT 16GB matches it for €215 less'),
-    ('RX 7900 XT', 'a 9070 XT beats it and costs €67 less'),
+    ('RX 7900 XT', 'a 9070 XT beats it for €67 less'),
+    ('RX 9060 XT 8GB', 'the 16GB more than doubles it for €73'),
     ('RTX 5060 Ti 8GB', 'the 16GB twin is +23% for €217'),
+    ('Arc B580', 'fine at 1080p, out of its depth above'),
 ]
 TIERS = ['entry', 'mid', 'high']
 VENDORS = ['amd', 'nv']

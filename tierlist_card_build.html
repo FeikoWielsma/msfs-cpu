@@ -153,10 +153,10 @@ h1 em{font-style:normal;color:var(--acc)}
     move to DDR5 where the platform earns it. Nothing takes 64 GB: that kit now costs more
     than a 9800X3D.</p>
     <p><b>Radeon is better value at every tier right now.</b> A <b>9070 XT at €669 is both
-    cheaper and faster than a 5070 Ti at €949</b> (81 against 70 at 1440p), so it is the
-    AMD pick from mid upward — and because AMD has only two viable cards at these prices,
-    mid and high share it and differ by CPU. A 9070 GRE at €555 sits between them on
-    paper, but it is <b>priced too close to the XT to make sense</b>: €114 more buys +35%.</p>
+    cheaper and faster than a 5070 Ti at €949</b> (81 against 70 at 1440p), which is why
+    the XT tops the 1440p and 4K blocks while the Nvidia column spends more for less. The
+    <b>9070 GRE at €555</b> only earns a place at 1080p, where nothing above it is worth
+    the money.</p>
     <p><b>8 GB is a 1080p-only compromise, and only on the Nvidia side.</b> A
     <b>5060 8 GB at €319</b> saves €243 over a 5060 Ti 16 GB and the penalty at 1080p is
     the mildest it gets (+29%, against +59% at 1440p). On AMD it is a trap: the 8 GB
@@ -168,11 +168,12 @@ h1 em{font-style:normal;color:var(--acc)}
     index points, which is why the 285K appears nowhere on this card. The Intel column
     tops out at a 270K Plus and spends the rest on the GPU. AMD's ladder is not flat: a
     9800X3D reaches 97.</p>
-    <p><b>1080p and 1440p take the same parts on purpose.</b> The cheapest current 16 GB
-    cards cover both, so the difference shows in the index chips — a 9060 XT reads
-    <b>63 at 1080p but 54 at 1440p</b> — rather than in invented picks. Only 4K moves
-    them, where that card falls to 41. AMD's high-end build repeats at every resolution:
-    the 9070 XT is its ceiling, and past that you are into a 5090.</p>
+    <p><b>1080p tops out deliberately low.</b> The GPU field compresses to a
+    <b>5.5× spread</b> there and the CPU becomes the limit, so the 1080p high build pairs
+    the best CPU with an <b>RX 9070 / 5070 Ti</b> rather than a 9070 XT or a 5080 — a
+    flagship card at 1080p is money that buys almost nothing. At 4K the spread opens to
+    <b>17×</b> and the same money decides everything, which is why only that block climbs
+    to a 5090.</p>
   </div>
 
   <div class="foot">
@@ -204,12 +205,12 @@ const BUILDS = {
     { v:"nv", cpu:"Core i5-12600KF", ci:64, gpu:"RTX 5060", gi:47, gd:false, vram:8, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1189, approx:true }
   ],
   "mid": [
-    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070 XT", gi:96, gd:false, vram:16, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1923, approx:true },
-    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5070 Ti", gi:84, gd:false, vram:16, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:2138, approx:true }
+    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070 GRE", gi:74, gd:true, vram:null, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1809, approx:true },
+    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5070", gi:68, gd:false, vram:12, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1818, approx:true }
   ],
   "high": [
-    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:96, gd:false, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2248, approx:true },
-    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5080", gi:87, gd:false, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2760, approx:true }
+    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070", gi:90, gd:false, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2198, approx:true },
+    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5070 Ti", gi:84, gd:false, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2493, approx:true }
   ],
 },
 "1440p": {
@@ -228,7 +229,7 @@ const BUILDS = {
 },
 "4K": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 7 5800X3D", ci:69, gpu:"RX 9070 XT", gi:65, gd:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1697, approx:true },
+    { v:"amd", cpu:"Ryzen 7 5800X3D", ci:69, gpu:"RX 9070", gi:56, gd:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1647, approx:true },
     { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5070 Ti", gi:57, gd:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1794, approx:true }
   ],
   "mid": [
@@ -242,10 +243,10 @@ const BUILDS = {
 },
 };
 const NOT_PICKED = [
-  { p:"RX 9070 GRE", eur:555, gi:60, gd:true, vram:null, why:"a 9070 XT is +35% for €114 more" },
-  { p:"RTX 5070", eur:629, gi:54, gd:false, vram:12, why:"a 9060 XT 16GB matches it for €215 less" },
-  { p:"RX 7900 XT", eur:736, gi:73, gd:false, vram:20, why:"a 9070 XT beats it and costs €67 less" },
+  { p:"RX 7900 XT", eur:736, gi:73, gd:false, vram:20, why:"a 9070 XT beats it for €67 less" },
+  { p:"RX 9060 XT 8GB", eur:341, gi:25, gd:false, vram:8, why:"the 16GB more than doubles it for €73" },
   { p:"RTX 5060 Ti 8GB", eur:345, gi:40, gd:false, vram:8, why:"the 16GB twin is +23% for €217" },
+  { p:"Arc B580", eur:289, gi:33, gd:false, vram:12, why:"fine at 1080p, out of its depth above" },
 ];
 // >>> BUILDS
 
