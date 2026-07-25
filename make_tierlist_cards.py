@@ -19,6 +19,10 @@ Needs Chrome (or Edge) and Pillow.
 import os, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# public/ is copied verbatim into dist/ by Vite, so writing here means the deploy
+# workflow publishes the cards at https://msfs.razortek.nl/cards/<name>.png with no
+# extra build step — handy for linking or embedding them instead of re-uploading.
+OUT_DIR = os.path.join(HERE, 'public', 'cards')
 SCALE = 2          # device pixel ratio of the final PNGs
 PROBE_H = 1800     # tall enough that no card is clipped while measuring
 
@@ -74,13 +78,14 @@ def content_height(png, width):
 def main():
     chrome = find_chrome()
     only = sys.argv[1] if len(sys.argv) > 1 else None
+    os.makedirs(OUT_DIR, exist_ok=True)
     tmp = os.path.join(HERE, '.probe.png')
     for out, html, query, width in CARDS:
         if only and only.lower() not in out.lower():
             continue
         shoot(chrome, html, query, tmp, width, PROBE_H, 1)
         height = content_height(tmp, width)
-        dest = os.path.join(HERE, out)
+        dest = os.path.join(OUT_DIR, out)
         shoot(chrome, html, query, dest, width, height, SCALE)
         kb = os.path.getsize(dest) // 1024
         aspect = height / width

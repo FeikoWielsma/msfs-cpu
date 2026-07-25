@@ -37,6 +37,9 @@ public/                # copied verbatim into dist/ (data.json, CNAME)
 .github/workflows/     # GitHub Pages deploy (Actions)
 *.csv                  # the transcribed/scraped source data
 plot_msfs24.py, make_megachart.py   # standalone matplotlib chart generators (PNGs)
+tierlist_card_*.html   # the shareable tier-list cards (rendered to PNG)
+make_tierlist_*.py     # tier-list data generator + PNG renderer
+msfs24_*tierlist*      # the generated tier lists (text + PNG)
 ```
 
 The frontend never inlines data — `src/main.ts` fetches `data.json` at runtime,
@@ -61,6 +64,51 @@ the single source of truth. The standalone PNG charts are generated separately:
 python plot_msfs24.py --by-epoch     # Tom's per-epoch PNGs
 python make_megachart.py --averaged  # normalized megachart PNG
 ```
+
+## Shareable tier lists
+
+For posting in Discord and the like, the index is also boiled down to S/A/B/C/D/E
+tier lists — as plain text (`msfs24_tierlist.txt`, `msfs24_gpu_tierlist.txt`, both
+paste-ready in one message) and as PNG cards rendered from HTML+CSS in the site's
+own style:
+
+```sh
+python make_tierlist_clusters.py     # gpu_data.json → cluster rows in the GPU card
+python make_tierlist_cards.py        # both cards → 8 PNGs (needs Chrome + Pillow)
+python make_tierlist_cards.py 4K     # just the variants matching "4K"
+```
+
+The PNGs are written to `public/cards/`, which Vite copies verbatim into `dist/`, so
+the normal Pages deploy publishes them — no extra workflow step. They are then
+linkable and embeddable straight from the site:
+
+```
+https://msfs.razortek.nl/cards/msfs24_cpu_tierlist.png
+https://msfs.razortek.nl/cards/msfs24_cpu_tierlist_compact.png
+https://msfs.razortek.nl/cards/msfs24_gpu_tierlist_1080p.png          (+ _compact)
+https://msfs.razortek.nl/cards/msfs24_gpu_tierlist.png                (1440p, + _compact)
+https://msfs.razortek.nl/cards/msfs24_gpu_tierlist_4k.png             (+ _compact)
+```
+
+They are committed rather than rendered on CI, since the render needs a browser — so
+after editing a card, re-run `make_tierlist_cards.py` and commit the PNGs.
+
+Each card renders in two variants. The **detail** one carries the full prose and is
+meant to be opened; the **compact** one is built for Discord's inline preview, which
+is roughly 550×400 — so a tall portrait image gets height-limited and shown ~290px
+wide, where 13px text lands at about 4px on screen. The compact cards stay under
+0.727 aspect to be width-limited instead, and drop the prose for larger type.
+`make_tierlist_cards.py` measures each card's height instead of hardcoding it, and
+warns if a compact variant creeps back over the aspect limit.
+
+The GPU card covers **1080p / 1440p / 4K** (green / blue / red), each normalised on
+its own — the numbers never compare across resolutions. Tier bands are a fixed share
+of the fastest card and identical on all three, which is the point: 1080p puts four
+cards in S, 4K puts one there and eleven in E.
+
+The CPU tier list groups by generation and V-Cache rather than listing every SKU; the
+GPU one merges cards within 5 index points into a single row, since most GPUs here
+come from one test pass and small gaps are not real differences.
 
 Data lives in `msfs24_data.csv` (Tom's, transcribed from chart screenshots),
 `pcgh_msfs24.csv` (scraped from saved PCGH pages by `scrape_pcgh.py`) and
