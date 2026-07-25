@@ -57,10 +57,55 @@ DDR4_FACTOR = {12: 0.936, 13: 0.887, 14: 0.898}
 # VRAM for cards that are not in gpu_data.json, so they still get a memory tag.
 VRAM_EXTRA = {'RX 9070 GRE': 12}
 
+# ---- the rest of the build, composed rather than carried as one bundle figure -------
+# PSU sized by the card it has to feed. Anything not listed takes the 650W unit.
+PSU = {
+    'RTX 5090': 'psu_1000',
+    'RTX 5080': 'psu_850', 'RTX 5070 Ti': 'psu_850',
+    'RX 9070 XT': 'psu_850', 'RX 7900 XT': 'psu_850',
+    'RTX 5070': 'psu_750a', 'RX 9070': 'psu_750a',
+    'RTX 5060 Ti 16GB': 'psu_750b', 'RTX 5060 Ti 8GB': 'psu_750b',
+    'RX 9070 GRE': 'psu_750b',
+}
+PSU_DEFAULT = 'psu_650'
+
+# Chips that want a better board than the cheapest B-series: flagships, and K-series
+# parts whose VRM demands are more than a bargain board is happy with.
+MB_GREAT = {'Ryzen 7 9800X3D', 'Core i5-14600K'}
+
+# 360mm AIO territory (the hot Intel parts) and dual-tower territory. Everything else
+# takes the 120mm single tower.
+COOLER_AIO = {'Core Ultra 9 285K', 'Core Ultra 7 270K Plus', 'Core i7-14700K'}
+COOLER_MID = {'Ryzen 7 9800X3D', 'Ryzen 7 7800X3D', 'Ryzen 7 5800X3D',
+              'Core i5-12600KF', 'Core i5-14600K', 'Ryzen 5 9600X'}
+
+
+def psu_for(gpu):
+    return PSU.get(gpu, PSU_DEFAULT)
+
+
+def mb_for(cpu, socket, ram):
+    great = '_great' if cpu in MB_GREAT else ''
+    if socket == 'AM4':
+        return 'mb_am4'                     # no great tier: B550 is the sensible ceiling
+    if socket == 'AM5':
+        return 'mb_am5' + great
+    if socket == 'LGA1851':
+        return 'mb_lga1851'
+    if socket == 'LGA1700':
+        return 'mb_lga1700_ddr4' + great if 'DDR4' in ram else 'mb_lga1700_ddr5' + great
+    return None
+
+
+def cooler_for(cpu):
+    return ('cooler_aio' if cpu in COOLER_AIO else
+            'cooler_mid' if cpu in COOLER_MID else 'cooler_entry')
+
 # Priced, plausible, but beaten on value by something already in the matrix. Listed
 # under it because "why isn't X in here?" is the question that always follows.
 # (part, reason) — index shown is at 1440p.
 NOT_PICKED = [
+    ('RX 9070 GRE', 'an RX 9070 is +20% for €34 more'),
     ('RX 7900 XT', 'a 9070 XT beats it for €67 less'),
     ('RX 9060 XT 8GB', 'the 16GB more than doubles it for €73'),
     ('RTX 5060 Ti 8GB', 'the 16GB twin is +23% for €217'),
@@ -159,8 +204,12 @@ def main():
                 warn('%s is on DDR4 but has no measured DDR4 factor' % cpu)
 
         # total — any missing part kills the total rather than under-reporting it
-        bundle = 'bundle_%s_%s' % (tier, ven)
-        parts = [cpu, gpu, ram, sto, bundle]
+        mb = mb_for(cpu, socket, ram)
+        if mb is None:
+            warn('no motherboard rule for %s on %r' % (cpu, socket))
+        parts = [cpu, gpu, ram, sto, psu_for(gpu), cooler_for(cpu), 'case']
+        if mb:
+            parts.append(mb)
         missing = [p for p in parts if p not in prices]
         for p in missing:
             warn('no price for %r (needed by %s/%s/%s)' % (p, res, tier, ven))

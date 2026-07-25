@@ -6,8 +6,8 @@
 #                 its total shown with a ~ prefix, so the card never passes an estimate
 #                 off as a looked-up price.
 #
-# Bundle rows cover PSU + case + motherboard, split by vendor because LGA1851 boards
-# run dearer than AM5 ones at the same tier. These are the last estimates left.
+# PSU, motherboard, case and cooler are composed per build by make_build_table.py
+# from the rules in that file, rather than being one flat bundle figure.
 part,eur,src
 priced_on,2026-07-25,
 # --- CPUs
@@ -35,8 +35,7 @@ Core i5-12600KF,170,tweakers
 # --- GPUs. Radeon is markedly better value at every tier at these prices; the 9070 XT
 # at 669 is both cheaper and faster than a 5070 Ti at 949.
 RX 9070 XT,669,tweakers
-# NOT YET PRICED — sits between the GRE (555) and the XT (669); needs a real figure.
-RX 9070,619,est
+RX 9070,589,tweakers
 RX 9060 XT 16GB,414,tweakers
 RX 9060 XT 8GB,341,tweakers
 RX 7600,283,tweakers
@@ -66,10 +65,25 @@ RTX 4080,1589,tweakers
 # --- storage
 1TB NVMe,140,tweakers
 2TB NVMe,240,tweakers
-# --- PSU + case + motherboard — THE LAST ESTIMATES
-bundle_entry_amd,290,est
-bundle_entry_nv,320,est
-bundle_mid_amd,390,est
-bundle_mid_nv,430,est
-bundle_high_amd,540,est
-bundle_high_nv,590,est
+# --- PSU, by the GPU it has to feed
+psu_650,50,tweakers
+psu_750b,58,tweakers
+psu_750a,80,tweakers
+psu_850,90,tweakers
+psu_1000,115,tweakers
+# --- motherboard, by socket and memory type. "great" = a board worth pairing with a
+# K-series or flagship chip rather than the cheapest B-series.
+mb_am4,85,tweakers
+mb_am5,100,tweakers
+mb_am5_great,130,tweakers
+mb_lga1700_ddr4,100,tweakers
+mb_lga1700_ddr4_great,125,tweakers
+mb_lga1700_ddr5,100,tweakers
+mb_lga1700_ddr5_great,125,tweakers
+mb_lga1851,125,tweakers
+# --- case, flat
+case,75,tweakers
+# --- CPU cooler: single 120mm tower, dual tower, or a 360mm AIO for the hot Intel parts
+cooler_entry,15,tweakers
+cooler_mid,35,tweakers
+cooler_aio,75,tweakers
