@@ -10,7 +10,7 @@ prints a warning and (for prices) renders a dash rather than a plausible-looking
 number. A build table that is quietly wrong about money is worse than one that admits
 it does not know.
 """
-import csv, datetime, os, sys
+import csv, datetime, os, re, sys
 
 from msfs_index import (cpu_index, gpu_index, CPU_SPECS, CPU_VENDOR, GPU_SPECS,
                         coverage)
@@ -43,6 +43,19 @@ DERIVED_GPU = {
 CPU_ALIAS = {
     'Core i5-12600KF': 'Core i5-12600K',
 }
+
+# LGA1700 chips are indexed on DDR5, so pairing one with DDR4 has to be discounted or
+# the card overstates it. These factors are measured, not guessed: Tom's 5800X3D
+# re-review ran the same three chips on DDR5 and on DDR4-3200, and the raw cross-source
+# fit puts DDR5 ahead by 6.8% (12700K), 12.7% (13700K) and 11.3% (14700K). Inverted,
+# DDR4 lands at these fractions of the DDR5 figure. Applied per Intel generation, and
+# the resulting chip is marked derived.
+# AM4 needs no factor: those parts were only ever tested on DDR4, so their index is
+# already the DDR4 number.
+DDR4_FACTOR = {12: 0.936, 13: 0.887, 14: 0.898}
+
+# VRAM for cards that are not in gpu_data.json, so they still get a memory tag.
+VRAM_EXTRA = {'RX 9070 GRE': 12}
 
 # Priced, plausible, but beaten on value by something already in the matrix. Listed
 # under it because "why isn't X in here?" is the question that always follows.
@@ -119,7 +132,7 @@ def main():
 
         # index lookups — a miss means a typo, so say so rather than showing no chip
         cpu_key = CPU_ALIAS.get(cpu, cpu)      # same silicon, other name
-        ci = cpu_idx.get(cpu_key)
+        ci, cd = cpu_idx.get(cpu_key), False
         gi, gd = prices_by_res[res].get(gpu), False
         if gi is None:                       # fall back to a TPU-derived figure
             gi = DERIVED_GPU.get(gpu, {}).get(res)
@@ -136,6 +149,15 @@ def main():
             warn('%s is %s so it needs %s, but the build lists %r'
                  % (cpu, socket, want, ram))
 
+        # LGA1700 on DDR4: discount the index by the measured factor for that generation
+        if ci is not None and socket == 'LGA1700' and 'DDR4' in ram:
+            m = re.match(r'^Core i\d-(\d\d)', cpu_key)
+            gen = int(m.group(1)) if m else None
+            if gen in DDR4_FACTOR:
+                ci, cd = ci * DDR4_FACTOR[gen], True
+            else:
+                warn('%s is on DDR4 but has no measured DDR4 factor' % cpu)
+
         # total — any missing part kills the total rather than under-reporting it
         bundle = 'bundle_%s_%s' % (tier, ven)
         parts = [cpu, gpu, ram, sto, bundle]
@@ -147,10 +169,10 @@ def main():
         approx = any(price_src.get(p, 'est') != 'tweakers' for p in parts if p in prices)
 
         builds[(res, tier, ven)] = {
-            'cpu': cpu, 'ci': ci, 'cn': cpu_cov.get(cpu_key, 0),
+            'cpu': cpu, 'ci': ci, 'cd': cd, 'cn': cpu_cov.get(cpu_key, 0),
             'gpu': gpu, 'gi': gi, 'gd': gd, 'gn': gpu_cov.get(gpu, 0),
             'ram': ram, 'sto': sto, 'total': total, 'approx': approx,
-            'vram': GPU_SPECS.get(gpu, {}).get('vram'),
+            'vram': GPU_SPECS.get(gpu, {}).get('vram') or VRAM_EXTRA.get(gpu),
         }
 
     for res in RES:
@@ -170,9 +192,10 @@ def main():
                 if not b:
                     continue
                 cells.append(
-                    '    { v:"%s", cpu:%s, ci:%s, gpu:%s, gi:%s, gd:%s, vram:%s,'
-                    ' ram:%s, sto:%s, eur:%s, approx:%s }'
-                    % (ven, js_str(b['cpu']), fmt(b['ci']), js_str(b['gpu']),
+                    '    { v:"%s", cpu:%s, ci:%s, cd:%s, gpu:%s, gi:%s, gd:%s,'
+                    ' vram:%s, ram:%s, sto:%s, eur:%s, approx:%s }'
+                    % (ven, js_str(b['cpu']), fmt(b['ci']),
+                       'true' if b['cd'] else 'false', js_str(b['gpu']),
                        fmt(b['gi']), 'true' if b['gd'] else 'false',
                        fmt(b['vram']), js_str(b['ram']), js_str(b['sto']),
                        'null' if b['total'] is None else b['total'],
@@ -198,7 +221,8 @@ def main():
         js.append('  { p:%s, eur:%d, gi:%d, gd:%s, vram:%s, why:%s },'
                   % (js_str(part), prices[part], round(idx),
                      'true' if derived else 'false',
-                     fmt(GPU_SPECS.get(part, {}).get('vram')), js_str(reason)))
+                     fmt(GPU_SPECS.get(part, {}).get('vram')
+                         or VRAM_EXTRA.get(part)), js_str(reason)))
     js.append('];')
     block = '\n'.join(js)
 
