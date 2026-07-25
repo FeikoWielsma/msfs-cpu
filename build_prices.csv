@@ -29,9 +29,14 @@ Core Ultra 5 250K Plus,219,tweakers
 Core i7-14700K,392,tweakers
 Core i5-14600K,229,tweakers
 Core i5-12400F,145,tweakers
+# Priced as the KF; identical silicon to the 12600K with the iGPU fused off, which is
+# how it resolves to an index. See CPU_ALIAS in make_build_table.py.
+Core i5-12600KF,170,tweakers
 # --- GPUs. Radeon is markedly better value at every tier at these prices; the 9070 XT
 # at 669 is both cheaper and faster than a 5070 Ti at 949.
 RX 9070 XT,669,tweakers
+# NOT YET PRICED — sits between the GRE (555) and the XT (669); needs a real figure.
+RX 9070,619,est
 RX 9060 XT 16GB,414,tweakers
 RX 9060 XT 8GB,341,tweakers
 RX 7600,283,tweakers

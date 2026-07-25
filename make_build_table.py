@@ -36,6 +36,14 @@ DERIVED_GPU = {
     'RX 9070 GRE': {'1080p': 74, '1440p': 60},
 }
 
+# Parts that are the same silicon under another name, so index and socket resolve
+# through the alias. Not an estimate and not an interpolation — an equivalence — so
+# these carry no ° marker. The KF is a 12600K with the iGPU fused off; the arch prior
+# in msfs_index.py already treats the K and KF bins as equal.
+CPU_ALIAS = {
+    'Core i5-12600KF': 'Core i5-12600K',
+}
+
 # Priced, plausible, but beaten on value by something already in the matrix. Listed
 # under it because "why isn't X in here?" is the question that always follows.
 # (part, reason) — index shown is at 1440p.
@@ -110,7 +118,8 @@ def main():
         ram, sto = row['ram'].strip(), row['storage'].strip()
 
         # index lookups — a miss means a typo, so say so rather than showing no chip
-        ci = cpu_idx.get(cpu)
+        cpu_key = CPU_ALIAS.get(cpu, cpu)      # same silicon, other name
+        ci = cpu_idx.get(cpu_key)
         gi, gd = prices_by_res[res].get(gpu), False
         if gi is None:                       # fall back to a TPU-derived figure
             gi = DERIVED_GPU.get(gpu, {}).get(res)
@@ -121,7 +130,7 @@ def main():
             warn('GPU %r has no index for %s — measured or derived (typo?)' % (gpu, res))
 
         # socket vs memory generation
-        socket = CPU_SPECS.get(cpu, {}).get('socket')
+        socket = CPU_SPECS.get(cpu_key, {}).get('socket')
         want = SOCKET_MEM.get(socket, None) if socket else None
         if want and want not in ram:
             warn('%s is %s so it needs %s, but the build lists %r'
@@ -138,7 +147,7 @@ def main():
         approx = any(price_src.get(p, 'est') != 'tweakers' for p in parts if p in prices)
 
         builds[(res, tier, ven)] = {
-            'cpu': cpu, 'ci': ci, 'cn': cpu_cov.get(cpu, 0),
+            'cpu': cpu, 'ci': ci, 'cn': cpu_cov.get(cpu_key, 0),
             'gpu': gpu, 'gi': gi, 'gd': gd, 'gn': gpu_cov.get(gpu, 0),
             'ram': ram, 'sto': sto, 'total': total, 'approx': approx,
             'vram': GPU_SPECS.get(gpu, {}).get('vram'),
