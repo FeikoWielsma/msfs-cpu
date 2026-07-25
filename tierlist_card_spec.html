@@ -5,14 +5,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 <!--
-  A rebuild of Microsoft's official MSFS 2024 system-requirements table using the
-  measured index. Render with: python make_tierlist_cards.py spec
+  A tiered spec table for MSFS 2024, driven by the measured index.
+  Render with: python make_tierlist_cards.py spec
 
-  Borrowed from the official table: filled header cells, a filled left label column,
-  condensed uppercase headers, and a gap between tier blocks so each AMD / NVIDIA
-  pair reads as one unit.
+  The layout follows the game's official requirements table so it reads as familiar:
+  filled header cells, a filled left label column, condensed uppercase headers, and a
+  gap between tier blocks so each AMD / NVIDIA pair reads as one unit. The card itself
+  makes no reference to that table — it stands on its own.
 
-  Deliberately NOT borrowed:
+  Deliberately NOT copied from it:
    - their photo background. Cells are semi-transparent over a photo, so per-cell
      contrast varies and text bleeds through in places. A solid surface is legible.
    - white-on-cyan headers, which measure 2.70:1 on their #00a8e8 — below AA even
@@ -106,33 +107,31 @@ h1 em{font-style:normal;color:var(--acc)}
 
 <div class="card">
   <div class="kicker">Microsoft Flight Simulator 2024</div>
-  <h1>Spec Table <em>· 2026 Rebuild</em></h1>
+  <h1>Spec Table <em>· 2026</em></h1>
   <div class="lede">
-    Microsoft's launch-day requirements table, rebuilt from <b>measured benchmarks</b>
-    instead of pre-release estimates. The <b>index rows are the addition</b> — the
-    official table gives three tiers with no way to see how far apart they are.
-    CPU, GPU, index and VRAM rows come from our data; RAM is carried over from
-    Microsoft unchanged, since nothing here measures memory capacity.
+    Three hardware tiers for MSFS 2024, each pick carrying its <b>measured Performance
+    Index</b> so you can see how far apart the tiers actually are. CPU, GPU and VRAM
+    rows come from benchmark data; RAM is not something this dataset measures.
   </div>
 
   <div id="grid" class="grid"></div>
 
   <div class="call">
-    <h3>What Microsoft's own picks score</h3>
-    <p>Their <b>ideal</b> Intel pick, the <b>i7-14700K</b>, lands on <b>79</b> — which is
-    the Intel ceiling in this dataset, so it is a fair call. Their ideal AMD pick is the
-    Ryzen 9 7900X; the closest part we have, the <b>Ryzen 9 7900</b>, scores <b>58</b>.
-    A cheaper, older <b>7800X3D beats it at 78</b>, and a 9800X3D reaches <b>98</b> —
-    so the one row where the official table costs you the most money is its AMD flagship.</p>
-    <p>Their VRAM guidance of <s>4 / 8 / 12 GB</s> predates the memory wall this game
-    now has: the same GPU with 16 GB instead of 8 GB measures <b>+59% at 1440p and
-    +120% at 4K</b>. <b>16 GB is the floor at every tier</b>, which is the biggest single
-    change on this card.</p>
+    <h3>Where the money actually goes</h3>
+    <p><b>VRAM before the chip.</b> The same GPU with 16 GB instead of 8 GB measures
+    <b>+59% at 1440p and +120% at 4K</b> on three matched pairs. That is why 16 GB is
+    the floor at every tier here, including minimum — an 8 GB card falls off a cliff
+    rather than degrading gently.</p>
+    <p><b>Cache before cores on the CPU side.</b> V-Cache is worth <b>+19–30%</b> over
+    the same generation without it, and a 16-core 5950X scores below an 8-core 5800X.
+    It is also why the AMD column climbs further: <b>98 against a ceiling of 79</b> on
+    the Intel side, where there is no X3D equivalent.</p>
   </div>
 
   <div class="foot">
-    <b>Unchanged from Microsoft:</b> Windows 10 with the latest update · DirectX 12 ·
-    50 GB storage · 10 / 50 / 100 Mbps bandwidth. RAM figures are theirs too.<br/>
+    <b>Not measured here:</b> RAM, storage, bandwidth and OS follow the official
+    requirements — Windows 10 with the latest update · DirectX 12 · 50 GB storage ·
+    10 / 50 / 100 Mbps.<br/>
     <b>Measured rows:</b> CPU index from seven Tom's Hardware, PCGH and ComputerBase
     test passes; GPU index at 1440p Ultra from Tom's Hardware, 5090 = 100. Both are
     relative scales, not frame rates — absolute FPS are not comparable across sites.
@@ -160,9 +159,9 @@ const ROWS = [
   ]},
   { label:"GPU index", sub:"1440p ultra · 5090 = 100", idx:1,
     cells:[[37],[41],[54],[49],[81],[100]] },
-  { label:"Min VRAM", sub:"measured, not carried",
+  { label:"Min VRAM", sub:"measured",
     cells:[["16 GB"],["16 GB"],["16 GB"],["16 GB"],["16 GB"],["32 GB"]] },
-  { label:"System RAM", sub:"Microsoft's figure", carried:1,
+  { label:"System RAM", sub:"not measured", carried:1,
     cells:[["16 GB"],["16 GB"],["32 GB"],["32 GB"],["64 GB"],["64 GB"]] },
 ];
 const TIERS = ["Minimum", "Recommended", "Ideal"];
