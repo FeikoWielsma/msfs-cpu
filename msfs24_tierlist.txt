@@ -1,0 +1,35 @@
+```
+    MSFS 2024 · CPU TIER LIST
+    Performance Index, 7 reviews normalised
+
+S │ Ryzen 9000 X3D ........ 84-100
+  │
+A │ Core Ultra 2xx ........  66-78
+  │ Ryzen 7000 X3D ........  71-78
+  │ Ryzen 9000 non-X3D ....  69-75
+  │ Core 13/14th ..........  57-79
+  │
+B │ Ryzen 5000 X3D ........  61-69
+  │ Core 12th + DDR5 ......  59-65
+  │ Ryzen 7000 non-X3D ....  58-69
+  │
+C │ Core 12th + DDR4 ......  55-62
+  │ Ryzen 5000 non-X3D ....  51-59
+  │
+D │ Ryzen 3000 ............  47-53
+  │
+E │ 5500 · 5700(non-X) · 5600G · 5700G
+```
+Ranges are fastest-to-slowest SKU in the group, so a wide one (Core 13/14th) means the flagship and the i3 are far apart.
+
+⛔ **Don't buy the 16 MB L3 Cezanne traps** — 5500, 5700 (non-X!), 5600G, 5700G. Never benchmarked, so no score, but they carry **half** the 5600's cache (16 vs 32 MB) plus PCIe 3.0. Cache is worth +10-20% here, so they land at or below the 3600 (47).
+⚠️ **"5700" and "5700X" are different chips!** 5700X = Vermeer, 32 MB, fine-ish (C tier). 5700 = Cezanne, 16 MB, avoid.
+
+**TL;DR**
+• V-Cache is worth **+19-30%** over the same generation without it — a full gen of uplift, or more.
+• Arrow Lake, Raptor Lake and Zen 4 X3D flagships land within **1%** of each other. That fight's a wash.
+• Cores do nothing: the 16-core 5950X scores *below* the 8-core 5800X. Buy cache, not core count.
+• DDR4 costs Alder Lake **~7%** (measured, 12700K on both) — get the DDR5 board if you can.
+• On AM4? V-Cache, any of it: 5800X3D `69` > 5700X3D `66` > 5600X3D `61`. (5500X3D untested, but same 96 MB die.) Nothing else on the socket is worth the money.
+
+Data: <https://msfs.razortek.nl> — Tom's · PCGH · ComputerBase

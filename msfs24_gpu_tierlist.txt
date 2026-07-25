@@ -1,0 +1,38 @@
+```
+   MSFS 2024 · GPU TIER LIST · 1440p Ultra
+   Performance Index, 5090 = 100
+
+S │ 5090 100
+  │
+A │ 4090 86 · 9070XT 81 · 7900XTX 81
+  │ 5080 76 · 7900XT 73 · 9070 72
+  │ 4080S 72 · 5070Ti 70
+  │
+B │ 4070TiS 63 · 4070Ti 59 · 4070S 55
+  │ 5070 54 · 7800XT 54 · 9060XT16 54
+  │ 7700XT 50
+  │
+C │ 5060Ti16 49 · 4070 47 · 4060Ti16 41
+  │ 5060Ti8* 40 · 5060* 37 · 7600XT 37
+  │
+D │ B580 33 · 3060(12GB) 31 · A770 30
+  │ 4060Ti8* 30 · 9060XT8* 25
+  │
+E │ 5050* 22 · A750* 21 · 4060* 17
+  │ B570 16 · 7600* 15 · 3050* 15
+  │ 6600* 13 · 3060Ti* 12
+
+  * = 8 GB card. XT/XTX = Radeon, A/B = Arc.
+```
+⛔ **8 GB is the trap.** Same GPU, 16 GB vs 8 GB, measured here: **+59%** at 1440p and **+120%** at 4K. A 5060 Ti 16GB beats the 8GB version by more than the 8GB version beats a 4060. Every `*` card above is a VRAM cliff waiting to happen.
+
+**TL;DR**
+• VRAM > everything at these settings. Don't buy 8 GB for MSFS, at any price.
+• Resolution decides how much the GPU matters: the field spans 5.5x at 1080p but **17x** at 4K. MSFS is CPU-bound at 1080p, so a big GPU there is wasted without a big CPU.
+• Best value in B: 9060XT 16GB matches a 5070 and a 7800 XT.
+• AMD is competitive up high — 9070 XT and 7900 XTX both land within 6% of a 4090.
+• Below ~25 the ordering is mush: those cards are all VRAM-starved and their exact places are noise, not ranking.
+
+Caveats: one source (Tom's Hardware), most cards from a single test pass, and the index is normalised **per resolution** — 1440p numbers aren't comparable to 4K ones.
+
+Data: <https://msfs.razortek.nl/#gpu> — Tom's Hardware
