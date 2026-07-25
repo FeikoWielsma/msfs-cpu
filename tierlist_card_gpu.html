@@ -82,6 +82,13 @@ h1 em{font-style:normal;color:var(--acc)}
 sup.vr{font-size:8.5px;font-weight:800;letter-spacing:.03em;vertical-align:3px;margin-left:2px}
 sup.v8{color:#ff7d8d}
 sup.v12{color:#f2c14e}
+/* Gold accolades. Deliberately glyphs, not pills: a mark belongs to one card, and a
+   pill mid-list ("RX 9070 [BEST VALUE] · RTX 4080 Super") reads badly. The glow is
+   what separates them from the amber 12G tag, which sits at a similar hue. */
+.mk{font-size:11.5px;margin-left:3px;color:#ffd166;
+  text-shadow:0 0 5px rgba(255,200,80,.55), 0 0 11px rgba(255,190,60,.3)}
+.mk.ult{font-size:12.5px;
+  text-shadow:0 0 6px rgba(255,205,90,.75), 0 0 15px rgba(255,190,60,.45)}
 .note{font-size:12.5px;color:var(--note);letter-spacing:-.002em;margin-left:7px}
 .bar{grid-column:1;position:relative;height:13px;background:var(--track);border-radius:2px;
   overflow:hidden}
@@ -160,10 +167,11 @@ html.compact .foot{margin-top:9px;padding-top:7px;font-size:10.5px}
   <h1>GPU Tier List <em>· <span id="hRes"></span> Ultra</em></h1>
   <!-- .sub must stay ONE line: ~852px of content width at 12.5px fits ~128 chars.
        Keep it under that or it silently steals a whole line of card height. -->
-  <div class="sub">Performance Index · 5090 = 100 · rows = interchangeable ·
-    <span class="b-nv">GeForce</span> · <span class="b-amd">Radeon</span> ·
-    <span class="b-intel">Arc</span> · <b style="color:#ff7d8d">8G</b> avoid ·
-    <b style="color:#f2c14e">12G</b> tight · rest 16 GB+</div>
+  <div class="sub">Performance Index · 5090 = 100 · <span class="b-nv">GeForce</span> ·
+    <span class="b-amd">Radeon</span> · <span class="b-intel">Arc</span> ·
+    <b style="color:#ff7d8d">8G</b> avoid · <b style="color:#f2c14e">12G</b> tight ·
+    rest 16 GB+ · <span class="mk">★</span> value ·
+    <span class="mk ult">◆</span> fastest</div>
   <div class="lede">
     Tom's Hardware GPU test passes at <b><span class="hRes2"></span> Ultra</b>, rescaled
     onto one 0–100 scale with the 5090 at 100. Cards within a few points of each other are
@@ -172,8 +180,10 @@ html.compact .foot{margin-top:9px;padding-top:7px;font-size:10.5px}
     Names are tinted by brand — <span class="b-nv">GeForce</span>,
     <span class="b-amd">Radeon</span>, <span class="b-intel">Arc</span> — and tagged by
     memory: <sup class="vr v8">8G</sup> and <sup class="vr v12">12G</sup>, untagged means
-    16 GB or more. The index is normalised per resolution, so these numbers are
-    <b>not comparable to the other two cards</b>.
+    16 GB or more. <span class="mk ult">◆</span> is the outright fastest card and
+    <span class="mk">★</span> marks the <b>best value for money</b> — an editorial pick,
+    since the dataset holds no prices. The index is normalised per resolution, so these
+    numbers are <b>not comparable to other resolutions</b>.
   </div>
   <div class="hrule"></div>
 
@@ -227,31 +237,31 @@ html.compact .foot{margin-top:9px;padding-top:7px;font-size:10.5px}
 /* Per-resolution index, clusters generated from public/gpu_data.json (gap 5, cap 5).
    mean = cluster average (sets the tier); lo/hi = slowest and fastest card in it.
    Third card arg is VRAM in GB, present only when <= 12 — that is what earns a tag. */
-const nv=(n,s,g)=>({n,s,v:"nv",g}), amd=(n,s,g)=>({n,s,v:"amd",g}),
-      intel=(n,s,g)=>({n,s,v:"intel",g});
+const nv=(n,s,g,m)=>({n,s,v:"nv",g,m}), amd=(n,s,g,m)=>({n,s,v:"amd",g,m}),
+      intel=(n,s,g,m)=>({n,s,v:"intel",g,m});
 // GENERATED — do not hand-edit between the markers.
 // Regenerate with: python make_tierlist_clusters.py
 const GPU_DATA = {
 // <<< CLUSTERS
 "1080p": [
   { t:"S", rows:[
-    { cards:[nv("RTX 5090","5090"), nv("RTX 4090","4090"), amd("RX 7900 XTX","7900XTX"), amd("RX 9070 XT","9070XT")],
+    { cards:[nv("RTX 5090","5090",0,"ult"), nv("RTX 4090","4090"), amd("RX 7900 XTX","7900XTX"), amd("RX 9070 XT","9070XT",0,"value")],
       lo:96, hi:100, mean:98 },
   ]},
   { t:"A", rows:[
-    { cards:[amd("RX 9070","9070"), amd("RX 7900 XT","7900XT"), nv("RTX 5080","5080"), nv("RTX 4080 Super","4080S"), nv("RTX 5070 Ti","5070Ti")],
+    { cards:[nv("RTX 5080","5080"), nv("RTX 4080 Super","4080S"), nv("RTX 5070 Ti","5070Ti"), amd("RX 9070","9070",0,"value"), amd("RX 7900 XT","7900XT")],
       lo:84, hi:90, mean:87 },
     { cards:[nv("RTX 4070 Ti Super","4070TiS"), nv("RTX 4070 Ti","4070Ti",12), nv("RTX 4070 Super","4070S",12), nv("RTX 5070","5070",12)],
       lo:68, hi:76, mean:72 },
   ]},
   { t:"B", rows:[
-    { cards:[amd("RX 7800 XT","7800XT"), amd("RX 9060 XT 16GB","9060XT16"), amd("RX 7700 XT","7700XT",12), nv("RTX 4070","4070",12), nv("RTX 5060 Ti 16GB","5060Ti16")],
+    { cards:[nv("RTX 4070","4070",12), nv("RTX 5060 Ti 16GB","5060Ti16"), amd("RX 7800 XT","7800XT"), amd("RX 9060 XT 16GB","9060XT16",0,"value"), amd("RX 7700 XT","7700XT",12)],
       lo:59, hi:67, mean:62 },
   ]},
   { t:"C", rows:[
     { cards:[nv("RTX 4060 Ti 16GB","4060Ti16"), nv("RTX 4060 Ti","4060Ti",8), nv("RTX 5060 Ti","5060Ti",8), nv("RTX 5060","5060",8), amd("RX 7600 XT","7600XT")],
       lo:44, hi:48, mean:47 },
-    { cards:[intel("Arc B580","B580",12), amd("RX 9060 XT","9060XT",8), nv("RTX 5050","5050",8), nv("RTX 3060","3060",12), intel("Arc A770 16GB","A770")],
+    { cards:[nv("RTX 5050","5050",8), nv("RTX 3060","3060",12), amd("RX 9060 XT","9060XT",8), intel("Arc B580","B580",12), intel("Arc A770 16GB","A770")],
       lo:38, hi:39, mean:38 },
     { cards:[nv("RTX 4060","4060",8), nv("RTX 3060 Ti","3060Ti",8)],
       lo:36, hi:37, mean:37 },
@@ -265,27 +275,27 @@ const GPU_DATA = {
       lo:21, hi:21, mean:21 },
   ]},
   { t:"E", rows:[
-    { cards:[amd("RX 7600","7600",8), nv("RTX 3050","3050",8)],
+    { cards:[nv("RTX 3050","3050",8), amd("RX 7600","7600",8)],
       lo:18, hi:20, mean:19 },
   ]},
 ],
 "1440p": [
   { t:"S", rows:[
-    { cards:[nv("RTX 5090","5090")],
+    { cards:[nv("RTX 5090","5090",0,"ult")],
       lo:100, hi:100, mean:100 },
   ]},
   { t:"A", rows:[
     { cards:[nv("RTX 4090","4090")],
       lo:86, hi:86, mean:86 },
-    { cards:[amd("RX 9070 XT","9070XT"), amd("RX 7900 XTX","7900XTX")],
+    { cards:[amd("RX 9070 XT","9070XT",0,"value"), amd("RX 7900 XTX","7900XTX")],
       lo:81, hi:81, mean:81 },
-    { cards:[nv("RTX 5080","5080"), amd("RX 7900 XT","7900XT"), amd("RX 9070","9070"), nv("RTX 4080 Super","4080S"), nv("RTX 5070 Ti","5070Ti")],
+    { cards:[nv("RTX 5080","5080"), nv("RTX 4080 Super","4080S"), nv("RTX 5070 Ti","5070Ti"), amd("RX 7900 XT","7900XT"), amd("RX 9070","9070",0,"value")],
       lo:70, hi:76, mean:72 },
   ]},
   { t:"B", rows:[
     { cards:[nv("RTX 4070 Ti Super","4070TiS"), nv("RTX 4070 Ti","4070Ti",12), nv("RTX 4070 Super","4070S",12), nv("RTX 5070","5070",12), amd("RX 7800 XT","7800XT")],
       lo:54, hi:63, mean:57 },
-    { cards:[amd("RX 9060 XT 16GB","9060XT16"), amd("RX 7700 XT","7700XT",12), nv("RTX 5060 Ti 16GB","5060Ti16")],
+    { cards:[nv("RTX 5060 Ti 16GB","5060Ti16"), amd("RX 9060 XT 16GB","9060XT16",0,"value"), amd("RX 7700 XT","7700XT",12)],
       lo:49, hi:54, mean:51 },
   ]},
   { t:"C", rows:[
@@ -295,13 +305,13 @@ const GPU_DATA = {
       lo:37, hi:41, mean:39 },
   ]},
   { t:"D", rows:[
-    { cards:[intel("Arc B580","B580",12), nv("RTX 3060","3060",12), intel("Arc A770 16GB","A770"), nv("RTX 4060 Ti","4060Ti",8), amd("RX 9060 XT","9060XT",8)],
+    { cards:[nv("RTX 3060","3060",12), nv("RTX 4060 Ti","4060Ti",8), amd("RX 9060 XT","9060XT",8), intel("Arc B580","B580",12), intel("Arc A770 16GB","A770")],
       lo:25, hi:33, mean:30 },
     { cards:[nv("RTX 5050","5050",8), intel("Arc A750","A750",8)],
       lo:21, hi:22, mean:22 },
   ]},
   { t:"E", rows:[
-    { cards:[nv("RTX 4060","4060",8), intel("Arc B570","B570",10), amd("RX 7600","7600",8), nv("RTX 3050","3050",8), amd("RX 6600","6600",8)],
+    { cards:[nv("RTX 4060","4060",8), nv("RTX 3050","3050",8), amd("RX 7600","7600",8), amd("RX 6600","6600",8), intel("Arc B570","B570",10)],
       lo:13, hi:17, mean:15 },
     { cards:[nv("RTX 3060 Ti","3060Ti",8)],
       lo:12, hi:12, mean:12 },
@@ -309,7 +319,7 @@ const GPU_DATA = {
 ],
 "4K": [
   { t:"S", rows:[
-    { cards:[nv("RTX 5090","5090")],
+    { cards:[nv("RTX 5090","5090",0,"ult")],
       lo:100, hi:100, mean:100 },
   ]},
   { t:"A", rows:[
@@ -317,27 +327,27 @@ const GPU_DATA = {
       lo:78, hi:78, mean:78 },
   ]},
   { t:"B", rows:[
-    { cards:[amd("RX 7900 XTX","7900XTX"), amd("RX 9070 XT","9070XT"), nv("RTX 5080","5080"), nv("RTX 4080 Super","4080S"), amd("RX 7900 XT","7900XT")],
+    { cards:[nv("RTX 5080","5080"), nv("RTX 4080 Super","4080S"), amd("RX 7900 XTX","7900XTX"), amd("RX 9070 XT","9070XT",0,"value"), amd("RX 7900 XT","7900XT")],
       lo:58, hi:68, mean:63 },
-    { cards:[nv("RTX 5070 Ti","5070Ti"), amd("RX 9070","9070"), nv("RTX 4070 Ti Super","4070TiS"), nv("RTX 4070 Ti","4070Ti",12)],
+    { cards:[nv("RTX 5070 Ti","5070Ti"), nv("RTX 4070 Ti Super","4070TiS"), nv("RTX 4070 Ti","4070Ti",12), amd("RX 9070","9070",0,"value")],
       lo:49, hi:57, mean:53 },
   ]},
   { t:"C", rows:[
-    { cards:[nv("RTX 4070 Super","4070S",12), amd("RX 7800 XT","7800XT"), nv("RTX 5070","5070",12), amd("RX 9060 XT 16GB","9060XT16"), nv("RTX 5060 Ti 16GB","5060Ti16")],
+    { cards:[nv("RTX 4070 Super","4070S",12), nv("RTX 5070","5070",12), nv("RTX 5060 Ti 16GB","5060Ti16"), amd("RX 7800 XT","7800XT"), amd("RX 9060 XT 16GB","9060XT16",0,"value")],
       lo:39, hi:45, mean:42 },
-    { cards:[amd("RX 7700 XT","7700XT",12), nv("RTX 4070","4070",12)],
+    { cards:[nv("RTX 4070","4070",12), amd("RX 7700 XT","7700XT",12)],
       lo:36, hi:38, mean:37 },
   ]},
   { t:"D", rows:[
     { cards:[nv("RTX 4060 Ti 16GB","4060Ti16")],
       lo:33, hi:33, mean:33 },
-    { cards:[amd("RX 7600 XT","7600XT"), amd("RX 9060 XT","9060XT",8), intel("Arc B580","B580",12), nv("RTX 3060","3060",12), intel("Arc A770 16GB","A770")],
+    { cards:[nv("RTX 3060","3060",12), amd("RX 7600 XT","7600XT"), amd("RX 9060 XT","9060XT",8), intel("Arc B580","B580",12), intel("Arc A770 16GB","A770")],
       lo:23, hi:28, mean:25 },
   ]},
   { t:"E", rows:[
-    { cards:[nv("RTX 5060 Ti","5060Ti",8), intel("Arc A750","A750",8), nv("RTX 5060","5060",8), nv("RTX 5050","5050",8), nv("RTX 3060 Ti","3060Ti",8)],
+    { cards:[nv("RTX 5060 Ti","5060Ti",8), nv("RTX 5060","5060",8), nv("RTX 5050","5050",8), nv("RTX 3060 Ti","3060Ti",8), intel("Arc A750","A750",8)],
       lo:14, hi:19, mean:16 },
-    { cards:[amd("RX 7600","7600",8), nv("RTX 4060","4060",8), amd("RX 6600","6600",8), nv("RTX 4060 Ti","4060Ti",8), nv("RTX 3050","3050",8)],
+    { cards:[nv("RTX 4060","4060",8), nv("RTX 4060 Ti","4060Ti",8), nv("RTX 3050","3050",8), amd("RX 7600","7600",8), amd("RX 6600","6600",8)],
       lo:11, hi:14, mean:12 },
     { cards:[intel("Arc B570","B570",10)],
       lo:6, hi:6, mean:6 },
@@ -373,8 +383,11 @@ document.querySelectorAll(".hHint").forEach(e => (e.innerHTML = M.hint));
 const GL = [25,50,75];
 const vramTag = g => !g || g > 12 ? ``
   : `<sup class="vr ${g <= 8 ? "v8" : "v12"}">${g}G</sup>`;
+const MARK = { value:["★","best value for money"], ult:["◆","fastest card, any resolution"] };
+const markTag = m => !m ? ``
+  : `<span class="mk ${m}" title="${MARK[m][1]}">${MARK[m][0]}</span>`;
 const names = cards => cards
-  .map(c => `<span class="b-${c.v}">${COMPACT ? c.s : c.n}${vramTag(c.g)}</span>`)
+  .map(c => `<span class="b-${c.v}">${COMPACT ? c.s : c.n}${vramTag(c.g)}${markTag(c.m)}</span>`)
   .join(`<span class="dot"> · </span>`);
 document.getElementById("tiers").innerHTML = GPU_DATA[RES].map(g => `
   <div class="tier t-${g.t.toLowerCase()}">

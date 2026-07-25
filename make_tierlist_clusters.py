@@ -55,6 +55,19 @@ NAMES = {
     'Arc A770 16GB': ('Arc A770 16GB', 'A770'), 'Arc A750': ('Arc A750', 'A750'),
 }
 VMAP = {'Nvidia': 'nv', 'AMD': 'amd', 'Intel': 'intel'}
+VORDER = {'Nvidia': 0, 'AMD': 1, 'Intel': 2}   # listing order within a row
+
+# Gold accolades, rendered as a glyph after the card name. Editorial picks, not
+# computed — there is no price data in the dataset, so 'value' is a judgement call
+# about what the index is worth per pound, and it is labelled as such on the card.
+# A mark attaches to one card, never a whole row: clusters are mixed (the 9070 XT
+# shares a row with the 4090 at 1440p), so marking the row would mis-attribute it.
+MARKS = {
+    'RTX 5090': 'ult',            # fastest at every resolution, by a wide margin
+    'RX 9070 XT': 'value',
+    'RX 9070': 'value',
+    'RX 9060 XT 16GB': 'value',
+}
 
 
 def dedup_newest(rows):
@@ -126,10 +139,18 @@ def js_for(res):
             lines.append('  { t:"%s", rows:[' % t)
             prev_t = t
         cards = []
+        # within a row, order by vendor (Nvidia > AMD > Intel), then by index desc.
+        # Row order itself is still purely by index — only the listing is grouped.
+        cl = sorted(cl, key=lambda c: (VORDER[VENDOR[c[0]]], -c[1]))
         for name, _, _ in cl:
             full, short = NAMES[name]
             g = SPECS.get(name, {}).get('vram')
-            arg = ',%d' % g if g and g <= 12 else ''   # only <=12GB earns a tag
+            g = g if g and g <= 12 else 0              # only <=12GB earns a tag
+            mark = MARKS.get(name)
+            if mark:                                   # 0 keeps the mark in slot 4
+                arg = ',%d,"%s"' % (g, mark)
+            else:
+                arg = ',%d' % g if g else ''
             cards.append('%s("%s","%s"%s)' % (VMAP[VENDOR[name]], full, short, arg))
         vals = [v for _, v, _ in cl]
         lines.append('    { cards:[%s],' % ', '.join(cards))
