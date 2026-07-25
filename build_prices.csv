@@ -19,6 +19,9 @@ Ryzen 5 7500X3D,209,tweakers
 Ryzen 5 7500F,130,tweakers
 Ryzen 5 5600,131,tweakers
 Ryzen 5 5600X,146,tweakers
+# AliExpress-only Chinese-market SKU. Priced here for reference but not used in the
+# matrix: no benchmark set covers it, so it would carry no index chip.
+Ryzen 5 5500X3D,150,aliexpress
 Core Ultra 9 285K,549,tweakers
 Core Ultra 7 270K Plus,314,tweakers
 Core Ultra 5 250K Plus,219,tweakers

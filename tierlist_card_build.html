@@ -109,22 +109,28 @@ h1 em{font-style:normal;color:var(--acc)}
     What to buy at three budgets, for each resolution — with the <b>measured Performance
     Index</b> on every chip so you can see what the extra money actually buys.
     GPU picks are matched to the resolution they sit under; <b>every card is 16 GB or
-    more</b> by design. Current platforms only (AM5 / LGA1851).
+    more</b> by design. Entry builds stay on <b>DDR4 platforms</b> because of what memory
+    now costs; mid and high move to AM5 / LGA1851.
   </div>
 
   <div id="grid" class="grid"></div>
 
   <div class="call">
     <h3>Reading the matrix</h3>
-    <p><b>Memory is the story in 2026.</b> A 32 GB DDR5 kit is <b>€400</b> — more than
-    every CPU here except the two flagships, and a 64 GB kit now costs more than a
-    9800X3D. That is why no build takes 64 GB, and why the entry builds are dearer than
-    the parts list suggests they ought to be.</p>
+    <p><b>Memory is the story in 2026, and it decides the entry platform.</b> 32 GB of
+    DDR5 is <b>€400</b> against <b>€240</b> for DDR4 — so entry stays on <b>AM4 and
+    LGA1700</b> deliberately. Nobody puts €400 of memory in an €1,100 build. Mid and high
+    move to DDR5 where the platform earns it. Nothing takes 64 GB: that kit now costs more
+    than a 9800X3D.</p>
+    <p><b>Cheapest way into V-Cache: a Ryzen 5 5500X3D, about €150.</b> AliExpress only —
+    there is no retail channel — and no benchmark set here covers it, so it gets no index
+    chip and no row. For scale, a 5600X3D reads <b>61</b> and the 5500X3D clocks lower, so
+    expect a little under that. On a €240 DDR4 kit it is a lot of cache for the money.</p>
     <p><b>Intel's ladder is flat for this game, so don't climb it.</b> A
     <b>250K Plus (€219) scores 76</b> and a <b>285K (€549) scores 78</b> — €330 for two
-    index points. The Intel column therefore keeps the cheap chip at entry and mid and
-    puts the money into the GPU, where it still buys something. AMD's ladder is not flat:
-    a 9800X3D reaches 97.</p>
+    index points, which is why the 285K appears nowhere on this card. The Intel column
+    tops out at a 270K Plus and spends the rest on the GPU. AMD's ladder is not flat: a
+    9800X3D reaches 97.</p>
     <p><b>1080p and 1440p take the same parts on purpose.</b> The cheapest current 16 GB
     cards cover both, so the difference shows in the index chips — a 9060 XT reads
     <b>63 at 1080p but 54 at 1440p</b> — rather than in invented picks. Only 4K moves
@@ -155,8 +161,8 @@ const PRICED_ON = "2026-07-25";
 const BUILDS = {
 "1080p": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 5 9600X", ci:69, gpu:"RX 9060 XT 16GB", gi:63, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1289, approx:true },
-    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5060 Ti 16GB", gi:59, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1467, approx:true }
+    { v:"amd", cpu:"Ryzen 5 5600", ci:51, gpu:"RX 9060 XT 16GB", gi:63, ram:"32GB DDR4-3600", sto:"1TB NVMe", eur:1099, approx:true },
+    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5060 Ti 16GB", gi:59, ram:"32GB DDR4-3600", sto:"1TB NVMe", eur:1233, approx:true }
   ],
   "mid": [
     { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070", gi:90, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1872, approx:true },
@@ -169,8 +175,8 @@ const BUILDS = {
 },
 "1440p": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 5 9600X", ci:69, gpu:"RX 9060 XT 16GB", gi:54, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1289, approx:true },
-    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5060 Ti 16GB", gi:49, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1467, approx:true }
+    { v:"amd", cpu:"Ryzen 5 5600", ci:51, gpu:"RX 9060 XT 16GB", gi:54, ram:"32GB DDR4-3600", sto:"1TB NVMe", eur:1099, approx:true },
+    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5060 Ti 16GB", gi:49, ram:"32GB DDR4-3600", sto:"1TB NVMe", eur:1233, approx:true }
   ],
   "mid": [
     { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070", gi:72, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1872, approx:true },
@@ -183,16 +189,16 @@ const BUILDS = {
 },
 "4K": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070", gi:56, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1772, approx:true },
-    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5070 Ti", gi:57, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1897, approx:true }
+    { v:"amd", cpu:"Ryzen 7 5800X3D", ci:69, gpu:"RX 9070", gi:56, ram:"32GB DDR4-3600", sto:"2TB NVMe", eur:1646, approx:true },
+    { v:"nv", cpu:"Core i5-12400F", ci:59, gpu:"RTX 5070 Ti", gi:57, ram:"32GB DDR4-3600", sto:"2TB NVMe", eur:1663, approx:true }
   ],
   "mid": [
-    { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:65, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2047, approx:true },
-    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5080", gi:64, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2432, approx:true }
+    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, gpu:"RX 9070 XT", gi:65, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1972, approx:true },
+    { v:"nv", cpu:"Core Ultra 5 250K Plus", ci:77, gpu:"RTX 5080", gi:64, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2337, approx:true }
   ],
   "high": [
     { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, gpu:"RX 9070 XT", gi:65, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2197, approx:true },
-    { v:"nv", cpu:"Core Ultra 9 285K", ci:78, gpu:"RTX 5090", gi:100, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:4077, approx:true }
+    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, gpu:"RTX 5090", gi:100, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:3842, approx:true }
   ],
 },
 };
