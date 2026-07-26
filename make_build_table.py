@@ -19,7 +19,7 @@ it does not know.
 import csv, datetime, json, os, re, sys
 
 from msfs_index import (cpu_index, gpu_index, CPU_SPECS, CPU_VENDOR, GPU_SPECS,
-                        coverage)
+                        GPU_VENDOR, coverage)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CARD = os.path.join(HERE, 'tierlist_card_build.html')
@@ -146,6 +146,45 @@ NOT_PICKED = [
 TIERS = ['entry', 'mid', 'high']
 VENDORS = ['amd', 'nv']
 STALE_DAYS = 60
+
+# ---- the /specs generator ----------------------------------------------------------
+# The page also ships a catalogue of every part the budget generator may choose from,
+# with the platform rules above already resolved per part. The search itself runs in
+# the browser; these are its ingredients.
+
+# How much of a build's score each side carries, per resolution — the CPU's share, the
+# GPU takes the rest.
+#
+# JUDGEMENT, NOT MEASUREMENT, and the generator says so on the page. The two indices are
+# separate fits normalised to their own leaders, so a CPU 100 is not "the same amount of
+# performance" as a GPU 100 and no arithmetic across them is a frame rate. What these
+# weights encode is only which side decides the outcome at that resolution, which is the
+# one thing the data does say clearly: at 1080p the GPU field compresses to a 5.5x spread
+# and the CPU becomes the limit, while at 4K it opens to 17x and the GPU decides nearly
+# everything.
+BLEND_CPU = {'1080p': 0.55, '1440p': 0.35, '4K': 0.20}
+
+# Priced for reference but never offered by the generator: the group build_prices.csv
+# marks as no longer reasonably available or priced far above their index. They are all
+# beaten on value by something current anyway — the exclusion only stops a big budget
+# surfacing one on raw score alone. The 9070 GRE is NOT here: it is current and buyable,
+# it simply has no MSFS coverage, so it carries a derived index and a ° like anywhere
+# else on the page.
+GEN_EXCLUDE = {
+    'RX 7600 XT': 'superseded, and beaten by a 9060 XT 16GB for less',
+    'RX 7700 XT': 'superseded, and beaten by a 9060 XT 16GB for less',
+    'RX 7800 XT': 'superseded, and priced far above its index',
+    'RX 7900 XT': 'superseded, and beaten by an RX 9070 for less',
+    'RX 7900 XTX': 'superseded, and beaten by a 9070 XT for half the money',
+    'RTX 4090': 'last generation, no longer reasonably available at this price',
+    'RTX 4080': 'last generation, no longer reasonably available at this price',
+}
+
+# The only memory and storage the generator considers. Explicit rather than pattern-
+# matched, so a new kit in the CSV cannot silently become an option: 32 GB is what every
+# build on this page runs, and 64 GB currently costs more than a 9800X3D.
+GEN_MEMORY = [('32GB DDR4-3200', 'DDR4'), ('32GB DDR5-6000', 'DDR5')]
+GEN_STORAGE = ['1TB NVMe', '2TB NVMe']
 # memory a socket can actually take
 SOCKET_MEM = {'AM4': 'DDR4', 'AM5': 'DDR5', 'LGA1851': 'DDR5',
               'LGA1700': None}   # None = either
@@ -362,10 +401,12 @@ def main():
     _, post = rest.split(END, 1)
     open(CARD, 'w', encoding='utf-8').write(pre + BEGIN + '\n' + block + '\n' + END + post)
 
-    write_json(builds, skipped, prices, price_src, priced_on)
+    catalogue = build_catalogue(prices, cpu_idx, prices_by_res, cpu_cov, gpu_cov)
+    write_json(builds, skipped, prices, price_src, priced_on, catalogue)
 
-    print('wrote %d builds into %s and %s'
-          % (len(builds), os.path.basename(CARD), os.path.basename(JSON_OUT)))
+    print('wrote %d builds (+ %d CPUs / %d GPUs for the generator) into %s and %s'
+          % (len(builds), len(catalogue['cpus']), len(catalogue['gpus']),
+             os.path.basename(CARD), os.path.basename(JSON_OUT)))
     if warnings:
         print('\n%d warning(s):' % len(warnings), file=sys.stderr)
         for w in warnings:
@@ -374,12 +415,111 @@ def main():
         print('no warnings — every part priced, indexed and socket-consistent')
 
 
-def write_json(builds, skipped, prices, price_src, priced_on):
+def named(prices, key):
+    """A composed part as the page shows it: {part, eur}, or None if unpriced."""
+    if key is None or key not in prices:
+        return None
+    return {'part': PART_LABEL.get(key, key), 'eur': prices[key]}
+
+
+def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov):
+    """Every part the budget generator may pick, with its platform costs resolved.
+
+    The rules are applied here rather than in the browser so there is exactly one
+    implementation of "what else does this chip drag along" — the generator's totals
+    and the hand-picked matrix above it are composed by the same code, and a build the
+    generator proposes can be compared with one from the table without an asterisk.
+    """
+    cpus = []
+    for part in sorted(prices):
+        key = CPU_ALIAS.get(part, part)
+        base = cpu_idx.get(key)
+        if base is None:
+            continue                        # not a CPU, or a CPU we cannot place
+        if part in GEN_EXCLUDE:
+            continue
+        socket = CPU_SPECS.get(key, {}).get('socket')
+        cooler = named(prices, cooler_for(part))
+        if socket is None or cooler is None:
+            warn('generator skips %r: no socket or no cooler price' % part)
+            continue
+
+        idx, derived, mobo = {}, {}, {}
+        for mem, kind in GEN_MEMORY:
+            want = SOCKET_MEM.get(socket, None)
+            if want and want != kind:
+                continue                    # the socket cannot take this memory at all
+            board = named(prices, mb_for(part, socket, mem))
+            if board is None:
+                continue
+            if socket == 'LGA1700' and kind == 'DDR4':
+                # indexed on DDR5, so DDR4 has to be discounted by the measured factor
+                m = re.match(r'^Core i\d-(\d\d)', key)
+                gen = int(m.group(1)) if m else None
+                if gen not in DDR4_FACTOR:
+                    warn('generator skips %s on DDR4: no measured factor' % part)
+                    continue
+                idx[kind], derived[kind] = base * DDR4_FACTOR[gen], True
+            else:
+                idx[kind], derived[kind] = base, False
+            mobo[kind] = board
+        if not idx:
+            warn('generator skips %r: no usable memory/board combination' % part)
+            continue
+
+        cpus.append({'part': part, 'vendor': CPU_VENDOR.get(key), 'socket': socket,
+                     'eur': prices[part], 'cov': cpu_cov.get(key, 0),
+                     'idx': {k: rnd(v) for k, v in idx.items()}, 'derived': derived,
+                     'cooler': cooler, 'mobo': mobo})
+
+    gpus = []
+    for part in sorted(prices):
+        if part in GEN_EXCLUDE or part in cpu_idx or CPU_ALIAS.get(part) in cpu_idx:
+            continue
+        idx, derived = {}, False
+        for res in RES:
+            v = idx_by_res[res].get(part)
+            if v is None:
+                v = DERIVED_GPU.get(part, {}).get(res)
+                if v is not None:
+                    derived = True
+            if v is not None:
+                idx[res] = rnd(v)
+        if not idx:
+            continue                        # not a GPU, or one we cannot place
+        psu = named(prices, psu_for(part))
+        if psu is None:
+            warn('generator skips %r: no PSU price for its class' % part)
+            continue
+        gpus.append({'part': part, 'vendor': GPU_VENDOR.get(part), 'eur': prices[part],
+                     'cov': gpu_cov.get(part, 0), 'idx': idx, 'derived': derived,
+                     'vram': GPU_SPECS.get(part, {}).get('vram') or VRAM_EXTRA.get(part),
+                     'psu': psu})
+
+    memory = [{'part': m, 'kind': k, 'eur': prices[m]}
+              for m, k in GEN_MEMORY if m in prices]
+    storage = [{'part': s, 'eur': prices[s]} for s in GEN_STORAGE if s in prices]
+    for want, got in (('memory', memory), ('storage', storage)):
+        if not got:
+            warn('generator has no %s priced — it cannot compose a build' % want)
+
+    return {
+        'cpus': cpus, 'gpus': gpus, 'memory': memory, 'storage': storage,
+        'case': named(prices, 'case'),
+        'blend_cpu': BLEND_CPU,
+        'excluded': [{'part': p, 'why': w} for p, w in sorted(GEN_EXCLUDE.items())],
+    }
+
+
+def write_json(builds, skipped, prices, price_src, priced_on, catalogue):
     """The same picks as the card, for /specs to fetch at runtime.
 
     The site never inlines data — the SPA fetches data.json, and this page fetches
     this. One generator run feeds both outputs, so the card and the page cannot drift
     apart on a price.
+
+    `catalogue` is the extra the card has no use for: the parts bin the page's budget
+    generator searches.
     """
     rows = []
     for res in RES:
@@ -407,6 +547,7 @@ def write_json(builds, skipped, prices, price_src, priced_on):
         # you can re-total a build you have changed
         'prices': [{'part': p, 'eur': prices[p], 'src': price_src.get(p, 'est')}
                    for p in sorted(prices)],
+        'catalogue': catalogue,
     }
     os.makedirs(os.path.dirname(JSON_OUT), exist_ok=True)
     with open(JSON_OUT, 'w', encoding='utf-8') as f:

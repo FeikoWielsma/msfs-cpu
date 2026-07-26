@@ -51,6 +51,41 @@ type NotPicked = {
 
 type Price = { part: string; eur: number; src: string };
 
+type Named = { part: string; eur: number };
+
+type CatCpu = {
+  part: string;
+  vendor: string | null;
+  socket: string;
+  eur: number;
+  cov: number;
+  idx: Record<string, number>;        // by memory kind: DDR4 / DDR5
+  derived: Record<string, boolean>;
+  cooler: Named;
+  mobo: Record<string, Named>;
+};
+
+type CatGpu = {
+  part: string;
+  vendor: string | null;
+  eur: number;
+  cov: number;
+  idx: Record<string, number>;        // by resolution
+  derived: boolean;
+  vram: number | null;
+  psu: Named;
+};
+
+type Catalogue = {
+  cpus: CatCpu[];
+  gpus: CatGpu[];
+  memory: { part: string; kind: string; eur: number }[];
+  storage: Named[];
+  case: Named | null;
+  blend_cpu: Record<string, number>;
+  excluded: { part: string; why: string }[];
+};
+
 type Doc = {
   priced_on: string | null;
   resolutions: string[];
@@ -59,6 +94,7 @@ type Doc = {
   builds: Build[];
   not_picked: NotPicked[];
   prices: Price[];
+  catalogue: Catalogue;
 };
 
 const RES_LABEL: Record<string, string> = {
@@ -283,6 +319,357 @@ function renderCards(): void {
     </figure>`).join("");
 }
 
+// ---------- build generator ----------
+//
+// Brute force: ~15 CPUs x ~16 GPUs x 2 memory kinds is a few hundred combinations, so
+// there is nothing to be clever about. The value is in what it refuses to do — spend
+// the last of a budget on a point of index, or put an 8 GB card above 1080p.
+
+/** Score worth nothing extra: within this, take the cheaper build. */
+const TOL = 1.0;
+/** What counts as a real step up when reporting the next one. */
+const STEP = 3.0;
+
+const CPU_VENDORS = ["AMD", "Intel"];
+const GPU_VENDORS = ["AMD", "Nvidia", "Intel"];
+const VENDOR_CLASS: Record<string, string> = {
+  AMD: "amd", Intel: "intel", Nvidia: "nvidia",
+};
+
+type GenState = {
+  budget: number;
+  cpu: Set<string>;
+  gpu: Set<string>;
+  allow8: boolean;
+};
+
+type Cand = {
+  score: number;
+  eur: number;
+  cpu: CatCpu;
+  gpu: CatGpu;
+  mem: { part: string; kind: string; eur: number };
+  ci: number;
+  gi: number;
+  cd: boolean;
+};
+
+const gen: GenState = {
+  budget: 1500,
+  cpu: new Set(CPU_VENDORS),
+  gpu: new Set(GPU_VENDORS),
+  allow8: false,
+};
+
+/** VRAM policy, matching the hand-picked builds: 16 GB is the floor above 1080p, where
+ *  a thin card does not degrade gently. 10–12 GB is a 1080p compromise, 8 GB only if
+ *  you have said you will accept one. */
+function vramOk(g: CatGpu, atRes: string, allow8: boolean): boolean {
+  const v = g.vram ?? 0;
+  if (v >= 16) return true;
+  if (atRes !== "1080p") return false;
+  return v > 8 || allow8;
+}
+
+function candidates(doc: Doc, atRes: string, st: GenState): Cand[] {
+  const C = doc.catalogue;
+  const w = C.blend_cpu[atRes];
+  const store = C.storage.length
+    ? C.storage.reduce((a, b) => (b.eur < a.eur ? b : a)) : null;
+  if (w === undefined || !store || !C.case) return [];
+
+  const out: Cand[] = [];
+  for (const cpu of C.cpus) {
+    if (!cpu.vendor || !st.cpu.has(cpu.vendor)) continue;
+    for (const mem of C.memory) {
+      const ci = cpu.idx[mem.kind];
+      const board = cpu.mobo[mem.kind];
+      if (ci === undefined || !board) continue;      // socket cannot take this memory
+      const platform = cpu.eur + mem.eur + board.eur + cpu.cooler.eur
+        + C.case.eur + store.eur;
+      for (const gpu of C.gpus) {
+        if (!gpu.vendor || !st.gpu.has(gpu.vendor)) continue;
+        if (!vramOk(gpu, atRes, st.allow8)) continue;
+        const gi = gpu.idx[atRes];
+        if (gi === undefined) continue;
+        out.push({
+          // weighted geometric mean: an unbalanced build is punished rather than
+          // averaged out, which an arithmetic mean would not do
+          score: Math.pow(ci, w) * Math.pow(gi, 1 - w),
+          eur: platform + gpu.eur + gpu.psu.eur,
+          cpu, gpu, mem, ci, gi, cd: !!cpu.derived[mem.kind],
+        });
+      }
+    }
+  }
+  return out;
+}
+
+/** Best score the budget reaches, then the cheapest build that ties it. */
+function pick(cands: Cand[], budget: number): Cand | null {
+  const afford = cands.filter(c => c.eur <= budget);
+  if (!afford.length) return null;
+  const top = Math.max(...afford.map(c => c.score));
+  return afford.filter(c => c.score >= top - TOL)
+    .reduce((a, b) => (b.eur < a.eur ? b : a));
+}
+
+/** Where a value sits in its own ladder, 0–1. Used only to notice a lopsided build. */
+function rankOf(v: number, all: number[]): number {
+  const lo = Math.min(...all), hi = Math.max(...all);
+  return hi > lo ? (v - lo) / (hi - lo) : 1;
+}
+
+type GenResult =
+  | { ok: false; reason: "vendors" }
+  | { ok: false; reason: "vram" }
+  | { ok: false; reason: "budget"; floor: number }
+  | { ok: true; best: Cand; total: number; sto: Named; items: Item[];
+      next: Cand | null; headroom: number; lopsided: string | null };
+
+function generate(doc: Doc, atRes: string, st: GenState): GenResult {
+  const C = doc.catalogue;
+  const cands = candidates(doc, atRes, st);
+  if (!cands.length) {
+    // Distinguish "you turned off the only vendor that makes one" from "every card
+    // that vendor makes is under the VRAM floor for this resolution" — the second is
+    // the interesting one, and it is what happens to Arc above 1080p.
+    const loose = candidates(doc, atRes, { ...st, allow8: true })
+      .concat(candidates(doc, "1080p", { ...st, allow8: true }));
+    return { ok: false, reason: loose.length ? "vram" : "vendors" };
+  }
+
+  const best = pick(cands, st.budget);
+  if (!best) {
+    return { ok: false, reason: "budget",
+             floor: Math.min(...cands.map(c => c.eur)) };
+  }
+
+  // Leftover goes on storage. It buys no frames — it is simply the only thing left on
+  // the list that money improves, so the build uses the budget rather than banking it.
+  const small = C.storage.reduce((a, b) => (b.eur < a.eur ? b : a));
+  const large = C.storage.reduce((a, b) => (b.eur > a.eur ? b : a));
+  let total = best.eur, sto = small;
+  if (large !== small && total + (large.eur - small.eur) <= st.budget) {
+    total += large.eur - small.eur;
+    sto = large;
+  }
+
+  // The next real step up, re-picked at its own price so the step is itself balanced
+  // rather than the cheapest chip that happens to clear the threshold.
+  const upto = cands.filter(c => c.score >= best.score + STEP).map(c => c.eur);
+  const next = upto.length ? pick(cands, Math.min(...upto)) : null;
+
+  // A build can be the best its budget reaches and still be lopsided — most visibly at
+  // 4K, where the GPU carries 80% of the score and a huge card outruns a cheap chip.
+  const cpuRank = rankOf(best.ci, cands.map(c => c.ci));
+  const gpuRank = rankOf(best.gi, cands.map(c => c.gi));
+  let lopsided: string | null = null;
+  if (gpuRank - cpuRank > 0.45) {
+    lopsided = "The card is far ahead of the chip here. MSFS leans on the CPU even at " +
+      "high resolutions, so in dense scenery this build will be waiting on the " +
+      "processor — a bigger budget should go there first.";
+  } else if (cpuRank - gpuRank > 0.45) {
+    lopsided = "The chip is far ahead of the card. That is the right way round for " +
+      "add-on-heavy flying, but the next money belongs on the GPU.";
+  }
+
+  const board = best.cpu.mobo[best.mem.kind];
+  const items: Item[] = [
+    { slot: "CPU", part: best.cpu.part, eur: best.cpu.eur, src: null },
+    { slot: "GPU", part: best.gpu.part, eur: best.gpu.eur, src: null },
+    { slot: "Memory", part: best.mem.part, eur: best.mem.eur, src: null },
+    { slot: "Storage", part: sto.part, eur: sto.eur, src: null },
+    { slot: "Motherboard", part: board.part, eur: board.eur, src: null },
+    { slot: "Power supply", part: best.gpu.psu.part, eur: best.gpu.psu.eur, src: null },
+    { slot: "CPU cooler", part: best.cpu.cooler.part, eur: best.cpu.cooler.eur, src: null },
+  ];
+  if (C.case) items.push({ slot: "Case", part: C.case.part, eur: C.case.eur, src: null });
+
+  return { ok: true, best, total, sto, items, next,
+           headroom: st.budget - total, lopsided };
+}
+
+// ---------- generator UI ----------
+
+function vendorChips(host: HTMLElement | null, list: string[], set: Set<string>): void {
+  if (!host) return;
+  host.innerHTML = list.map(v =>
+    `<button class="vchip ${VENDOR_CLASS[v]}${set.has(v) ? " on" : ""}" data-v="${v}"
+       aria-pressed="${set.has(v)}">${v}</button>`).join("");
+  host.querySelectorAll<HTMLButtonElement>("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const v = btn.dataset.v!;
+      // never let the last one be turned off — an empty set can only return nothing
+      if (set.has(v) && set.size > 1) set.delete(v);
+      else set.add(v);
+      btn.classList.toggle("on", set.has(v));
+      btn.setAttribute("aria-pressed", String(set.has(v)));
+      syncGenUrl();
+      runGenerator();
+    });
+  });
+}
+
+function genCard(r: Extract<GenResult, { ok: true }>): string {
+  const b = r.best;
+  const ven = b.gpu.vendor === "AMD" ? "amd" : "nv";
+  const rows = [
+    { label: "CPU", value: b.cpu.part, tint: b.cpu.vendor === "AMD" ? "amd" : "intel",
+      extra: chip(b.ci, "c", b.cd, b.cpu.cov), sub: b.cpu.socket },
+    { label: "GPU", value: b.gpu.part, tint: VENDOR_CLASS[b.gpu.vendor || ""] || "",
+      extra: vramTag(b.gpu.vram) + chip(b.gi, "g", b.gpu.derived, b.gpu.cov), sub: "" },
+    { label: "Memory", value: b.mem.part, tint: "", extra: "", sub: "" },
+    { label: "Storage", value: r.sto.part, tint: "", extra: "", sub: "" },
+  ];
+  const body = rows.map(row => `
+    <div class="brow">
+      <span class="blabel">${row.label}</span>
+      <span class="bval ${row.tint}">${esc(row.value)}
+        ${row.sub ? `<span class="bsub">${esc(row.sub)}</span>` : ""}
+        ${row.extra}
+      </span>
+    </div>`).join("");
+
+  const bom = r.items.map(i => `
+    <tr><th>${esc(i.slot)}</th><td>${esc(i.part)}</td>
+      <td class="num">${i.eur === null ? "—" : eur(i.eur)}</td></tr>`).join("");
+
+  const notes: string[] = [];
+  if (r.headroom >= 40) {
+    notes.push(r.next
+      ? `<b>${eur(r.headroom)} left over.</b> Nothing between here and
+         <b>${eur(r.next.eur)}</b> improves on it — that is where the next real step is.`
+      : `<b>${eur(r.headroom)} left over.</b> Nothing in the list improves on this build
+         at this resolution, at any price. Spend it on a monitor, a yoke or a headset.`);
+  } else if (r.next) {
+    notes.push(`<b>${eur(r.next.eur - r.total)} more</b> would reach a
+      ${esc(r.next.cpu.part)} with a ${esc(r.next.gpu.part)} —
+      ${Math.round(r.next.score - r.best.score)} points better.`);
+  }
+  if (r.lopsided) notes.push(r.lopsided);
+
+  return `
+    <article class="build gen-build ${ven}">
+      <div class="bhead">
+        <span class="ven">Best build${b.cpu.vendor && b.gpu.vendor
+          && b.cpu.vendor !== b.gpu.vendor ? ` · ${esc(b.cpu.vendor)} + ${esc(b.gpu.vendor)}`
+          : b.cpu.vendor ? ` · ${esc(b.cpu.vendor)}` : ``}</span>
+        <span class="total">${eur(r.total)}</span>
+      </div>
+      ${body}
+      <details class="bom" open>
+        <summary>Full parts list</summary>
+        <table>${bom}
+          <tr class="sum"><th></th><td>Complete build</td>
+            <td class="num">${eur(r.total)}</td></tr>
+        </table>
+      </details>
+      ${notes.length ? `<div class="gen-notes">${notes.map(n => `<p>${n}</p>`).join("")}</div>` : ""}
+    </article>`;
+}
+
+function runGenerator(): void {
+  const host = $("#genResult");
+  if (!host || !DOC) return;
+  const r = generate(DOC, res, gen);
+
+  if (!r.ok) {
+    const msg =
+      r.reason === "vendors"
+        ? `No parts match those vendors at <b>${esc(res)}</b>. Turn one back on.`
+      : r.reason === "vram"
+        ? `Every card from those vendors is under <b>16 GB</b>, which this page only
+           allows at 1080p — above it a thin card falls off a cliff rather than
+           degrading. Add another GPU vendor, or drop to 1080p.`
+        : `Nothing sensible fits ${eur(gen.budget)} at <b>${esc(res)}</b>. The cheapest
+           complete build here is <b>${eur(r.floor)}</b>${res === "1080p" && !gen.allow8
+             ? `, or less with 8 GB cards allowed` : ``}.`;
+    host.innerHTML = `<p class="gen-fail">${msg}</p>`;
+    return;
+  }
+  host.innerHTML = genCard(r);
+
+  const w = DOC.catalogue.blend_cpu[res];
+  const weights = $("#genWeights");
+  if (weights && w !== undefined) {
+    weights.textContent = `${Math.round(w * 100)}% CPU / ${Math.round((1 - w) * 100)}% ` +
+      `GPU at ${res}`;
+  }
+}
+
+/** Generator state lives in the query string, so a build is linkable. The resolution
+ *  stays in the hash, where it already was. */
+function syncGenUrl(): void {
+  const p = new URLSearchParams();
+  p.set("budget", String(gen.budget));
+  if (gen.cpu.size !== CPU_VENDORS.length) p.set("cpu", [...gen.cpu].join(","));
+  if (gen.gpu.size !== GPU_VENDORS.length) p.set("gpu", [...gen.gpu].join(","));
+  if (gen.allow8) p.set("vram8", "1");
+  history.replaceState(null, "", `?${p}${location.hash}`);
+}
+
+function readGenUrl(): void {
+  const p = new URLSearchParams(location.search);
+  const b = Number(p.get("budget"));
+  if (Number.isFinite(b) && b > 0) gen.budget = Math.round(b);
+  for (const [key, all, set] of [
+    ["cpu", CPU_VENDORS, gen.cpu], ["gpu", GPU_VENDORS, gen.gpu],
+  ] as [string, string[], Set<string>][]) {
+    const raw = p.get(key);
+    if (!raw) continue;
+    const want = raw.split(",").map(s => s.trim().toLowerCase());
+    const hit = all.filter(v => want.includes(v.toLowerCase()));
+    if (hit.length) { set.clear(); hit.forEach(v => set.add(v)); }
+  }
+  gen.allow8 = p.get("vram8") === "1";
+}
+
+function wireGenerator(): void {
+  if (!DOC) return;
+  const num = $<HTMLInputElement>("#genBudget");
+  const range = $<HTMLInputElement>("#genRange");
+  const allow8 = $<HTMLInputElement>("#genAllow8");
+
+  // Slider bounds come from the parts bin, not from a guess: the floor is the cheapest
+  // complete build anyone could compose, the ceiling the dearest.
+  const all = candidates(DOC, "1080p",
+    { budget: Infinity, cpu: new Set(CPU_VENDORS), gpu: new Set(GPU_VENDORS), allow8: true });
+  if (all.length && range) {
+    const lo = Math.floor(Math.min(...all.map(c => c.eur)) / 50) * 50;
+    const hi = Math.ceil(Math.max(...all.map(c => c.eur)) / 100) * 100;
+    range.min = String(lo);
+    range.max = String(hi);
+    gen.budget = Math.min(Math.max(gen.budget, lo), hi);
+  }
+  if (num) num.value = String(gen.budget);
+  if (range) range.value = String(gen.budget);
+  if (allow8) allow8.checked = gen.allow8;
+
+  const setBudget = (v: number, echo: HTMLInputElement | null) => {
+    if (!Number.isFinite(v)) return;
+    gen.budget = Math.max(0, Math.round(v));
+    if (echo) echo.value = String(gen.budget);
+    syncGenUrl();
+    runGenerator();
+  };
+  range?.addEventListener("input", () => setBudget(Number(range.value), num));
+  num?.addEventListener("input", () => {
+    const v = Number(num.value);
+    if (range && Number.isFinite(v)) range.value = String(v);
+    setBudget(v, null);
+  });
+  allow8?.addEventListener("change", () => {
+    gen.allow8 = allow8.checked;
+    syncGenUrl();
+    runGenerator();
+  });
+
+  vendorChips($("#genCpu"), CPU_VENDORS, gen.cpu);
+  vendorChips($("#genGpu"), GPU_VENDORS, gen.gpu);
+  runGenerator();
+}
+
 // ---------- resolution control ----------
 
 /** #1440p in the URL, so a resolution is linkable. Matched case-insensitively
@@ -357,6 +744,8 @@ async function boot(): Promise<void> {
   renderNotPicked();
   renderPrices();
   renderProse();
+  readGenUrl();
+  wireGenerator();
 
   window.addEventListener("hashchange", () => {
     const r = resFromHash(doc.resolutions);
@@ -364,6 +753,7 @@ async function boot(): Promise<void> {
     res = r;
     renderResSeg();
     renderBuilds();
+    runGenerator();          // the generator reads the same resolution control
   });
 }
 

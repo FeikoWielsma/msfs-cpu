@@ -61,6 +61,61 @@ h1 { font-family:"Bebas Neue", sans-serif; font-size:clamp(34px, 9vw, 60px);
 .seg button.on small { color:var(--ink-2); }
 .res-note { font-size:13px; color:var(--muted); flex:1; min-width:min(100%, 34ch); max-width:70ch; }
 
+/* ---------- generator ---------- */
+.gen { margin-top:28px; }
+.gen-controls { display:flex; flex-wrap:wrap; align-items:flex-end; gap:14px 22px;
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; }
+.gen-field { display:flex; flex-direction:column; gap:7px; }
+.gen-field.budget { flex:1; min-width:min(100%, 260px); }
+.ctl-label { font-family:"Bebas Neue", sans-serif; font-size:14px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--muted); }
+.budget-row { display:flex; align-items:baseline; gap:4px; }
+.budget-row .cur { font-family:"Bebas Neue", sans-serif; font-size:26px; color:var(--gold); }
+#genBudget { font-family:"Bebas Neue", sans-serif; font-size:30px; letter-spacing:.02em;
+  color:var(--gold); background:transparent; border:0; border-bottom:1px solid var(--line);
+  padding:0 2px 2px; width:6ch; -moz-appearance:textfield; }
+#genBudget::-webkit-outer-spin-button, #genBudget::-webkit-inner-spin-button {
+  -webkit-appearance:none; margin:0; }
+#genBudget:focus { outline:none; border-bottom-color:var(--accent); }
+
+/* One slider style for both themes; the UA default is unreadable on black. */
+#genRange { -webkit-appearance:none; appearance:none; width:100%; height:4px;
+  background:var(--track); border:1px solid var(--line); border-radius:3px; }
+#genRange::-webkit-slider-thumb { -webkit-appearance:none; appearance:none;
+  width:18px; height:18px; border-radius:50%; background:var(--accent);
+  border:2px solid var(--card); cursor:pointer; }
+#genRange::-moz-range-thumb { width:16px; height:16px; border-radius:50%;
+  background:var(--accent); border:2px solid var(--card); cursor:pointer; }
+
+.vchip { appearance:none; cursor:pointer; font-family:"Bebas Neue", sans-serif;
+  font-size:14px; letter-spacing:.04em; text-transform:uppercase;
+  border:1px solid var(--line); background:var(--card-2); color:var(--ink-2);
+  padding:6px 12px; border-radius:var(--radius); transition:.14s; }
+.vchip:hover { border-color:var(--muted); }
+.vchip.on { color:#fff; }
+.vchip.on.amd { background:var(--amd); border-color:var(--amd); }
+.vchip.on.intel { background:var(--intel); border-color:var(--intel); }
+.vchip.on.nvidia { background:var(--nvidia); border-color:var(--nvidia); color:#000; }
+html[data-theme="light"] .vchip.on.nvidia { color:#fff; }
+
+.gen-toggle { display:flex; align-items:center; gap:7px; flex-wrap:wrap;
+  font-size:13px; color:var(--ink-2); cursor:pointer; padding-bottom:4px; }
+.gen-toggle small { color:var(--muted); font-size:11.5px; width:100%; padding-left:22px; }
+.gen-toggle input { accent-color:var(--accent); width:15px; height:15px; }
+
+.build.gen-build { margin-top:14px; border-top-width:3px; }
+.gen-notes { margin-top:10px; padding-top:9px; border-top:1px solid var(--line-2); }
+.gen-notes p { margin:0 0 5px; font-size:12.5px; color:var(--muted); line-height:1.55; }
+.gen-notes p:last-child { margin-bottom:0; }
+.gen-notes b { color:var(--ink-2); font-weight:600; }
+.gen-fail { margin-top:14px; background:var(--card); border:1px solid var(--line);
+  border-left:3px solid var(--warn); border-radius:var(--radius); padding:12px 14px;
+  font-size:13.5px; color:var(--ink-2); }
+.gen-how { margin-top:12px; }
+.gen-how b { color:var(--ink-2); font-weight:600; }
+.picks { margin-top:36px; margin-bottom:-10px; }
+
 /* ---------- tiers ---------- */
 .tier { margin-top:26px; }
 h2 { font-family:"Bebas Neue", sans-serif; font-size:24px; letter-spacing:.03em;

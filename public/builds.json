@@ -1645,5 +1645,712 @@
    "eur": 90,
    "src": "tweakers"
   }
- ]
+ ],
+ "catalogue": {
+  "cpus": [
+   {
+    "part": "Core Ultra 5 250K Plus",
+    "vendor": "Intel",
+    "socket": "LGA1851",
+    "eur": 219,
+    "cov": 3,
+    "idx": {
+     "DDR5": 77
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 15
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "LGA1851 motherboard",
+      "eur": 125
+     }
+    }
+   },
+   {
+    "part": "Core Ultra 7 270K Plus",
+    "vendor": "Intel",
+    "socket": "LGA1851",
+    "eur": 314,
+    "cov": 3,
+    "idx": {
+     "DDR5": 78
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "360 mm AIO",
+     "eur": 75
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "LGA1851 motherboard",
+      "eur": 125
+     }
+    }
+   },
+   {
+    "part": "Core Ultra 9 285K",
+    "vendor": "Intel",
+    "socket": "LGA1851",
+    "eur": 549,
+    "cov": 6,
+    "idx": {
+     "DDR5": 78
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "360 mm AIO",
+     "eur": 75
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "LGA1851 motherboard",
+      "eur": 125
+     }
+    }
+   },
+   {
+    "part": "Core i5-12400F",
+    "vendor": "Intel",
+    "socket": "LGA1700",
+    "eur": 145,
+    "cov": 1,
+    "idx": {
+     "DDR4": 55,
+     "DDR5": 59
+    },
+    "derived": {
+     "DDR4": true,
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 15
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "LGA1700 motherboard, DDR4",
+      "eur": 100
+     },
+     "DDR5": {
+      "part": "LGA1700 motherboard, DDR5",
+      "eur": 100
+     }
+    }
+   },
+   {
+    "part": "Core i5-12600KF",
+    "vendor": "Intel",
+    "socket": "LGA1700",
+    "eur": 170,
+    "cov": 2,
+    "idx": {
+     "DDR4": 60,
+     "DDR5": 64
+    },
+    "derived": {
+     "DDR4": true,
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "Dual-tower air cooler",
+     "eur": 35
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "LGA1700 motherboard, DDR4",
+      "eur": 100
+     },
+     "DDR5": {
+      "part": "LGA1700 motherboard, DDR5",
+      "eur": 100
+     }
+    }
+   },
+   {
+    "part": "Core i5-14600K",
+    "vendor": "Intel",
+    "socket": "LGA1700",
+    "eur": 229,
+    "cov": 5,
+    "idx": {
+     "DDR4": 68,
+     "DDR5": 76
+    },
+    "derived": {
+     "DDR4": true,
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "Dual-tower air cooler",
+     "eur": 35
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "LGA1700 motherboard, DDR4, upper tier",
+      "eur": 125
+     },
+     "DDR5": {
+      "part": "LGA1700 motherboard, DDR5, upper tier",
+      "eur": 125
+     }
+    }
+   },
+   {
+    "part": "Core i7-14700K",
+    "vendor": "Intel",
+    "socket": "LGA1700",
+    "eur": 392,
+    "cov": 6,
+    "idx": {
+     "DDR4": 71,
+     "DDR5": 79
+    },
+    "derived": {
+     "DDR4": true,
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "360 mm AIO",
+     "eur": 75
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "LGA1700 motherboard, DDR4",
+      "eur": 100
+     },
+     "DDR5": {
+      "part": "LGA1700 motherboard, DDR5",
+      "eur": 100
+     }
+    }
+   },
+   {
+    "part": "Ryzen 5 5600",
+    "vendor": "AMD",
+    "socket": "AM4",
+    "eur": 131,
+    "cov": 2,
+    "idx": {
+     "DDR4": 51
+    },
+    "derived": {
+     "DDR4": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 15
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "AM4 motherboard",
+      "eur": 85
+     }
+    }
+   },
+   {
+    "part": "Ryzen 5 7500F",
+    "vendor": "AMD",
+    "socket": "AM5",
+    "eur": 130,
+    "cov": 2,
+    "idx": {
+     "DDR5": 59
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 15
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "AM5 motherboard",
+      "eur": 100
+     }
+    }
+   },
+   {
+    "part": "Ryzen 5 7500X3D",
+    "vendor": "AMD",
+    "socket": "AM5",
+    "eur": 209,
+    "cov": 1,
+    "idx": {
+     "DDR5": 72
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 15
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "AM5 motherboard",
+      "eur": 100
+     }
+    }
+   },
+   {
+    "part": "Ryzen 5 7600X",
+    "vendor": "AMD",
+    "socket": "AM5",
+    "eur": 150,
+    "cov": 2,
+    "idx": {
+     "DDR5": 59
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 15
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "AM5 motherboard",
+      "eur": 100
+     }
+    }
+   },
+   {
+    "part": "Ryzen 5 9600X",
+    "vendor": "AMD",
+    "socket": "AM5",
+    "eur": 161,
+    "cov": 3,
+    "idx": {
+     "DDR5": 69
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "Dual-tower air cooler",
+     "eur": 35
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "AM5 motherboard",
+      "eur": 100
+     }
+    }
+   },
+   {
+    "part": "Ryzen 7 5800X3D",
+    "vendor": "AMD",
+    "socket": "AM4",
+    "eur": 358,
+    "cov": 7,
+    "idx": {
+     "DDR4": 69
+    },
+    "derived": {
+     "DDR4": false
+    },
+    "cooler": {
+     "part": "Dual-tower air cooler",
+     "eur": 35
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "AM4 motherboard",
+      "eur": 85
+     }
+    }
+   },
+   {
+    "part": "Ryzen 7 7800X3D",
+    "vendor": "AMD",
+    "socket": "AM5",
+    "eur": 324,
+    "cov": 7,
+    "idx": {
+     "DDR5": 78
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "Dual-tower air cooler",
+     "eur": 35
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "AM5 motherboard",
+      "eur": 100
+     }
+    }
+   },
+   {
+    "part": "Ryzen 7 9800X3D",
+    "vendor": "AMD",
+    "socket": "AM5",
+    "eur": 399,
+    "cov": 7,
+    "idx": {
+     "DDR5": 97
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "Dual-tower air cooler",
+     "eur": 35
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "AM5 motherboard, upper tier",
+      "eur": 130
+     }
+    }
+   }
+  ],
+  "gpus": [
+   {
+    "part": "Arc B570",
+    "vendor": "Intel",
+    "eur": 267,
+    "cov": 6,
+    "idx": {
+     "1080p": 34,
+     "1440p": 16,
+     "4K": 6
+    },
+    "derived": false,
+    "vram": 10,
+    "psu": {
+     "part": "650 W power supply",
+     "eur": 50
+    }
+   },
+   {
+    "part": "Arc B580",
+    "vendor": "Intel",
+    "eur": 289,
+    "cov": 6,
+    "idx": {
+     "1080p": 39,
+     "1440p": 33,
+     "4K": 24
+    },
+    "derived": false,
+    "vram": 12,
+    "psu": {
+     "part": "650 W power supply",
+     "eur": 50
+    }
+   },
+   {
+    "part": "RTX 5050",
+    "vendor": "Nvidia",
+    "eur": 279,
+    "cov": 3,
+    "idx": {
+     "1080p": 38,
+     "1440p": 22,
+     "4K": 15
+    },
+    "derived": false,
+    "vram": 8,
+    "psu": {
+     "part": "650 W power supply",
+     "eur": 50
+    }
+   },
+   {
+    "part": "RTX 5060",
+    "vendor": "Nvidia",
+    "eur": 319,
+    "cov": 6,
+    "idx": {
+     "1080p": 47,
+     "1440p": 37,
+     "4K": 15
+    },
+    "derived": false,
+    "vram": 8,
+    "psu": {
+     "part": "650 W power supply",
+     "eur": 50
+    }
+   },
+   {
+    "part": "RTX 5060 Ti 16GB",
+    "vendor": "Nvidia",
+    "eur": 562,
+    "cov": 6,
+    "idx": {
+     "1080p": 59,
+     "1440p": 49,
+     "4K": 39
+    },
+    "derived": false,
+    "vram": 16,
+    "psu": {
+     "part": "750 W power supply",
+     "eur": 58
+    }
+   },
+   {
+    "part": "RTX 5060 Ti 8GB",
+    "vendor": "Nvidia",
+    "eur": 345,
+    "cov": 6,
+    "idx": {
+     "1080p": 47,
+     "1440p": 40,
+     "4K": 19
+    },
+    "derived": false,
+    "vram": 8,
+    "psu": {
+     "part": "750 W power supply",
+     "eur": 58
+    }
+   },
+   {
+    "part": "RTX 5070",
+    "vendor": "Nvidia",
+    "eur": 629,
+    "cov": 3,
+    "idx": {
+     "1080p": 68,
+     "1440p": 54,
+     "4K": 42
+    },
+    "derived": false,
+    "vram": 12,
+    "psu": {
+     "part": "750 W power supply",
+     "eur": 80
+    }
+   },
+   {
+    "part": "RTX 5070 Ti",
+    "vendor": "Nvidia",
+    "eur": 949,
+    "cov": 3,
+    "idx": {
+     "1080p": 84,
+     "1440p": 70,
+     "4K": 57
+    },
+    "derived": false,
+    "vram": 16,
+    "psu": {
+     "part": "850 W power supply",
+     "eur": 90
+    }
+   },
+   {
+    "part": "RTX 5080",
+    "vendor": "Nvidia",
+    "eur": 1216,
+    "cov": 3,
+    "idx": {
+     "1080p": 87,
+     "1440p": 76,
+     "4K": 64
+    },
+    "derived": false,
+    "vram": 16,
+    "psu": {
+     "part": "850 W power supply",
+     "eur": 90
+    }
+   },
+   {
+    "part": "RTX 5090",
+    "vendor": "Nvidia",
+    "eur": 4249,
+    "cov": 3,
+    "idx": {
+     "1080p": 100,
+     "1440p": 100,
+     "4K": 100
+    },
+    "derived": false,
+    "vram": 32,
+    "psu": {
+     "part": "1000 W power supply",
+     "eur": 115
+    }
+   },
+   {
+    "part": "RX 7600",
+    "vendor": "AMD",
+    "eur": 283,
+    "cov": 6,
+    "idx": {
+     "1080p": 20,
+     "1440p": 15,
+     "4K": 14
+    },
+    "derived": false,
+    "vram": 8,
+    "psu": {
+     "part": "650 W power supply",
+     "eur": 50
+    }
+   },
+   {
+    "part": "RX 9060 XT 16GB",
+    "vendor": "AMD",
+    "eur": 414,
+    "cov": 6,
+    "idx": {
+     "1080p": 63,
+     "1440p": 54,
+     "4K": 41
+    },
+    "derived": false,
+    "vram": 16,
+    "psu": {
+     "part": "650 W power supply",
+     "eur": 50
+    }
+   },
+   {
+    "part": "RX 9060 XT 8GB",
+    "vendor": "AMD",
+    "eur": 341,
+    "cov": 3,
+    "idx": {
+     "1080p": 38,
+     "1440p": 25,
+     "4K": 25
+    },
+    "derived": false,
+    "vram": 8,
+    "psu": {
+     "part": "650 W power supply",
+     "eur": 50
+    }
+   },
+   {
+    "part": "RX 9070",
+    "vendor": "AMD",
+    "eur": 589,
+    "cov": 3,
+    "idx": {
+     "1080p": 90,
+     "1440p": 72,
+     "4K": 56
+    },
+    "derived": false,
+    "vram": 16,
+    "psu": {
+     "part": "750 W power supply",
+     "eur": 80
+    }
+   },
+   {
+    "part": "RX 9070 GRE",
+    "vendor": null,
+    "eur": 555,
+    "cov": 0,
+    "idx": {
+     "1080p": 74,
+     "1440p": 60
+    },
+    "derived": true,
+    "vram": 12,
+    "psu": {
+     "part": "750 W power supply",
+     "eur": 58
+    }
+   },
+   {
+    "part": "RX 9070 XT",
+    "vendor": "AMD",
+    "eur": 669,
+    "cov": 3,
+    "idx": {
+     "1080p": 96,
+     "1440p": 81,
+     "4K": 65
+    },
+    "derived": false,
+    "vram": 16,
+    "psu": {
+     "part": "850 W power supply",
+     "eur": 90
+    }
+   }
+  ],
+  "memory": [
+   {
+    "part": "32GB DDR4-3200",
+    "kind": "DDR4",
+    "eur": 240
+   },
+   {
+    "part": "32GB DDR5-6000",
+    "kind": "DDR5",
+    "eur": 400
+   }
+  ],
+  "storage": [
+   {
+    "part": "1TB NVMe",
+    "eur": 140
+   },
+   {
+    "part": "2TB NVMe",
+    "eur": 240
+   }
+  ],
+  "case": {
+   "part": "Case",
+   "eur": 75
+  },
+  "blend_cpu": {
+   "1080p": 0.55,
+   "1440p": 0.35,
+   "4K": 0.2
+  },
+  "excluded": [
+   {
+    "part": "RTX 4080",
+    "why": "last generation, no longer reasonably available at this price"
+   },
+   {
+    "part": "RTX 4090",
+    "why": "last generation, no longer reasonably available at this price"
+   },
+   {
+    "part": "RX 7600 XT",
+    "why": "superseded, and beaten by a 9060 XT 16GB for less"
+   },
+   {
+    "part": "RX 7700 XT",
+    "why": "superseded, and beaten by a 9060 XT 16GB for less"
+   },
+   {
+    "part": "RX 7800 XT",
+    "why": "superseded, and priced far above its index"
+   },
+   {
+    "part": "RX 7900 XT",
+    "why": "superseded, and beaten by an RX 9070 for less"
+   },
+   {
+    "part": "RX 7900 XTX",
+    "why": "superseded, and beaten by a 9070 XT for half the money"
+   }
+  ]
+ }
 }

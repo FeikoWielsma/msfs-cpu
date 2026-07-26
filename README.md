@@ -24,7 +24,9 @@ and methodology machinery is tucked into expanders.
   *epoch* or a PCGH/ComputerBase *scene*); average + 1% low bars, tap to re-baseline.
 - **Build guide** at [`/specs`](https://msfs.razortek.nl/specs) — the ranking turned into
   something you can buy: complete, fully priced builds at three budgets for each
-  resolution, every chip carrying its measured index. A separate page, not a tab.
+  resolution, every chip carrying its measured index. A separate page, not a tab. It also
+  carries a **budget generator**: give it a number and which vendors you will consider,
+  and it searches every priced part for the best complete build that fits.
 
 Absolute FPS are **not** comparable across sites/scenes (different scenes,
 settings, resolutions) — that's exactly why the Performance Index exists.
@@ -93,6 +95,36 @@ so a specific ladder is linkable.
 
 Both stylesheets import `src/theme.css`, so the two pages cannot drift apart on a colour,
 and the theme toggle writes the same `msfs-theme` key the SPA reads.
+
+### The budget generator
+
+Above the curated matrix sits a generator: a budget, which CPU and GPU vendors you will
+consider, and whether you will accept an 8 GB card. It composes every CPU × GPU × memory
+combination — board, PSU, cooler and case resolved by the same rules that build the matrix
+below it, so the two are directly comparable — and returns the **cheapest build within a
+point of the best score the budget reaches**, so the last euros are not spent on noise.
+Anything left goes on storage. State lives in the query string (`?budget=1500&cpu=AMD`),
+so a build is linkable; the resolution stays in the hash.
+
+The score is a **weighted geometric mean of the two indices**, the CPU's share set per
+resolution by `BLEND_CPU` in `make_build_table.py` (55% at 1080p down to 20% at 4K).
+Geometric rather than arithmetic so a lopsided build is punished instead of averaged out.
+**That weighting is judgement, not measurement, and the page says so**: the two indices are
+separate fits, each normalised to its own leader, so no arithmetic across them is a frame
+rate. It ranks builds; it does not predict FPS.
+
+What it refuses to do is where the value is. Under 16 GB of VRAM is offered only at 1080p
+(8 GB only if you opt in), matching the matrix. It reports the next real step up, re-priced
+so that step is itself a balanced build rather than the cheapest chip that clears the
+threshold. It says when a budget has headroom nothing can spend — at 1080p nothing improves
+on about €2,000, and it will tell you so. And it flags a build whose two halves are far
+apart, because the 4K weighting will otherwise happily bolt a huge card to a cheap chip.
+
+`GEN_EXCLUDE` holds the parts the generator may never pick: the group `build_prices.csv`
+already marks as no longer reasonably available. They are all beaten on value by something
+current anyway — the list only stops a large budget surfacing one on raw score. The 9070
+GRE is deliberately *not* in it: it is current and buyable, it simply has no MSFS coverage,
+so it carries a derived index and a `°` like anything else on the page.
 
 ## Shareable tier lists
 

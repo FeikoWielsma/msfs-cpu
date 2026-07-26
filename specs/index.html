@@ -40,6 +40,51 @@
     <span class="res-note" id="resNote"></span>
   </div>
 
+  <section class="gen">
+    <h2>Build generator<span>Give it a budget; it searches every priced part for the
+      resolution above</span></h2>
+    <div class="gen-controls">
+      <div class="gen-field budget">
+        <span class="ctl-label" id="genBudgetLabel">Budget</span>
+        <div class="budget-row">
+          <span class="cur">€</span>
+          <input type="number" id="genBudget" min="0" step="50" value="1500"
+                 inputmode="numeric" aria-labelledby="genBudgetLabel">
+        </div>
+        <input type="range" id="genRange" min="1000" max="6000" step="50" value="1500"
+               aria-labelledby="genBudgetLabel">
+      </div>
+      <div class="gen-field">
+        <span class="ctl-label">CPU</span>
+        <div class="chips" id="genCpu"></div>
+      </div>
+      <div class="gen-field">
+        <span class="ctl-label">GPU</span>
+        <div class="chips" id="genGpu"></div>
+      </div>
+      <label class="gen-toggle">
+        <input type="checkbox" id="genAllow8"> Allow 8 GB cards
+        <small>1080p only — above it they fall off a cliff</small>
+      </label>
+    </div>
+    <div id="genResult"></div>
+    <p class="note gen-how">
+      <b>How it picks.</b> It composes every CPU × GPU × memory combination that fits —
+      board, PSU, cooler and case included by the same rules as the builds below — and
+      scores each one, then returns the <b>cheapest build that comes within a point of the
+      best score your budget can reach</b>, so the last euros are not spent on noise.
+      Anything left over goes on storage. The score is a weighted blend of the two
+      indices, <b id="genWeights">weighted per resolution</b>. That weighting is
+      <b>judgement, not measurement</b>: the CPU and GPU indices are separate fits, each
+      normalised to its own leader, so no arithmetic across them is a frame rate. It ranks
+      builds; it does not predict FPS.
+    </p>
+  </section>
+
+  <section class="picks">
+    <h2>Hand-picked builds<span>The curated matrix — three budgets, both vendors</span></h2>
+  </section>
+
   <div id="builds"></div>
 
   <section class="np-wrap">
