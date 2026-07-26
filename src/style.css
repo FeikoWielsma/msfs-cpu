@@ -14,6 +14,19 @@ body {
 a { color:var(--intel); }
 html[data-theme="dark"] a { color:var(--intel); }
 
+/* ---------- top row ---------- */
+/* The hardware toggle with the build-guide link beside it. Centred as a pair and
+   allowed to wrap, so the link drops under the pill on a phone rather than squeezing
+   it. */
+.top-row { display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:10px 12px; margin-bottom:20px; }
+.top-link { font-family:"Bebas Neue", sans-serif; font-size:14px; font-weight:700;
+  letter-spacing:.04em; text-transform:uppercase; text-decoration:none;
+  color:var(--accent); background:var(--card); border:1px solid var(--line);
+  padding:7px 13px; border-radius:var(--radius); white-space:nowrap; transition:.14s; }
+html[data-theme="dark"] .top-link, html[data-theme="light"] .top-link { color:var(--accent); }
+.top-link:hover { border-color:var(--accent); }
+
 /* ---------- masthead ---------- */
 .kicker { font-family:"Bebas Neue", sans-serif; font-size:16px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
   color:var(--muted); }

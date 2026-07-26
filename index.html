@@ -18,7 +18,12 @@
 </head>
 <body>
 <div class="app">
-  <div class="hw-toggle" id="hwToggle" style="display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; background: var(--card-2); padding: 6px; border-radius: 20px; width: max-content; margin-left: auto; margin-right: auto; border: 1px solid var(--line);"><button data-hw="cpu" class="chip on" style="margin:0; border-radius: 14px; font-size: 14px; padding: 6px 16px; min-height: 32px; box-shadow: none;">CPU Benchmarks</button><button data-hw="gpu" class="chip" style="margin:0; border-radius: 14px; font-size: 14px; padding: 6px 16px; min-height: 32px; box-shadow: none;">GPU Benchmarks</button></div>
+  <!-- the link is a sibling, not a child: wireControls() toggles .on across every
+       child of #hwToggle, so anything in there is treated as a hardware button -->
+  <div class="top-row">
+    <div class="hw-toggle" id="hwToggle" style="display: flex; gap: 8px; justify-content: center; background: var(--card-2); padding: 6px; border-radius: 20px; width: max-content; border: 1px solid var(--line);"><button data-hw="cpu" class="chip on" style="margin:0; border-radius: 14px; font-size: 14px; padding: 6px 16px; min-height: 32px; box-shadow: none;">CPU Benchmarks</button><button data-hw="gpu" class="chip" style="margin:0; border-radius: 14px; font-size: 14px; padding: 6px 16px; min-height: 32px; box-shadow: none;">GPU Benchmarks</button></div>
+    <a class="top-link" href="/specs">Build Guide →</a>
+  </div>
   <header>
     <h1>Which CPU runs MSFS&nbsp;2024 best?</h1>
     <p class="lede">A combined ranking from Tom's Hardware, PCGH and ComputerBase. Each site tests
