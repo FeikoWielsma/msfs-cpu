@@ -51,8 +51,15 @@ noticing:
   check is the one you already have: a price that has moved more than 3× since the last
   capture is marked **?**, kept, and left out of exports until you have looked at it.
 - **Same-name products.** A video-card table puts "Gigabyte GAMING OC" in the name cell and
-  the actual chipset in its own column, so rows are keyed on the product URL and the
-  chipset is folded into the name only where two rows would otherwise be identical.
+  the actual chipset in its own column, and a cooler page lists the same model in two
+  colours. Since the name is the storage key, a clash would mean one part silently
+  reporting another's price — so rows are keyed on the product URL, and spec columns are
+  folded into the name (product id as a last resort) only for the rows that actually
+  clash. On real pages this was 12–19 collisions each; it is now none.
+- **Other extensions' badges.** The name cell is a popular thing to decorate — the PSU
+  tier-list userscript hangs a "Tier B+" badge inside it, which read as part of the product
+  name (`ASRock PRO-750GTier B+`) until injected badges were stripped. If you write your
+  own PCPP extension, add its class to `nameText()`.
 - Both exclusions are overridable with one checkbox, and exported rows are then tagged
   `pcpp:us:oos` / `pcpp:us:check` rather than passing as ordinary prices.
 
@@ -80,4 +87,10 @@ The saved PCPartPicker pages used to develop this live in `pcpp/`, which is giti
 their pages, not ours, the same rule the repo applies to the review sources. Note that a
 browser-saved product table renders **empty** when reopened, because PCPP's own JavaScript
 re-populates it from data a saved copy does not have; part-list pages survive saving
-intact. Test product-table changes against the live site, one load at a time.
+intact. To test against a saved product table, inject its HTML with `innerHTML` (scripts
+inserted that way never run, so the markup stays as saved) rather than opening the file.
+Otherwise test against the live site, one load at a time.
+
+The scraper has been checked against saved snapshots of every part category — CPU, cooler,
+motherboard, memory, storage, case, PSU, video card and a part list — plus the live product
+table.

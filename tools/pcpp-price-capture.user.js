@@ -236,6 +236,23 @@
     return txt(c);
   }
 
+  /**
+   * The product name, with anything another extension has injected taken back out.
+   *
+   * PCPP's name cell is a popular place to hang things: the PSU tier-list userscript
+   * puts a "Tier B+" badge inside it, and a page read through that extension would
+   * otherwise record a part called "ASRock PRO-750GTier B+". Only PCPP's own text is
+   * wanted, so known badges and any element carrying a badge-ish class are dropped.
+   */
+  function nameText(row, sel) {
+    const el = row.querySelector(sel);
+    if (!el) return '';
+    const c = el.cloneNode(true);
+    $$('.psu-tier-badge, [class*="tier-badge"], [class*="-badge"], .specLabel, h6, script, style',
+       c).forEach(e => e.remove());
+    return txt(c);
+  }
+
   /** Is this row's price one you could actually pay right now? The two page shapes say
    *  so in different places, and neither says it in the price itself. */
   function inStock(row, priceCell) {
@@ -291,7 +308,7 @@
       }
       if (!price) continue;                 // no seller: the cell holds only an Add button
 
-      let name = txt(row.querySelector((rule && rule.name) || PCPP.name));
+      let name = nameText(row, (rule && rule.name) || PCPP.name);
       if (!name) {
         const links = $$('a', row).map(txt).filter(Boolean);
         name = links.sort((a, b) => b.length - a.length)[0] || '';
@@ -337,14 +354,36 @@
     }
     const rowsOut = [...byKey.values()];
 
-    // Only where two genuinely different products would display the same name does the
-    // first spec column get appended — so a part list stays clean and a video-card table
-    // becomes readable.
-    const seen = new Map();
-    rowsOut.forEach(r => seen.set(r.name, (seen.get(r.name) || 0) + 1));
-    rowsOut.forEach(r => {
-      if (seen.get(r.name) > 1 && r.specs.length) r.name = `${r.specs[0]} ${r.name}`;
-    });
+    // Names are stored as keys, so two different products may not share one — the second
+    // would overwrite the first and quietly report one part's price for another. PCPP
+    // displays clashes constantly: two colours of the same cooler, or a whole page of
+    // video cards whose name cell says only "Asus DUAL" with the chipset in its own
+    // column. Spec columns are folded in until the clash is gone, and only for the rows
+    // that clash, so an unambiguous part keeps its plain name.
+    const clashes = () => {
+      const groups = new Map();
+      rowsOut.forEach(r => {
+        const k = r.name.toLowerCase();
+        if (!groups.has(k)) groups.set(k, []);
+        groups.get(k).push(r);
+      });
+      return [...groups.values()].filter(g => g.length > 1);
+    };
+    for (let depth = 0; depth < 4; depth++) {
+      const bad = clashes();
+      if (!bad.length) break;
+      // depth 0 goes in front: a video card reads better as "Radeon RX 9070 XT Asus DUAL"
+      bad.forEach(g => g.forEach(r => {
+        const extra = r.specs[depth];
+        if (extra) r.name = depth === 0 ? `${extra} ${r.name}` : `${r.name} ${extra}`;
+      }));
+    }
+    // Still identical after four specs: fall back to PCPP's own product id, which is
+    // ugly but unique, rather than losing a row.
+    clashes().forEach(g => g.forEach(r => {
+      const tag = r.product && r.product.match(/\/product\/([^/]+)/);
+      if (tag) r.name = `${r.name} [${tag[1]}]`;
+    }));
     return rowsOut;
   }
 
