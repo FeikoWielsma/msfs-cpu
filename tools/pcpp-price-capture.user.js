@@ -10,6 +10,7 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_setClipboard
+// @grant        unsafeWindow
 // @run-at       document-idle
 // @noframes
 // ==/UserScript==
@@ -1360,9 +1361,15 @@
   });
   GM_registerMenuCommand('Copy all-currency CSV', () => copy(exportWide(), 'CSV'));
 
-  // A handle for the console, and what the test harness drives: if a page ever reads
+  // A handle for the console, and what a test harness drives: if a page ever reads
   // wrong, `__pcppCapture.rows()` shows exactly what the scraper sees before Teach.
-  window.__pcppCapture = {
+  //
+  // It goes on unsafeWindow deliberately. Any @grant puts a Violentmonkey script in a
+  // sandboxed world, so a plain `window.__pcppCapture` is invisible from the page — and
+  // the devtools console is the page. Without this the handle exists but nothing you
+  // could type can reach it.
+  const pageWindow = (typeof unsafeWindow !== 'undefined' && unsafeWindow) || window;
+  pageWindow.__pcppCapture = {
     rows: scrapeRows, money: parseMoney, shape: pageShape, region: currentRegion,
     prices: () => prices, watchlist, captureHere: () => capture(null), captureWith: t => capture(t), rulesFor, saved: savedLists,
   };

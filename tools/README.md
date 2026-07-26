@@ -155,15 +155,26 @@ RTX 4090
 RTX 4080 = /RTX 4080(?! Super)/
 Arc B580
 Arc B570
-# Memory and storage. Two lookaheads rather than one pattern, because the order
-# differs by page shape: a list row reads "32 GB (2 x 16 GB) DDR4-3200", a category
-# row puts capacity and speed in separate spec columns. The (?<!x ) is load-bearing —
-# without it "32 GB" also matches the "2 x 32 GB" of a 64 GB kit.
-32GB DDR5-6000 = /^(?=.*DDR5-6000)(?=.*(?<!x )\b32 GB\b)/
-32GB DDR4-3200 = /^(?=.*DDR4-3200)(?=.*(?<!x )\b32 GB\b)/
+# Memory. Match the MODULE COUNT, not the total: 1x16, 2x8 and 2x16 are three
+# deliberate options (a budget build really does buy a single 16 GB stick), and a
+# total-capacity pattern cannot tell 1x16 from 2x8 — they are both "16 GB". The \s?
+# is because a list row writes "(2 x 16 GB)" and a category spec column writes
+# "2 x 16GB". Two lookaheads because their order differs between those two shapes.
+1x16GB DDR5-6000 = /^(?=.*DDR5-6000)(?=.*\b1 x 16\s?GB\b)/
+2x8GB DDR5-6000  = /^(?=.*DDR5-6000)(?=.*\b2 x 8\s?GB\b)/
+32GB DDR5-6000   = /^(?=.*DDR5-6000)(?=.*\b2 x 16\s?GB\b)/
+1x16GB DDR4-3200 = /^(?=.*DDR4-3200)(?=.*\b1 x 16\s?GB\b)/
+2x8GB DDR4-3200  = /^(?=.*DDR4-3200)(?=.*\b2 x 8\s?GB\b)/
+32GB DDR4-3200   = /^(?=.*DDR4-3200)(?=.*\b2 x 16\s?GB\b)/
+# Storage. Here the total IS the thing, so (?<!x ) keeps "2 TB" from matching a
+# "2 x 2 TB" pair.
 1TB NVMe = /^(?=.*(NVME|M\.2))(?=.*(?<!x )\b1 TB\b)/
 2TB NVMe = /^(?=.*(NVME|M\.2))(?=.*(?<!x )\b2 TB\b)/
 ```
+
+`32GB DDR5-6000` and `32GB DDR4-3200` keep their existing names because `build_specs.csv`
+refers to them; the four `1x16` / `2x8` rows are new and would need adding to
+`build_prices.csv` before they mean anything to the build table.
 
 The PSU, board, case and cooler rows in `build_prices.csv` are tier bundles
 (`psu_650`, `mb_am4`, …) rather than named products. They are not watchable by name —
