@@ -2,6 +2,9 @@
 # The pipeline reads these locally; only our transcribed CSVs are committed.
 pcgh.de/
 computerbase.de/
+# Saved PCPartPicker pages, kept locally to develop the price-capture userscript
+# against real markup. Their pages, not ours — same rule as the reviews above.
+pcpp/
 tomshardware/
 toms/
 gpu/

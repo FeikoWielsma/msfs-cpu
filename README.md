@@ -156,7 +156,8 @@ with prices. Two CSVs drive it and they are the only files to edit:
   low resolution to isolate the chip and there is only one CPU ladder.
 - **`build_prices.csv`** — `part,eur` plus `priced_on` and per-tier PSU/case/mobo
   bundles. **EUR, Netherlands, hand-maintained.** Refresh the figures and bump
-  `priced_on`; the generator warns past 60 days.
+  `priced_on`; the generator warns past 60 days. `tools/pcpp-price-capture.user.js` is a
+  userscript that reads a refresh off PCPartPicker — see [`tools/README.md`](tools/README.md).
 
 `make_build_table.py` is deliberately noisy. A part with no price renders as a dash
 rather than a wrong total, an unrecognised part name is reported as a likely typo, and
