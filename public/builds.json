@@ -1,8 +1,8 @@
 {
- "priced_on": "2026-07-25",
+ "priced_on": "2026-07-26",
  "currency": "EUR",
  "region": "Netherlands",
- "source": "Tweakers.net",
+ "source": "PCPartPicker NL and Tweakers.net",
  "resolutions": [
   "1080p",
   "1440p",
@@ -31,12 +31,12 @@
    "gpu": "RX 9060 XT 16GB",
    "gi": 63,
    "gd": false,
-   "gbest": true,
+   "gbest": false,
    "gn": 6,
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1150,
+   "eur": 1168,
    "approx": false,
    "items": [
     {
@@ -48,44 +48,44 @@
     {
      "slot": "GPU",
      "part": "RX 9060 XT 16GB",
-     "eur": 414,
-     "src": "tweakers"
+     "eur": 438,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM4 motherboard",
      "eur": 85,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "650 W power supply",
-     "eur": 50,
-     "src": "tweakers"
+     "eur": 59,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "120 mm tower cooler",
-     "eur": 15,
-     "src": "tweakers"
+     "eur": 26,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -102,12 +102,12 @@
    "gpu": "RTX 5060",
    "gi": 47,
    "gd": false,
-   "gbest": false,
+   "gbest": true,
    "gn": 6,
    "vram": 8,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1084,
+   "eur": 1065,
    "approx": false,
    "items": [
     {
@@ -119,44 +119,44 @@
     {
      "slot": "GPU",
      "part": "RTX 5060",
-     "eur": 319,
-     "src": "tweakers"
+     "eur": 317,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4",
-     "eur": 100,
-     "src": "tweakers"
+     "eur": 89,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "650 W power supply",
-     "eur": 50,
-     "src": "tweakers"
+     "eur": 59,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "120 mm tower cooler",
-     "eur": 15,
-     "src": "tweakers"
+     "eur": 26,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -178,7 +178,7 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1743,
+   "eur": 1748,
    "approx": false,
    "items": [
     {
@@ -190,26 +190,26 @@
     {
      "slot": "GPU",
      "part": "RX 9070",
-     "eur": 589,
-     "src": "tweakers"
+     "eur": 599,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard",
-     "eur": 100,
-     "src": "tweakers"
+     "eur": 112,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
@@ -220,14 +220,14 @@
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -249,7 +249,7 @@
    "vram": 12,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1469,
+   "eur": 1441,
    "approx": false,
    "items": [
     {
@@ -261,26 +261,26 @@
     {
      "slot": "GPU",
      "part": "RTX 5070",
-     "eur": 629,
-     "src": "tweakers"
+     "eur": 639,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4",
-     "eur": 100,
-     "src": "tweakers"
+     "eur": 89,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
@@ -291,14 +291,14 @@
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -320,7 +320,7 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 1948,
+   "eur": 1921,
    "approx": false,
    "items": [
     {
@@ -332,20 +332,20 @@
     {
      "slot": "GPU",
      "part": "RX 9070",
-     "eur": 589,
-     "src": "tweakers"
+     "eur": 599,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 220,
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
@@ -362,14 +362,14 @@
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -391,7 +391,7 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2268,
+   "eur": 2209,
    "approx": false,
    "items": [
     {
@@ -403,44 +403,44 @@
     {
      "slot": "GPU",
      "part": "RTX 5070 Ti",
-     "eur": 949,
-     "src": "tweakers"
+     "eur": 959,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 220,
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1851 motherboard",
-     "eur": 125,
-     "src": "tweakers"
+     "eur": 115,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
      "eur": 90,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "360 mm AIO",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 52,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -462,7 +462,7 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1150,
+   "eur": 1168,
    "approx": false,
    "items": [
     {
@@ -474,44 +474,44 @@
     {
      "slot": "GPU",
      "part": "RX 9060 XT 16GB",
-     "eur": 414,
-     "src": "tweakers"
+     "eur": 438,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM4 motherboard",
      "eur": 85,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "650 W power supply",
-     "eur": 50,
-     "src": "tweakers"
+     "eur": 59,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "120 mm tower cooler",
-     "eur": 15,
-     "src": "tweakers"
+     "eur": 26,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -533,7 +533,7 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1335,
+   "eur": 1356,
    "approx": false,
    "items": [
     {
@@ -545,44 +545,44 @@
     {
      "slot": "GPU",
      "part": "RTX 5060 Ti 16GB",
-     "eur": 562,
-     "src": "tweakers"
+     "eur": 579,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4",
-     "eur": 100,
-     "src": "tweakers"
+     "eur": 89,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "750 W power supply",
-     "eur": 58,
-     "src": "tweakers"
+     "eur": 88,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "120 mm tower cooler",
-     "eur": 15,
-     "src": "tweakers"
+     "eur": 26,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -604,7 +604,7 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1743,
+   "eur": 1748,
    "approx": false,
    "items": [
     {
@@ -616,26 +616,26 @@
     {
      "slot": "GPU",
      "part": "RX 9070",
-     "eur": 589,
-     "src": "tweakers"
+     "eur": 599,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard",
-     "eur": 100,
-     "src": "tweakers"
+     "eur": 112,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
@@ -646,14 +646,14 @@
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -675,7 +675,7 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1883,
+   "eur": 1866,
    "approx": false,
    "items": [
     {
@@ -687,20 +687,20 @@
     {
      "slot": "GPU",
      "part": "RTX 5070 Ti",
-     "eur": 949,
-     "src": "tweakers"
+     "eur": 959,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
@@ -712,19 +712,19 @@
      "slot": "Power supply",
      "part": "850 W power supply",
      "eur": 90,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -746,7 +746,7 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2038,
+   "eur": 2031,
    "approx": false,
    "items": [
     {
@@ -758,20 +758,20 @@
     {
      "slot": "GPU",
      "part": "RX 9070 XT",
-     "eur": 669,
-     "src": "tweakers"
+     "eur": 699,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 220,
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
@@ -783,19 +783,19 @@
      "slot": "Power supply",
      "part": "850 W power supply",
      "eur": 90,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -817,7 +817,7 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2535,
+   "eur": 2509,
    "approx": false,
    "items": [
     {
@@ -829,44 +829,44 @@
     {
      "slot": "GPU",
      "part": "RTX 5080",
-     "eur": 1216,
-     "src": "tweakers"
+     "eur": 1259,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 220,
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1851 motherboard",
-     "eur": 125,
-     "src": "tweakers"
+     "eur": 115,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
      "eur": 90,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "360 mm AIO",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 52,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -888,7 +888,7 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1602,
+   "eur": 1585,
    "approx": false,
    "items": [
     {
@@ -900,26 +900,26 @@
     {
      "slot": "GPU",
      "part": "RX 9070",
-     "eur": 589,
-     "src": "tweakers"
+     "eur": 599,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM4 motherboard",
      "eur": 85,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
@@ -930,14 +930,14 @@
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -959,7 +959,7 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1799,
+   "eur": 1771,
    "approx": false,
    "items": [
     {
@@ -971,44 +971,44 @@
     {
      "slot": "GPU",
      "part": "RTX 5070 Ti",
-     "eur": 949,
-     "src": "tweakers"
+     "eur": 959,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4",
-     "eur": 100,
-     "src": "tweakers"
+     "eur": 89,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
      "eur": 90,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -1030,7 +1030,7 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1833,
+   "eur": 1858,
    "approx": false,
    "items": [
     {
@@ -1042,44 +1042,44 @@
     {
      "slot": "GPU",
      "part": "RX 9070 XT",
-     "eur": 669,
-     "src": "tweakers"
+     "eur": 699,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard",
-     "eur": 100,
-     "src": "tweakers"
+     "eur": 112,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
      "eur": 90,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -1101,7 +1101,7 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 2150,
+   "eur": 2166,
    "approx": false,
    "items": [
     {
@@ -1113,20 +1113,20 @@
     {
      "slot": "GPU",
      "part": "RTX 5080",
-     "eur": 1216,
-     "src": "tweakers"
+     "eur": 1259,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 229,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
      "eur": 140,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
@@ -1138,19 +1138,19 @@
      "slot": "Power supply",
      "part": "850 W power supply",
      "eur": 90,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -1172,7 +1172,7 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2038,
+   "eur": 2031,
    "approx": false,
    "items": [
     {
@@ -1184,20 +1184,20 @@
     {
      "slot": "GPU",
      "part": "RX 9070 XT",
-     "eur": 669,
-     "src": "tweakers"
+     "eur": 699,
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 220,
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
@@ -1209,19 +1209,19 @@
      "slot": "Power supply",
      "part": "850 W power supply",
      "eur": 90,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 35,
-     "src": "tweakers"
+     "eur": 34,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   },
@@ -1243,7 +1243,7 @@
    "vram": 32,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 5593,
+   "eur": 5490,
    "approx": false,
    "items": [
     {
@@ -1256,43 +1256,43 @@
      "slot": "GPU",
      "part": "RTX 5090",
      "eur": 4249,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 400,
-     "src": "tweakers"
+     "eur": 399,
+     "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 240,
-     "src": "tweakers"
+     "eur": 220,
+     "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1851 motherboard",
-     "eur": 125,
-     "src": "tweakers"
+     "eur": 115,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "1000 W power supply",
-     "eur": 115,
-     "src": "tweakers"
+     "eur": 81,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "360 mm AIO",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 52,
+     "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 75,
-     "src": "tweakers"
+     "eur": 60,
+     "src": "pcpp"
     }
    ]
   }
@@ -1300,10 +1300,10 @@
  "not_picked": [
   {
    "part": "RX 9070 GRE",
-   "eur": 555,
+   "eur": 559,
    "gi": 60,
    "gd": true,
-   "why": "an RX 9070 is +20% for €34 more",
+   "why": "an RX 9070 is +20% for €40 more",
    "vram": 12
   },
   {
@@ -1311,23 +1311,23 @@
    "eur": 736,
    "gi": 73,
    "gd": false,
-   "why": "a 9070 XT beats it for €67 less",
+   "why": "a 9070 XT beats it for €37 less",
    "vram": 20
   },
   {
    "part": "RX 9060 XT 8GB",
-   "eur": 341,
+   "eur": 348,
    "gi": 25,
    "gd": false,
-   "why": "the 16GB more than doubles it for €73",
+   "why": "the 16GB is +114% for €90",
    "vram": 8
   },
   {
    "part": "RTX 5060 Ti 8GB",
-   "eur": 345,
+   "eur": 352,
    "gi": 40,
    "gd": false,
-   "why": "the 16GB twin is +23% for €217",
+   "why": "the 16GB twin is +23% for €227",
    "vram": 8
   },
   {
@@ -1343,22 +1343,37 @@
   {
    "part": "1TB NVMe",
    "eur": 140,
-   "src": "tweakers"
+   "src": "pcpp"
+  },
+  {
+   "part": "1x16GB DDR5-6000",
+   "eur": 233,
+   "src": "pcpp"
   },
   {
    "part": "2TB NVMe",
-   "eur": 240,
-   "src": "tweakers"
+   "eur": 220,
+   "src": "pcpp"
+  },
+  {
+   "part": "2x8GB DDR4-3200",
+   "eur": 103,
+   "src": "pcpp"
+  },
+  {
+   "part": "2x8GB DDR5-6000",
+   "eur": 229,
+   "src": "pcpp"
   },
   {
    "part": "32GB DDR4-3200",
-   "eur": 240,
-   "src": "tweakers"
+   "eur": 229,
+   "src": "pcpp"
   },
   {
    "part": "32GB DDR5-6000",
-   "eur": 400,
-   "src": "tweakers"
+   "eur": 399,
+   "src": "pcpp"
   },
   {
    "part": "Arc B570",
@@ -1417,43 +1432,43 @@
   },
   {
    "part": "RTX 5050",
-   "eur": 279,
-   "src": "tweakers"
+   "eur": 285,
+   "src": "pcpp"
   },
   {
    "part": "RTX 5060",
-   "eur": 319,
-   "src": "tweakers"
+   "eur": 317,
+   "src": "pcpp"
   },
   {
    "part": "RTX 5060 Ti 16GB",
-   "eur": 562,
-   "src": "tweakers"
+   "eur": 579,
+   "src": "pcpp"
   },
   {
    "part": "RTX 5060 Ti 8GB",
-   "eur": 345,
-   "src": "tweakers"
+   "eur": 352,
+   "src": "pcpp"
   },
   {
    "part": "RTX 5070",
-   "eur": 629,
-   "src": "tweakers"
+   "eur": 639,
+   "src": "pcpp"
   },
   {
    "part": "RTX 5070 Ti",
-   "eur": 949,
-   "src": "tweakers"
+   "eur": 959,
+   "src": "pcpp"
   },
   {
    "part": "RTX 5080",
-   "eur": 1216,
-   "src": "tweakers"
+   "eur": 1259,
+   "src": "pcpp"
   },
   {
    "part": "RTX 5090",
    "eur": 4249,
-   "src": "tweakers"
+   "src": "pcpp"
   },
   {
    "part": "RX 7600",
@@ -1487,28 +1502,28 @@
   },
   {
    "part": "RX 9060 XT 16GB",
-   "eur": 414,
-   "src": "tweakers"
+   "eur": 438,
+   "src": "pcpp"
   },
   {
    "part": "RX 9060 XT 8GB",
-   "eur": 341,
-   "src": "tweakers"
+   "eur": 348,
+   "src": "pcpp"
   },
   {
    "part": "RX 9070",
-   "eur": 589,
-   "src": "tweakers"
+   "eur": 599,
+   "src": "pcpp"
   },
   {
    "part": "RX 9070 GRE",
-   "eur": 555,
-   "src": "tweakers"
+   "eur": 559,
+   "src": "pcpp"
   },
   {
    "part": "RX 9070 XT",
-   "eur": 669,
-   "src": "tweakers"
+   "eur": 699,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 5 5500X3D",
@@ -1562,33 +1577,33 @@
   },
   {
    "part": "case",
-   "eur": 75,
-   "src": "tweakers"
+   "eur": 60,
+   "src": "pcpp"
   },
   {
    "part": "cooler_aio",
-   "eur": 75,
-   "src": "tweakers"
+   "eur": 52,
+   "src": "pcpp"
   },
   {
    "part": "cooler_entry",
-   "eur": 15,
-   "src": "tweakers"
+   "eur": 26,
+   "src": "pcpp"
   },
   {
    "part": "cooler_mid",
-   "eur": 35,
-   "src": "tweakers"
+   "eur": 34,
+   "src": "pcpp"
   },
   {
    "part": "mb_am4",
    "eur": 85,
-   "src": "tweakers"
+   "src": "pcpp"
   },
   {
    "part": "mb_am5",
-   "eur": 100,
-   "src": "tweakers"
+   "eur": 112,
+   "src": "pcpp"
   },
   {
    "part": "mb_am5_great",
@@ -1597,8 +1612,8 @@
   },
   {
    "part": "mb_lga1700_ddr4",
-   "eur": 100,
-   "src": "tweakers"
+   "eur": 89,
+   "src": "pcpp"
   },
   {
    "part": "mb_lga1700_ddr4_great",
@@ -1607,8 +1622,8 @@
   },
   {
    "part": "mb_lga1700_ddr5",
-   "eur": 100,
-   "src": "tweakers"
+   "eur": 107,
+   "src": "pcpp"
   },
   {
    "part": "mb_lga1700_ddr5_great",
@@ -1617,18 +1632,18 @@
   },
   {
    "part": "mb_lga1851",
-   "eur": 125,
-   "src": "tweakers"
+   "eur": 115,
+   "src": "pcpp"
   },
   {
    "part": "psu_1000",
-   "eur": 115,
-   "src": "tweakers"
+   "eur": 81,
+   "src": "pcpp"
   },
   {
    "part": "psu_650",
-   "eur": 50,
-   "src": "tweakers"
+   "eur": 59,
+   "src": "pcpp"
   },
   {
    "part": "psu_750a",
@@ -1637,13 +1652,13 @@
   },
   {
    "part": "psu_750b",
-   "eur": 58,
-   "src": "tweakers"
+   "eur": 88,
+   "src": "pcpp"
   },
   {
    "part": "psu_850",
    "eur": 90,
-   "src": "tweakers"
+   "src": "pcpp"
   }
  ],
  "catalogue": {
@@ -1662,12 +1677,12 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 15
+     "eur": 26
     },
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 125
+      "eur": 115
      }
     }
    },
@@ -1685,12 +1700,12 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 75
+     "eur": 52
     },
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 125
+      "eur": 115
      }
     }
    },
@@ -1708,12 +1723,12 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 75
+     "eur": 52
     },
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 125
+      "eur": 115
      }
     }
    },
@@ -1733,16 +1748,16 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 15
+     "eur": 26
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 100
+      "eur": 89
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 100
+      "eur": 107
      }
     }
    },
@@ -1762,16 +1777,16 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 35
+     "eur": 34
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 100
+      "eur": 89
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 100
+      "eur": 107
      }
     }
    },
@@ -1791,7 +1806,7 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 35
+     "eur": 34
     },
     "mobo": {
      "DDR4": {
@@ -1820,16 +1835,16 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 75
+     "eur": 52
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 100
+      "eur": 89
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 100
+      "eur": 107
      }
     }
    },
@@ -1847,7 +1862,7 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 15
+     "eur": 26
     },
     "mobo": {
      "DDR4": {
@@ -1870,12 +1885,12 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 15
+     "eur": 26
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 100
+      "eur": 112
      }
     }
    },
@@ -1893,12 +1908,12 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 15
+     "eur": 26
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 100
+      "eur": 112
      }
     }
    },
@@ -1916,12 +1931,12 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 15
+     "eur": 26
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 100
+      "eur": 112
      }
     }
    },
@@ -1939,12 +1954,12 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 35
+     "eur": 34
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 100
+      "eur": 112
      }
     }
    },
@@ -1962,7 +1977,7 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 35
+     "eur": 34
     },
     "mobo": {
      "DDR4": {
@@ -1985,12 +2000,12 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 35
+     "eur": 34
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 100
+      "eur": 112
      }
     }
    },
@@ -2008,7 +2023,7 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 35
+     "eur": 34
     },
     "mobo": {
      "DDR5": {
@@ -2033,7 +2048,7 @@
     "vram": 10,
     "psu": {
      "part": "650 W power supply",
-     "eur": 50
+     "eur": 59
     }
    },
    {
@@ -2050,13 +2065,13 @@
     "vram": 12,
     "psu": {
      "part": "650 W power supply",
-     "eur": 50
+     "eur": 59
     }
    },
    {
     "part": "RTX 5050",
     "vendor": "Nvidia",
-    "eur": 279,
+    "eur": 285,
     "cov": 3,
     "idx": {
      "1080p": 38,
@@ -2067,13 +2082,13 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 50
+     "eur": 59
     }
    },
    {
     "part": "RTX 5060",
     "vendor": "Nvidia",
-    "eur": 319,
+    "eur": 317,
     "cov": 6,
     "idx": {
      "1080p": 47,
@@ -2084,13 +2099,13 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 50
+     "eur": 59
     }
    },
    {
     "part": "RTX 5060 Ti 16GB",
     "vendor": "Nvidia",
-    "eur": 562,
+    "eur": 579,
     "cov": 6,
     "idx": {
      "1080p": 59,
@@ -2101,13 +2116,13 @@
     "vram": 16,
     "psu": {
      "part": "750 W power supply",
-     "eur": 58
+     "eur": 88
     }
    },
    {
     "part": "RTX 5060 Ti 8GB",
     "vendor": "Nvidia",
-    "eur": 345,
+    "eur": 352,
     "cov": 6,
     "idx": {
      "1080p": 47,
@@ -2118,13 +2133,13 @@
     "vram": 8,
     "psu": {
      "part": "750 W power supply",
-     "eur": 58
+     "eur": 88
     }
    },
    {
     "part": "RTX 5070",
     "vendor": "Nvidia",
-    "eur": 629,
+    "eur": 639,
     "cov": 3,
     "idx": {
      "1080p": 68,
@@ -2141,7 +2156,7 @@
    {
     "part": "RTX 5070 Ti",
     "vendor": "Nvidia",
-    "eur": 949,
+    "eur": 959,
     "cov": 3,
     "idx": {
      "1080p": 84,
@@ -2158,7 +2173,7 @@
    {
     "part": "RTX 5080",
     "vendor": "Nvidia",
-    "eur": 1216,
+    "eur": 1259,
     "cov": 3,
     "idx": {
      "1080p": 87,
@@ -2186,7 +2201,7 @@
     "vram": 32,
     "psu": {
      "part": "1000 W power supply",
-     "eur": 115
+     "eur": 81
     }
    },
    {
@@ -2203,13 +2218,13 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 50
+     "eur": 59
     }
    },
    {
     "part": "RX 9060 XT 16GB",
     "vendor": "AMD",
-    "eur": 414,
+    "eur": 438,
     "cov": 6,
     "idx": {
      "1080p": 63,
@@ -2220,13 +2235,13 @@
     "vram": 16,
     "psu": {
      "part": "650 W power supply",
-     "eur": 50
+     "eur": 59
     }
    },
    {
     "part": "RX 9060 XT 8GB",
     "vendor": "AMD",
-    "eur": 341,
+    "eur": 348,
     "cov": 3,
     "idx": {
      "1080p": 38,
@@ -2237,13 +2252,13 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 50
+     "eur": 59
     }
    },
    {
     "part": "RX 9070",
     "vendor": "AMD",
-    "eur": 589,
+    "eur": 599,
     "cov": 3,
     "idx": {
      "1080p": 90,
@@ -2260,7 +2275,7 @@
    {
     "part": "RX 9070 GRE",
     "vendor": null,
-    "eur": 555,
+    "eur": 559,
     "cov": 0,
     "idx": {
      "1080p": 74,
@@ -2270,13 +2285,13 @@
     "vram": 12,
     "psu": {
      "part": "750 W power supply",
-     "eur": 58
+     "eur": 88
     }
    },
    {
     "part": "RX 9070 XT",
     "vendor": "AMD",
-    "eur": 669,
+    "eur": 699,
     "cov": 3,
     "idx": {
      "1080p": 96,
@@ -2295,12 +2310,12 @@
    {
     "part": "32GB DDR4-3200",
     "kind": "DDR4",
-    "eur": 240
+    "eur": 229
    },
    {
     "part": "32GB DDR5-6000",
     "kind": "DDR5",
-    "eur": 400
+    "eur": 399
    }
   ],
   "storage": [
@@ -2310,12 +2325,12 @@
    },
    {
     "part": "2TB NVMe",
-    "eur": 240
+    "eur": 220
    }
   ],
   "case": {
    "part": "Case",
-   "eur": 75
+   "eur": 60
   },
   "blend_cpu": {
    "1080p": 0.55,

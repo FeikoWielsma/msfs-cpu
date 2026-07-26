@@ -136,12 +136,16 @@ def cooler_for(cpu):
 # Priced, plausible, but beaten on value by something already in the matrix. Listed
 # under it because "why isn't X in here?" is the question that always follows.
 # (part, reason) — index shown is at 1440p.
+# (part, what it loses to, reason). {d} is the price gap in EUR and {p} the index gap as
+# a percentage, both COMPUTED — this strip exists to justify a price comparison, so a
+# hand-typed "€73" in it goes wrong the moment either price moves, which is precisely
+# when someone is reading the card to decide what to buy.
 NOT_PICKED = [
-    ('RX 9070 GRE', 'an RX 9070 is +20% for €34 more'),
-    ('RX 7900 XT', 'a 9070 XT beats it for €67 less'),
-    ('RX 9060 XT 8GB', 'the 16GB more than doubles it for €73'),
-    ('RTX 5060 Ti 8GB', 'the 16GB twin is +23% for €217'),
-    ('Arc B580', 'fine at 1080p, out of its depth above'),
+    ('RX 9070 GRE', 'RX 9070', 'an RX 9070 is +{p}% for €{d} more'),
+    ('RX 7900 XT', 'RX 9070 XT', 'a 9070 XT beats it for €{d} less'),
+    ('RX 9060 XT 8GB', 'RX 9060 XT 16GB', 'the 16GB is +{p}% for €{d}'),
+    ('RTX 5060 Ti 8GB', 'RTX 5060 Ti 16GB', 'the 16GB twin is +{p}% for €{d}'),
+    ('Arc B580', None, 'fine at 1080p, out of its depth above'),
 ]
 TIERS = ['entry', 'mid', 'high']
 VENDORS = ['amd', 'nv']
@@ -185,6 +189,15 @@ GEN_EXCLUDE = {
 # build on this page runs, and 64 GB currently costs more than a 9800X3D.
 GEN_MEMORY = [('32GB DDR4-3200', 'DDR4'), ('32GB DDR5-6000', 'DDR5')]
 GEN_STORAGE = ['1TB NVMe', '2TB NVMe']
+
+# Which src values in build_prices.csv are a real price someone looked up, as opposed to
+# a guess. A total built entirely from these is exact; anything else marks the total with
+# a ~ so the card never passes an estimate off as a figure.
+#   tweakers  Tweakers.net, by hand
+#   pcpp      nl.pcpartpicker.com, via tools/pcpp-price-capture.user.js
+# 'aliexpress' is deliberately NOT here: it is a real price with no NL retail channel, so
+# a build containing one should still read as approximate.
+LOOKED_UP = {'tweakers': 'Tweakers.net', 'pcpp': 'PCPartPicker NL'}
 # memory a socket can actually take
 SOCKET_MEM = {'AM4': 'DDR4', 'AM5': 'DDR5', 'LGA1851': 'DDR5',
               'LGA1700': None}   # None = either
@@ -225,7 +238,7 @@ def load_prices():
                 warn('prices are %d days old (priced_on %s) — refresh them' % (age, priced_on))
         except ValueError:
             warn('priced_on is not an ISO date: %r' % priced_on)
-    est = sorted(p for p, s in src.items() if s != 'tweakers')
+    est = sorted(p for p, s in src.items() if s not in LOOKED_UP)
     if est:
         warn('%d part(s) still on estimated prices, so their totals show a ~ prefix: %s'
              % (len(est), ', '.join(est)))
@@ -291,7 +304,7 @@ def main():
             warn('no price for %r (needed by %s/%s/%s)' % (p, res, tier, ven))
         total = None if missing else sum(prices[p] for p in parts)
         # approximate if any component price is still a placeholder
-        approx = any(price_src.get(p, 'est') != 'tweakers' for p in parts if p in prices)
+        approx = any(price_src.get(p, 'est') not in LOOKED_UP for p in parts if p in prices)
 
         items = []
         for slot, part in bom:
@@ -370,20 +383,34 @@ def main():
 
     # the "priced but not picked" strip, indexed at 1440p
     ref = prices_by_res['1440p']
+    def idx_of(part):
+        """1440p index, measured or derived. -> (value, derived) or (None, False)."""
+        v = ref.get(part)
+        if v is not None:
+            return v, False
+        v = DERIVED_GPU.get(part, {}).get('1440p')
+        return (v, True) if v is not None else (None, False)
+
     skipped = []
-    for part, reason in NOT_PICKED:
-        idx, derived = ref.get(part), False
-        if idx is None:
-            idx = DERIVED_GPU.get(part, {}).get('1440p')
-            derived = idx is not None
+    for part, versus, reason in NOT_PICKED:
+        idx, derived = idx_of(part)
         if idx is None:
             warn('NOT_PICKED entry %r has no 1440p index' % part)
             continue
         if part not in prices:
             warn('NOT_PICKED entry %r has no price' % part)
             continue
+        why = reason
+        if versus:
+            alt_idx, _ = idx_of(versus)
+            if versus not in prices or alt_idx is None or not idx:
+                warn('NOT_PICKED %r compares with %r, which has no price or index'
+                     % (part, versus))
+                continue
+            why = reason.format(d=abs(prices[versus] - prices[part]),
+                                p=int(round((alt_idx / idx - 1) * 100)))
         skipped.append({'part': part, 'eur': prices[part], 'gi': round(idx),
-                        'gd': derived, 'why': reason,
+                        'gd': derived, 'why': why,
                         'vram': GPU_SPECS.get(part, {}).get('vram')
                         or VRAM_EXTRA.get(part)})
 
@@ -537,9 +564,15 @@ def write_json(builds, skipped, prices, price_src, priced_on, catalogue):
                     'ram': b['ram'], 'sto': b['sto'],
                     'eur': b['total'], 'approx': b['approx'], 'items': b['items'],
                 })
+    # Name the sources actually present rather than a fixed string: the file is a mix
+    # now, and claiming one shop for prices that came from two would be exactly the kind
+    # of quiet wrongness the rest of this generator goes out of its way to avoid.
+    used = sorted({price_src.get(p, 'est') for p in prices} & set(LOOKED_UP))
+    source = ' and '.join(LOOKED_UP[s] for s in used) or 'estimates'
+
     doc = {
         'priced_on': priced_on,
-        'currency': 'EUR', 'region': 'Netherlands', 'source': 'Tweakers.net',
+        'currency': 'EUR', 'region': 'Netherlands', 'source': source,
         'resolutions': RES, 'tiers': TIERS, 'vendors': VENDORS,
         'builds': rows,
         'not_picked': skipped,

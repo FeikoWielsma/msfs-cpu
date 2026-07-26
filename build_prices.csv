@@ -1,5 +1,7 @@
 # EUR, Netherlands.
 #
+# src=pcpp        looked up on nl.pcpartpicker.com (2026-07-26) by
+#                 tools/pcpp-price-capture.user.js -- see tools/README.md
 # src=tweakers    real figures from Tweakers.net price data (2026-07-25)
 # src=aliexpress  grey-import only, no NL retail channel
 # src=est         still a rough estimate — REPLACE THESE. Any build containing one has
@@ -9,7 +11,7 @@
 # PSU, motherboard, case and cooler are composed per build by make_build_table.py
 # from the rules in that file, rather than being one flat bundle figure.
 part,eur,src
-priced_on,2026-07-25,
+priced_on,2026-07-26,
 # --- CPUs
 Ryzen 7 9800X3D,399,tweakers
 Ryzen 7 7800X3D,324,tweakers
@@ -34,24 +36,24 @@ Core i5-12400F,145,tweakers
 Core i5-12600KF,170,tweakers
 # --- GPUs. Radeon is markedly better value at every tier at these prices; the 9070 XT
 # at 669 is both cheaper and faster than a 5070 Ti at 949.
-RX 9070 XT,669,tweakers
-RX 9070,589,tweakers
-RX 9060 XT 16GB,414,tweakers
-RX 9060 XT 8GB,341,tweakers
+RX 9070 XT,699,pcpp
+RX 9070,599,pcpp
+RX 9060 XT 16GB,438,pcpp
+RX 9060 XT 8GB,348,pcpp
 RX 7600,283,tweakers
-RTX 5090,4249,tweakers
-RTX 5080,1216,tweakers
-RTX 5070 Ti,949,tweakers
-RTX 5070,629,tweakers
-RTX 5060 Ti 16GB,562,tweakers
-RTX 5060 Ti 8GB,345,tweakers
-RTX 5060,319,tweakers
-RTX 5050,279,tweakers
+RTX 5090,4249,pcpp
+RTX 5080,1259,pcpp
+RTX 5070 Ti,959,pcpp
+RTX 5070,639,pcpp
+RTX 5060 Ti 16GB,579,pcpp
+RTX 5060 Ti 8GB,352,pcpp
+RTX 5060,317,pcpp
+RTX 5050,285,pcpp
 Arc B580,289,tweakers
 Arc B570,267,tweakers
 # Priced but unusable in the matrix — no benchmark coverage (9070 GRE) or no longer
 # reasonably available / priced far above their index (the rest).
-RX 9070 GRE,555,tweakers
+RX 9070 GRE,559,pcpp
 RX 7600 XT,536,tweakers
 RX 7700 XT,500,tweakers
 RX 7800 XT,900,tweakers
@@ -60,30 +62,35 @@ RX 7900 XTX,1325,tweakers
 RTX 4090,3489,tweakers
 RTX 4080,1589,tweakers
 # --- memory. The 2026 market: 32GB of DDR5 costs more than most CPUs above.
-32GB DDR5-6000,400,tweakers
-32GB DDR4-3200,240,tweakers
+32GB DDR5-6000,399,pcpp
+32GB DDR4-3200,229,pcpp
+# 1x16 / 2x8 are deliberate alternatives, not the same kit: a budget build really
+# does buy a single 16 GB stick. Priced but not yet used by any build_specs.csv row.
+1x16GB DDR5-6000,233,pcpp
+2x8GB DDR5-6000,229,pcpp
+2x8GB DDR4-3200,103,pcpp
 # --- storage
-1TB NVMe,140,tweakers
-2TB NVMe,240,tweakers
+1TB NVMe,140,pcpp
+2TB NVMe,220,pcpp
 # --- PSU, by the GPU it has to feed
-psu_650,50,tweakers
-psu_750b,58,tweakers
+psu_650,59,pcpp
+psu_750b,88,pcpp
 psu_750a,80,tweakers
-psu_850,90,tweakers
-psu_1000,115,tweakers
+psu_850,90,pcpp
+psu_1000,81,pcpp
 # --- motherboard, by socket and memory type. "great" = a board worth pairing with a
 # K-series or flagship chip rather than the cheapest B-series.
-mb_am4,85,tweakers
-mb_am5,100,tweakers
+mb_am4,85,pcpp
+mb_am5,112,pcpp
 mb_am5_great,130,tweakers
-mb_lga1700_ddr4,100,tweakers
+mb_lga1700_ddr4,89,pcpp
 mb_lga1700_ddr4_great,125,tweakers
-mb_lga1700_ddr5,100,tweakers
+mb_lga1700_ddr5,107,pcpp
 mb_lga1700_ddr5_great,125,tweakers
-mb_lga1851,125,tweakers
+mb_lga1851,115,pcpp
 # --- case, flat
-case,75,tweakers
+case,60,pcpp
 # --- CPU cooler: single 120mm tower, dual tower, or a 360mm AIO for the hot Intel parts
-cooler_entry,15,tweakers
-cooler_mid,35,tweakers
-cooler_aio,75,tweakers
+cooler_entry,26,pcpp
+cooler_mid,34,pcpp
+cooler_aio,52,pcpp

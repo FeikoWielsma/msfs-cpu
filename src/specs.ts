@@ -88,6 +88,9 @@ type Catalogue = {
 
 type Doc = {
   priced_on: string | null;
+  currency?: string;
+  region?: string;
+  source?: string;        // named by the generator from the sources actually present
   resolutions: string[];
   tiers: string[];
   vendors: string[];
@@ -176,6 +179,16 @@ function chip(v: number | null, kind: "c" | "g", derived: boolean, n: number): s
     `${v} — ${how}">${v}${derived ? "°" : ""}</span>`;
 }
 
+/** Where a price came from, shown only when it is not an ordinary retail lookup — so a
+ *  grey import or a leftover estimate is visible rather than sitting among real prices
+ *  looking identical. The two retail sources are unremarkable and stay unmarked. */
+const RETAIL = ["tweakers", "pcpp"];
+function srcTag(src: string | null): string {
+  if (!src || RETAIL.includes(src)) return "";
+  return `<span class="src" title="${esc(src)} — not an ordinary retail price">` +
+    `${esc(src)}</span>`;
+}
+
 /** VRAM tag, but only when the number is a compromise. 8 GB reads as critical and
  *  10–12 GB as caution, the same ramp the GPU tier cards use — a thin card has to
  *  look thin rather than slip past as a bargain. */
@@ -215,9 +228,7 @@ function buildCard(b: Build): string {
   const bom = b.items.map(i => `
     <tr>
       <th>${esc(i.slot)}</th>
-      <td>${esc(i.part)}${i.src && i.src !== "tweakers"
-        ? `<span class="src" title="${esc(i.src)} — not a Tweakers.net retail price">${esc(i.src)}</span>`
-        : ""}</td>
+      <td>${esc(i.part)}${srcTag(i.src)}</td>
       <td class="num">${i.eur === null ? "—" : eur(i.eur)}</td>
     </tr>`).join("");
 
@@ -280,9 +291,8 @@ function renderPrices(): void {
   const rows = [...DOC.prices].sort((a, b) => b.eur - a.eur);
   table.innerHTML =
     `<thead><tr><th>Part</th><th class="num">EUR</th></tr></thead><tbody>` +
-    rows.map(p => `<tr><td>${esc(p.part)}${p.src !== "tweakers"
-      ? `<span class="src" title="${esc(p.src)} — not a Tweakers.net retail price">${esc(p.src)}</span>`
-      : ""}</td><td class="num">${eur(p.eur)}</td></tr>`).join("") +
+    rows.map(p => `<tr><td>${esc(p.part)}${srcTag(p.src)}</td>` +
+      `<td class="num">${eur(p.eur)}</td></tr>`).join("") +
     `</tbody>`;
   const count = $("#priceCount");
   if (count) count.textContent = `${rows.length} parts`;
@@ -732,8 +742,8 @@ async function boot(): Promise<void> {
   const stamp = $("#stamp");
   if (stamp) {
     stamp.innerHTML = doc.priced_on
-      ? `Prices: <b>EUR, Netherlands, Tweakers.net, ${esc(doc.priced_on)}</b> — ` +
-        `hand-maintained, so check before buying.`
+      ? `Prices: <b>${esc(doc.currency || "EUR")}, ${esc(doc.region || "Netherlands")}, ` +
+        `${esc(doc.source || "retail")}, ${esc(doc.priced_on)}</b> — check before buying.`
       : `Prices are hand-maintained and undated — check before buying.`;
   }
   const pon = $("#pon");

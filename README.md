@@ -154,10 +154,12 @@ with prices. Two CSVs drive it and they are the only files to edit:
 - **`build_specs.csv`** — the picks, one row per build. GPU choices are measured
   against that row's resolution; CPU choices are judgement, since CPU reviews run at
   low resolution to isolate the chip and there is only one CPU ladder.
-- **`build_prices.csv`** — `part,eur` plus `priced_on` and per-tier PSU/case/mobo
-  bundles. **EUR, Netherlands, hand-maintained.** Refresh the figures and bump
-  `priced_on`; the generator warns past 60 days. `tools/pcpp-price-capture.user.js` is a
-  userscript that reads a refresh off PCPartPicker — see [`tools/README.md`](tools/README.md).
+- **`build_prices.csv`** — `part,eur,src` plus `priced_on` and per-tier PSU/case/mobo
+  bundles. **EUR, Netherlands.** Refresh the figures and bump `priced_on`; the generator
+  warns past 60 days. `src` records where each figure came from: `pcpp` and `tweakers` are
+  retail lookups, anything else (`aliexpress`, `est`) marks every total containing it with
+  a `~`. Most rows are now captured off PCPartPicker NL by
+  [`tools/pcpp-price-capture.user.js`](tools/README.md); the CPUs are still by hand.
 
 `make_build_table.py` is deliberately noisy. A part with no price renders as a dash
 rather than a wrong total, an unrecognised part name is reported as a likely typo, and
