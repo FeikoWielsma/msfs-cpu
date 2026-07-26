@@ -406,6 +406,26 @@
     return rowsOut;
   }
 
+  /**
+   * The saved-lists page, as targets.
+   *
+   * Each saved list is a li[data-part-list] carrying its id and its name, and is opened
+   * at /user/<you>/saved/#view=<id>. Since the whole scheme rests on naming lists well,
+   * reading those names straight off this page beats retyping five of them — and the
+   * name becomes the target label, which is what the list rules match against.
+   */
+  function savedLists() {
+    return $$('[data-part-list]').map(el => {
+      const id = el.dataset.partList;
+      const nameEl = el.querySelector('.partlist__saved--name');
+      if (!id || !nameEl) return null;
+      const c = nameEl.cloneNode(true);
+      $$('span', c).forEach(s => s.remove());       // drop the Private/Public badge
+      const name = txt(c);
+      return name ? { id, name } : null;
+    }).filter(Boolean);
+  }
+
   /** A coarse identifier for "pages that look like this", for taught selectors. */
   function pageShape() {
     const p = location.pathname;
@@ -513,9 +533,22 @@
    *  both, so they work off a saved list's name without depending on PCPP's title
    *  markup — "Add this page" seeds the target label from the title anyway. */
   function pageTitle() {
+    // On /user/…/saved/ every list shares one document title ("Saved Part Lists"), and
+    // switching list only changes the hash — so the name of the list you are actually
+    // looking at is on the sidebar item marked list-active, and nowhere else.
+    const act = $('[data-part-list].list-active') || $('[data-part-list][class*="active"]');
+    let activeName = '';
+    if (act) {
+      const n = act.querySelector('.partlist__saved--name');
+      if (n) {
+        const c = n.cloneNode(true);
+        $$('span', c).forEach(s => s.remove());     // drop the Private/Public badge
+        activeName = txt(c);
+      }
+    }
     const h = txt($('h1.pageTitle')) || txt($('h1'));
     const t = (document.title || '').replace(/\s*[-–|]\s*PCPartPicker.*$/i, '').trim();
-    return [h, t].filter(Boolean).join(' ');
+    return [activeName, h, t].filter(Boolean).join(' ');
   }
 
   /**
@@ -721,6 +754,11 @@
     render();
   }
 
+  /** A cheap fingerprint of what is on screen, to tell one list's rows from another's. */
+  function rowSig() {
+    return scrapeRows().map(r => r.name).join('|').slice(0, 400);
+  }
+
   /** Go to queue[i], unless we are already there. */
   function hop(i) {
     const w = load(KEY.walk, null);
@@ -730,9 +768,38 @@
     const url = regionUrl(step.region, step.path);
     if (pathOf(url) === pathOf() && currentRegion() === step.region) {
       onArrived();
+      return;
+    }
+    // Saved lists live at /user/<name>/saved/#view=<id>, so stepping from one to the next
+    // changes only the hash. That is a same-document navigation: no load event, no reboot,
+    // and — the part that would quietly ruin a run — the previous list's rows are still on
+    // screen while PCPP swaps the new ones in. So the walk keeps going in place and waits
+    // for the rows to actually change before reading them.
+    let u;
+    try { u = new URL(url); } catch (e) { u = null; }
+    const sameDoc = u && u.pathname === location.pathname && u.search === location.search
+      && currentRegion() === step.region && u.hash;
+    if (sameDoc) {
+      w.sig = rowSig();
+      w.sameDoc = true;
+      save(KEY.walk, w);
+      location.hash = u.hash.replace(/^#/, '');
+      setTimeout(onArrived, 300);
     } else {
       location.href = url;
     }
+  }
+
+  /** Wait until the visible rows differ from `sig`, so a hash-swapped list is not read
+   *  as whichever list was on screen a moment ago. */
+  async function waitForChange(sig, limitMs) {
+    const until = Date.now() + limitMs;
+    while (Date.now() < until) {
+      const now = rowSig();
+      if (now && now !== sig) return true;
+      await sleep(300);
+    }
+    return false;
   }
 
   /** Called on every page load: if a walk is running and this is its current step,
@@ -747,8 +814,18 @@
       return;                       // a page we navigated to by hand; leave the walk be
     }
 
-    // let a client-rendered table settle before reading it
-    await waitForRows(8000);
+    // let a client-rendered table settle before reading it — and after a hash swap, wait
+    // for it to become a DIFFERENT table, or the same list gets captured twice
+    if (w.sameDoc) {
+      const changed = await waitForChange(w.sig || '', 10000);
+      w.sameDoc = false;
+      save(KEY.walk, w);
+      if (!changed) {
+        toast('That list did not load — its rows never changed. Skipping.', 8000);
+      }
+    } else {
+      await waitForRows(8000);
+    }
     const res = capture(step);
 
     if (res.challenged) {
@@ -1032,6 +1109,7 @@
     // which list rules this page satisfies, judged against the target it belongs to
     const here = targets.find(t => pathOf(regionUrl(currentRegion(), t.path)) === pathOf());
     const fired = rulesFor(here || { label: '' });
+    const saved = savedLists();
     const p = ui.panel;
     p.textContent = '';
 
@@ -1055,7 +1133,12 @@
         <div class="row">
           <input type="text" id="lbl" placeholder="label (e.g. tracked parts)">
           <button class="b" data-a="add">Add this page</button>
+          ${saved.length ? `<button class="b" data-a="addall">Add all ${saved.length}
+            saved lists</button>` : ''}
         </div>
+        ${saved.length ? `<div class="note" style="margin:6px 0 0">Filter first if you
+          only want some: <input type="text" id="onlypre" placeholder="name contains…"
+          style="width:120px"></div>` : ''}
         <div class="note">One saved part list with everything on it is the whole trick:
           each region is then a single page load.</div>
         <div id="tlist"></div>
@@ -1195,6 +1278,23 @@
                      regions: [currentRegion()], single: false, match: '' });
       save(KEY.targets, targets); render();
     }
+    if (a === 'addall') {
+      const pre = (ui.panel.querySelector('#onlypre') || {}).value || '';
+      const base = location.pathname.replace(/#.*$/, '');
+      let added = 0;
+      for (const l of savedLists()) {
+        if (pre && !l.name.toLowerCase().includes(pre.toLowerCase())) continue;
+        const path = `${base}#view=${l.id}`;
+        if (targets.some(t => t.path === path)) continue;      // already tracked
+        targets.push({ label: l.name, path, regions: [currentRegion()],
+                       single: false, match: '', map: '' });
+        added++;
+      }
+      save(KEY.targets, targets);
+      render();
+      toast(added ? `Added ${added} list(s). Their names drive the list rules.`
+                  : 'Nothing new to add.');
+    }
     if (a === 'exp1') {
       const c = ui.panel.querySelector('#expcur').value;
       if (c) copy(exportOne(c), `${c} CSV`);
@@ -1264,7 +1364,7 @@
   // wrong, `__pcppCapture.rows()` shows exactly what the scraper sees before Teach.
   window.__pcppCapture = {
     rows: scrapeRows, money: parseMoney, shape: pageShape, region: currentRegion,
-    prices: () => prices, watchlist, captureHere: () => capture(null), captureWith: t => capture(t), rulesFor,
+    prices: () => prices, watchlist, captureHere: () => capture(null), captureWith: t => capture(t), rulesFor, saved: savedLists,
   };
 
   function boot() {
