@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MSFS 2024 — Build Specs</title>
+<meta name="description" content="Complete PC builds for Microsoft Flight Simulator 2024 at 1080p, 1440p and 4K, three budgets each, with the measured Performance Index on every chip and current EUR prices.">
+<link rel="icon" type="image/jpeg" href="/favicon.jpg">
+<script>
+  (function() {
+    const theme = localStorage.getItem("msfs-theme") || "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<script defer src="https://stats.feikowielsma.nl/script.js" data-website-id="b0988ab4-7b6a-4775-83a1-ff89fb549345"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="back" href="/">← Benchmarks</a>
+    <button id="themeToggleBtn" class="chip" title="Toggle Light/Dark Theme">Dark</button>
+  </div>
+
+  <header>
+    <div class="kicker">Microsoft Flight Simulator 2024</div>
+    <h1>What to buy</h1>
+    <p class="lede">Complete builds at three budgets for each resolution, with the
+      <b>measured Performance Index</b> on every chip so you can see what the extra money
+      actually buys. GPU picks are matched to the resolution they sit under; every part is
+      priced, so the totals are whole machines rather than a chip and a card.
+      <a href="/">The benchmark data behind the index lives on the main page.</a></p>
+    <p class="stamp" id="stamp"></p>
+  </header>
+
+  <div class="res-nav">
+    <div class="seg" id="resSeg"></div>
+    <span class="res-note" id="resNote"></span>
+  </div>
+
+  <div id="builds"></div>
+
+  <section class="np-wrap">
+    <h2>Priced, but not picked</h2>
+    <p class="note">The question that always follows the table. Index at 1440p, so the
+      figures compare with each other and with the 1440p builds above — never across
+      resolutions.</p>
+    <div id="notPicked"></div>
+  </section>
+
+  <section>
+    <h2>Reading the table</h2>
+    <div class="notes">
+      <p><b>Memory decides the entry platform in 2026.</b> 32 GB of DDR5 costs
+        <b id="p-ddr5">—</b> against <b id="p-ddr4">—</b> for DDR4, so entry stays on
+        <b>AM4 and LGA1700</b> deliberately — nobody puts that much memory in an entry
+        build. Mid and high move to DDR5 where the platform earns it. Nothing takes 64 GB:
+        that kit now costs more than a 9800X3D.</p>
+      <p><b>Radeon is better value at every tier right now.</b> An
+        <b id="p-9070xt">RX 9070 XT</b> is both cheaper and faster than an
+        <b id="p-5070ti">RTX 5070 Ti</b> (81 against 70 at 1440p), which is why the XT tops
+        the 1440p and 4K blocks while the Nvidia column spends more for less.</p>
+      <p><b>8 GB is a 1080p-only compromise, and only on the Nvidia side.</b> An
+        <b id="p-5060">RTX 5060</b> saves real money over a 5060 Ti 16 GB and the penalty
+        at 1080p is the mildest it gets (+29%, against +59% at 1440p). On AMD it is a trap:
+        the 8 GB 9060 XT is <b id="p-9060xt8">—</b> against <b id="p-9060xt16">—</b> for
+        the 16 GB, and that gap buys <b>+66%</b> at 1080p — so AMD's floor stays at 16 GB.</p>
+      <p><b>The two columns are alternatives, not packages — mix them.</b> A
+        <span class="tick-demo">✔</span> marks the better index per euro in that row,
+        counting memory with the CPU because the socket drags the RAM cost along. Nothing
+        stops an Intel chip driving a Radeon card, and at these prices that is repeatedly
+        the cheaper build: the DDR4 Intel platforms win most of the CPU rows while
+        <b>Radeon wins nearly every GPU row</b>. Read across, not down.</p>
+      <p><b>Intel's ladder is flat for this game.</b> A <b id="p-285k">285K</b> scores 78,
+        two points over a <b id="p-250k">250K Plus</b>, so the flagship appears nowhere
+        here. The <b id="p-14600k">14600K</b> on DDR4 is the sleeper: with a DDR4 kit it is
+        a far cheaper platform than a 250K Plus on DDR5, for an index of 68 against 77 — so
+        it wins wherever the GPU is the limit, which is why it takes 1440p and 4K mid but
+        not 1080p, where the CPU is. AMD's ladder is not flat: a 9800X3D reaches 97.</p>
+      <p><b>1080p tops out deliberately low.</b> The GPU field compresses to a
+        <b>5.5× spread</b> there and the CPU becomes the limit, so the 1080p high build
+        pairs the best CPU with an RX 9070 / 5070 Ti rather than a 9070 XT or a 5080 — a
+        flagship card at 1080p is money that buys almost nothing. On the AMD side mid and
+        high even share the 9070 and <b>differ by CPU alone</b>. At 4K the spread opens to
+        <b>17×</b> and the same money decides everything, which is why only that block
+        reaches a 5090.</p>
+    </div>
+  </section>
+
+  <details class="panel" id="pricePanel">
+    <summary>Every part price <span class="pcount" id="priceCount"></span></summary>
+    <div class="panel-body">
+      <p class="note">Everything in the price list, including parts no build above uses —
+        so you can re-total a build you have changed. Hand-maintained, EUR, Netherlands.</p>
+      <div class="tablewrap"><table class="ptable" id="priceTable"></table></div>
+    </div>
+  </details>
+
+  <section>
+    <h2>The same thing as a card</h2>
+    <p class="note">For pasting into Discord and the like. The detail cards carry the full
+      prose and are meant to be opened; the compact ones are sized for Discord's inline
+      preview.</p>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <footer>
+    <p><b>Measured:</b> CPU index from seven Tom's Hardware, PCGH and ComputerBase test
+      passes; GPU index per resolution from Tom's Hardware. Relative scales, not frame
+      rates. <b>Judgement:</b> which CPU pairs with which resolution — CPU tests run at low
+      resolution to isolate the chip, so there is only one CPU ladder.
+      <b>Not measured:</b> RAM and storage. A chip marked <span class="ix d">°</span> is
+      <b>derived rather than directly measured</b> — either a GPU with no MSFS coverage,
+      placed by interpolating TechPowerUp's aggregate between two cards we do measure, or
+      an LGA1700 chip discounted onto DDR4 by the measured DDR5-vs-DDR4 factor (−6% on 12th
+      gen, −10% on 14th).</p>
+    <p><b class="price">EUR, Netherlands, Tweakers.net pricing as of
+      <span id="pon">—</span> — check before buying.</b> Totals are complete builds:
+      they include the PSU sized to the card, a motherboard for that socket, a case and a
+      cooler. Every figure is looked up rather than estimated — a <b class="price">~</b>
+      would mark a total that was not.</p>
+    <p><b class="dis">Not affiliated with or endorsed by Microsoft or Asobo.</b> These
+      picks are <b>my opinion</b>, drawn from third-party benchmarks — by
+      <b>'Razortek'</b>, Flight Crew in the official MSFS Discord
+      <a href="https://discord.com/invite/msfs" target="_blank" rel="noopener">#hardware</a>.</p>
+  </footer>
+</div>
+<script type="module" src="/src/specs.ts"></script>
+</body>
+</html>

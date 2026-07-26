@@ -1,39 +1,6 @@
-:root {
-  --bg:#000000; --card:#0d0e12; --card-2:#15181f;
-  --ink:#ffffff; --ink-2:#cccccc; --muted:#818693; --faint:#555964;
-  --line:#222631; --line-2:#1b1d26;
-  --amd:#e63935; --amd-deep:#a32320;
-  --intel:#00b4ff; --intel-deep:#0087c2;
-  --accent:#00b4ff; --on-accent:#000000;
-  --track:#131620; --hover:#1b202e; --pin-bg:#111520;
-  --pos:#2ec4b6; --pos-bg:#0e3636; --neg:#e71d36; --neg-bg:#400b12;
-  --shadow:0 1px 3px rgba(0,0,0,.5), 0 12px 36px -16px rgba(0,0,0,.9);
-  --radius:4px;
-}
-html[data-theme="dark"] {
-  --bg:#000000; --card:#0d0e12; --card-2:#15181f;
-  --ink:#ffffff; --ink-2:#cccccc; --muted:#818693; --faint:#555964;
-  --line:#202430; --line-2:#1c202a;
-  --amd:#e63935; --amd-deep:#a32320;
-  --intel:#00b4ff; --intel-deep:#0087c2;
-  --nvidia:#76b900; --nvidia-deep:#568700;
-  --accent:#00b4ff; --on-accent:#000000;
-  --track:#131620; --hover:#1b202e; --pin-bg:#111520;
-  --pos:#2ec4b6; --pos-bg:#0e3636; --neg:#e71d36; --neg-bg:#400b12;
-  --shadow:0 1px 3px rgba(0,0,0,.5), 0 12px 36px -16px rgba(0,0,0,.9);
-}
-html[data-theme="light"] {
-  --bg:#edeef0; --card:#ffffff; --card-2:#fafbfd;
-  --ink:#000000; --ink-2:#22252a; --muted:#656b7c; --faint:#d5d8e1;
-  --line:#dbdee6; --line-2:#e6e9f0;
-  --amd:#d32f2f; --amd-deep:#a12220;
-  --intel:#007cc0; --intel-deep:#005c90;
-  --nvidia:#5c8f00; --nvidia-deep:#406400;
-  --accent:#007cc0; --on-accent:#ffffff;
-  --track:#edf0f5; --hover:#e2e5ec; --pin-bg:#edf0f6;
-  --pos:#00897b; --pos-bg:#e0f2f1; --neg:#d32f2f; --neg-bg:#ffebee;
-  --shadow:0 1px 3px rgba(0,0,0,.08), 0 12px 36px -16px rgba(0,0,0,.15);
-}
+/* The palette lives in theme.css so /specs shares it. Everything else here is the SPA. */
+@import "./theme.css";
+
 * { box-sizing:border-box; }
 html, body { margin:0; }
 body {

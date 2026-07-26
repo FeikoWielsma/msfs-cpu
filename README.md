@@ -22,6 +22,9 @@ and methodology machinery is tucked into expanders.
   reviews feed the index and watch the ranking shift.
 - **By source** — browse one comparable dataset at a time (a Tom's Hardware test
   *epoch* or a PCGH/ComputerBase *scene*); average + 1% low bars, tap to re-baseline.
+- **Build guide** at [`/specs`](https://msfs.razortek.nl/specs) — the ranking turned into
+  something you can buy: complete, fully priced builds at three budgets for each
+  resolution, every chip carrying its measured index. A separate page, not a tab.
 
 Absolute FPS are **not** comparable across sites/scenes (different scenes,
 settings, resolutions) — that's exactly why the Performance Index exists.
@@ -30,10 +33,14 @@ settings, resolutions) — that's exactly why the Performance Index exists.
 
 ```
 build_data.py          # data step: CSVs → public/data.json (rows + norm series + specs)
-index.html             # Vite entry (markup only)
+index.html             # Vite entry for the SPA (markup only)
 src/main.ts            # app logic (TypeScript), fetches data.json
-src/style.css          # styles
-public/                # copied verbatim into dist/ (data.json, CNAME)
+src/style.css          # SPA styles
+specs/index.html       # Vite entry for the build guide at /specs (markup + prose)
+src/specs.ts           # build-guide logic, fetches builds.json
+src/specs.css          # build-guide styles
+src/theme.css          # the palette, imported by both stylesheets
+public/                # copied verbatim into dist/ (data.json, builds.json, CNAME)
 .github/workflows/     # GitHub Pages deploy (Actions)
 *.csv                  # the transcribed/scraped source data
 plot_msfs24.py, make_megachart.py   # standalone matplotlib chart generators (PNGs)
@@ -45,25 +52,47 @@ msfs24_*tierlist*      # the generated tier lists (text + PNG)
 The frontend never inlines data — `src/main.ts` fetches `data.json` at runtime,
 so the presentation (HTML/CSS/TS) and the data pipeline are fully decoupled.
 
+Two pages, not one app. `/` is the benchmark SPA and `/specs` is the build guide; they
+are separate Vite entries with separate bundles, sharing only `src/theme.css` and the
+`msfs-theme` localStorage key. Neither loads the other's code.
+
 ## Developing
 
 Requires [bun](https://bun.sh) and Python 3.
 
 ```sh
 bun install            # one-time
-bun run data           # regenerate public/data.json from the CSVs
+bun run data           # regenerate public/data.json + builds.json from the CSVs
 bun run dev            # Vite dev server with HMR
 bun run build          # data step + tsc type-check + production bundle → dist/
 bun run preview        # serve the production build locally
 ```
 
-`bun run build` regenerates `data.json`, type-checks, and bundles, so the CSVs are
-the single source of truth. The standalone PNG charts are generated separately:
+`bun run build` regenerates `data.json` and `builds.json`, type-checks, and bundles both
+pages, so the CSVs are the single source of truth. The standalone PNG charts are
+generated separately:
 
 ```sh
 python plot_msfs24.py --by-epoch     # Tom's per-epoch PNGs
 python make_megachart.py --averaged  # normalized megachart PNG
 ```
+
+## Build guide (`/specs`)
+
+A second page, served at `msfs.razortek.nl/specs` from `specs/index.html` — deliberately
+not a tab in the SPA: it answers a different question ("what do I buy?") and shares no
+state with the charts. It fetches `public/builds.json` and renders, per resolution, the
+three budget tiers as two vendor columns, each an itemised build that totals to the
+figure shown. The parts breakdown is the thing the PNG card cannot do; the card has room
+only for the sum.
+
+Everything on it comes from `builds.json`, including the figures quoted in the prose —
+the copy names a part and the page fills in its price, so refreshing the CSV never leaves
+a stale number in a sentence. `#1080p` / `#1440p` / `#4K` in the URL selects a resolution,
+so a specific ladder is linkable.
+
+Both stylesheets import `src/theme.css`, so the two pages cannot drift apart on a colour,
+and the theme toggle writes the same `msfs-theme` key the SPA reads.
 
 ## Shareable tier lists
 
@@ -100,6 +129,13 @@ with prices. Two CSVs drive it and they are the only files to edit:
 `make_build_table.py` is deliberately noisy. A part with no price renders as a dash
 rather than a wrong total, an unrecognised part name is reported as a likely typo, and
 a socket/memory mismatch (DDR4 next to an AM5 chip) fails the check.
+
+One run writes both consumers of these CSVs: the block between the `BUILDS` markers in
+`tierlist_card_build.html` (the card is rendered from `file://`, so it cannot fetch
+anything) and `public/builds.json` for `/specs`. The card and the page therefore cannot
+disagree about a price. The script is part of `bun run data`, so CI regenerates the JSON
+on every deploy; the PNG still has to be re-rendered and committed by hand, since that
+needs a browser.
 
 The PNGs are written to `public/cards/`, which Vite copies verbatim into `dist/`, so
 the normal Pages deploy publishes them — no extra workflow step. They are then

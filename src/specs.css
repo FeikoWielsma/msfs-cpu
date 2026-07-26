@@ -1,0 +1,203 @@
+/* /specs — the build guide.
+ *
+ * Standalone: it shares the palette with the SPA (theme.css) and nothing else, so
+ * editing the app's styles cannot reflow this page or the reverse. Mobile-first, like
+ * the rest of the site — the desktop layout is the one media query at the bottom.
+ */
+@import "./theme.css";
+
+* { box-sizing:border-box; }
+html, body { margin:0; }
+body {
+  background:var(--bg); color:var(--ink);
+  font-family:"Open Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size:14.5px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+.app { max-width:1120px; margin:0 auto; padding:max(14px, env(safe-area-inset-top)) 18px 80px; }
+a { color:var(--intel); }
+.num { font-variant-numeric:tabular-nums; }
+
+/* ---------- top bar ---------- */
+.topbar { display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin-bottom:18px; }
+.back { font-family:"Bebas Neue", sans-serif; font-size:16px; letter-spacing:.04em;
+  text-transform:uppercase; text-decoration:none; color:var(--muted); }
+.back:hover { color:var(--ink); }
+.chip { appearance:none; cursor:pointer;
+  font-family:"Bebas Neue", sans-serif; font-size:14.5px; font-weight:700;
+  letter-spacing:.04em; text-transform:uppercase;
+  border:1px solid var(--line); background:var(--card); color:var(--ink-2);
+  padding:7px 13px; border-radius:var(--radius); min-width:90px; text-align:center;
+  transition:.14s; }
+.chip:hover { border-color:var(--muted); }
+
+/* ---------- masthead ---------- */
+.kicker { font-family:"Bebas Neue", sans-serif; font-size:16px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--muted); }
+h1 { font-family:"Bebas Neue", sans-serif; font-size:clamp(34px, 9vw, 60px);
+  line-height:.95; letter-spacing:.02em; margin:6px 0 0; text-transform:uppercase; }
+.lede { color:var(--ink-2); margin:12px 0 0; max-width:80ch; font-size:15px; font-weight:300; }
+.lede b { color:var(--ink); font-weight:600; }
+.stamp { margin:10px 0 0; font-size:12.5px; color:var(--muted); }
+.stamp b { color:var(--ink-2); font-weight:600; }
+
+/* ---------- resolution control ---------- */
+.res-nav { margin:26px 0 4px; display:flex; flex-wrap:wrap; align-items:center; gap:12px 18px; }
+.seg { display:inline-flex; background:var(--track); padding:3px; border-radius:var(--radius);
+  gap:2px; border:1px solid var(--line); }
+.seg button { appearance:none; border:0; background:transparent; cursor:pointer;
+  font-family:"Bebas Neue", sans-serif; font-size:17px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--ink-2); padding:7px 15px 6px;
+  border-radius:calc(var(--radius) - 1px); display:flex; flex-direction:column;
+  align-items:center; line-height:1.05; transition:background .15s, color .15s; }
+.seg button small { font-family:"Open Sans", sans-serif; font-size:9.5px; font-weight:600;
+  letter-spacing:.02em; text-transform:none; color:var(--muted); margin-top:2px; }
+/* On dark, card-on-track is only a few points of luminance apart, so the selected
+   resolution also takes an accent rule — the control has to be readable at a glance,
+   since every number on the page depends on which one is active. */
+.seg button.on { background:var(--card); color:var(--ink); box-shadow:var(--shadow);
+  border-bottom:2px solid var(--accent); padding-bottom:4px; }
+.seg button.on small { color:var(--ink-2); }
+.res-note { font-size:13px; color:var(--muted); flex:1; min-width:min(100%, 34ch); max-width:70ch; }
+
+/* ---------- tiers ---------- */
+.tier { margin-top:26px; }
+h2 { font-family:"Bebas Neue", sans-serif; font-size:24px; letter-spacing:.03em;
+  text-transform:uppercase; margin:0 0 10px; display:flex; flex-wrap:wrap;
+  align-items:baseline; gap:4px 12px; }
+h2 span { font-family:"Open Sans", sans-serif; font-size:12.5px; font-weight:400;
+  letter-spacing:0; text-transform:none; color:var(--muted); }
+.pair { display:grid; gap:12px; grid-template-columns:1fr; }
+
+/* ---------- one build ---------- */
+.build { background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:12px 14px 10px; border-top:3px solid var(--line); }
+.build.amd { border-top-color:var(--amd); }
+.build.nv { border-top-color:var(--nvidia); }
+.bhead { display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  padding-bottom:8px; margin-bottom:4px; border-bottom:1px solid var(--line-2); }
+.bhead .ven { font-family:"Bebas Neue", sans-serif; font-size:16px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--muted); }
+.total { font-family:"Bebas Neue", sans-serif; font-size:27px; letter-spacing:.02em;
+  color:var(--gold); }
+.total.none { color:var(--muted); font-size:20px; }
+
+.brow { display:flex; align-items:baseline; gap:10px; padding:5px 0;
+  border-bottom:1px solid var(--line-2); }
+.brow:last-of-type { border-bottom:0; }
+.blabel { font-family:"Bebas Neue", sans-serif; font-size:13px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--muted); width:62px; flex:none; }
+.bval { font-weight:700; font-size:14.5px; display:flex; align-items:center; gap:6px;
+  flex-wrap:wrap; color:var(--ink-2); }
+.bval.amd { color:var(--amd); } .bval.nv { color:var(--nvidia); } .bval.intel { color:var(--intel); }
+.bsub { font-size:10px; font-weight:600; letter-spacing:.04em; color:var(--muted);
+  border:1px solid var(--line); border-radius:2px; padding:0 4px; }
+.brow.best { background:var(--track); border-radius:2px; margin:0 -6px; padding:5px 6px; }
+.tick { font-size:11px; font-weight:800; color:var(--pos); }
+
+/* Index chips. Cyan is the CPU scale, green the GPU one; they are separate fits and
+   never comparable, so they must not look like one number in two places. */
+.ix { font-size:10px; font-weight:800; letter-spacing:.02em; border-radius:2px;
+  padding:2px 5px; flex:none; cursor:help; }
+.ix.c { background:var(--idx-cpu-bg); color:var(--idx-cpu); }
+.ix.g { background:var(--idx-gpu-bg); color:var(--idx-gpu); }
+/* derived rather than measured: outlined, and it carries a ° in the text */
+.ix.d { background:transparent; box-shadow:inset 0 0 0 1px currentColor; }
+
+/* VRAM below 16 GB, on the same ramp as the GPU tier cards */
+.vr { font-size:10px; font-weight:800; border-radius:2px; padding:2px 5px; flex:none; }
+.vr.v8 { background:var(--crit-bg); color:var(--crit); }
+.vr.v12 { background:var(--warn-bg); color:var(--warn); }
+
+/* ---------- the itemised build ---------- */
+.bom { margin-top:8px; border-top:1px solid var(--line-2); }
+.bom > summary { cursor:pointer; list-style:none; padding:8px 0 2px;
+  font-family:"Bebas Neue", sans-serif; font-size:13px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:6px; }
+.bom > summary::-webkit-details-marker { display:none; }
+.bom > summary::after { content:"›"; font-size:17px; transition:transform .15s; }
+.bom[open] > summary::after { transform:rotate(90deg); }
+.bom > summary:hover { color:var(--ink); }
+.bom table { width:100%; border-collapse:collapse; margin:4px 0 6px; font-size:13px; }
+/* The label column takes as little as it can and the part name may break mid-word.
+   A build card is a grid item, so it cannot shrink below its own min-content width —
+   an unbreakable parts row would widen the whole column rather than wrap. */
+.bom th { text-align:left; font-weight:600; color:var(--muted); font-size:11px;
+  letter-spacing:.03em; text-transform:uppercase; padding:3px 8px 3px 0;
+  vertical-align:baseline; width:1%; }
+.bom td { padding:3px 0; color:var(--ink-2); vertical-align:baseline;
+  overflow-wrap:anywhere; }
+.bom td.num { text-align:right; white-space:nowrap; padding-left:10px; }
+.bom tr.sum td { border-top:1px solid var(--line); padding-top:6px; font-weight:700;
+  color:var(--ink); }
+.src { font-size:9.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
+  color:var(--warn); background:var(--warn-bg); border-radius:2px; padding:1px 4px;
+  margin-left:6px; cursor:help; }
+
+/* ---------- priced but not picked ---------- */
+.np-wrap { margin-top:34px; }
+.np { display:flex; align-items:center; flex-wrap:wrap; gap:8px;
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:8px 12px; margin-bottom:6px; font-size:13.5px; }
+.np-part { font-weight:700; color:var(--amd); display:flex; align-items:center; gap:6px; }
+.np.nv .np-part { color:var(--nvidia); }
+.np-eur { font-family:"Bebas Neue", sans-serif; font-size:18px; color:var(--gold); }
+.np-why { color:var(--muted); font-size:12.5px; margin-left:auto; text-align:right; }
+
+/* ---------- prose ---------- */
+section { margin-top:34px; }
+.notes p { max-width:80ch; color:var(--ink-2); font-size:14px; font-weight:300;
+  margin:0 0 10px; }
+.notes b { color:var(--ink); font-weight:600; }
+.note { color:var(--muted); font-size:13px; max-width:80ch; margin:0 0 12px; }
+.tick-demo { color:var(--pos); font-weight:800; }
+.fail { color:var(--neg); background:var(--neg-bg); border:1px solid var(--neg);
+  border-radius:var(--radius); padding:12px 14px; }
+
+/* ---------- price panel ---------- */
+.panel { margin-top:34px; background:var(--card); border:1px solid var(--line);
+  border-radius:var(--radius); }
+.panel > summary { cursor:pointer; list-style:none; padding:14px 16px;
+  font-family:"Bebas Neue", sans-serif; font-size:19px; letter-spacing:.04em;
+  text-transform:uppercase; display:flex; align-items:center; gap:10px; }
+.panel > summary::-webkit-details-marker { display:none; }
+.panel > summary::after { content:"›"; margin-left:auto; font-size:20px;
+  color:var(--muted); transition:transform .15s; }
+.panel[open] > summary::after { transform:rotate(90deg); }
+.pcount { font-family:"Bebas Neue", sans-serif; font-size:13px; letter-spacing:.04em;
+  color:var(--muted); }
+.panel-body { padding:0 16px 16px; }
+.tablewrap { overflow-x:auto; }
+.ptable { width:100%; border-collapse:collapse; font-size:13px; }
+.ptable th { text-align:left; font-size:11px; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--muted); border-bottom:1px solid var(--line); padding:6px 0; }
+.ptable td { padding:5px 0; border-bottom:1px solid var(--line-2); color:var(--ink-2); }
+.ptable .num { text-align:right; white-space:nowrap; padding-left:12px; }
+
+/* ---------- card gallery ---------- */
+.cards { display:grid; gap:14px; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); }
+.cardlink { margin:0; background:var(--card); border:1px solid var(--line);
+  border-radius:var(--radius); overflow:hidden; }
+.cardlink img { display:block; width:100%; height:150px; object-fit:cover;
+  object-position:top center; background:#000; border-bottom:1px solid var(--line); }
+.cardlink figcaption { padding:9px 11px; display:flex; flex-wrap:wrap; gap:2px 8px;
+  align-items:baseline; font-size:12.5px; }
+.cardlink figcaption b { font-size:13.5px; width:100%; }
+.cardlink figcaption span { color:var(--muted); }
+.cardlink .alt { margin-left:auto; font-size:11.5px; }
+
+/* ---------- footer ---------- */
+footer { margin-top:44px; padding-top:16px; border-top:1px solid var(--line);
+  font-size:12px; color:var(--muted); line-height:1.65; }
+footer p { margin:0 0 8px; max-width:90ch; }
+footer b { color:var(--ink-2); font-weight:600; }
+footer b.price { color:var(--gold); }
+footer .ix.d { color:var(--idx-gpu); padding:1px 4px; }
+
+/* ---------- desktop ---------- */
+@media (min-width:760px) {
+  .pair { grid-template-columns:1fr 1fr; gap:16px; }
+  .build { padding:14px 18px 12px; }
+  .blabel { width:70px; }
+}

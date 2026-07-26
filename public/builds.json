@@ -1,0 +1,1649 @@
+{
+ "priced_on": "2026-07-25",
+ "currency": "EUR",
+ "region": "Netherlands",
+ "source": "Tweakers.net",
+ "resolutions": [
+  "1080p",
+  "1440p",
+  "4K"
+ ],
+ "tiers": [
+  "entry",
+  "mid",
+  "high"
+ ],
+ "vendors": [
+  "amd",
+  "nv"
+ ],
+ "builds": [
+  {
+   "res": "1080p",
+   "tier": "entry",
+   "vendor": "amd",
+   "cpu": "Ryzen 5 5600",
+   "ci": 51,
+   "cd": false,
+   "cbest": false,
+   "cn": 2,
+   "socket": "AM4",
+   "gpu": "RX 9060 XT 16GB",
+   "gi": 63,
+   "gd": false,
+   "gbest": true,
+   "gn": 6,
+   "vram": 16,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1150,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 5 5600",
+     "eur": 131,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9060 XT 16GB",
+     "eur": 414,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM4 motherboard",
+     "eur": 85,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "650 W power supply",
+     "eur": 50,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 15,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1080p",
+   "tier": "entry",
+   "vendor": "nv",
+   "cpu": "Core i5-12400F",
+   "ci": 55,
+   "cd": true,
+   "cbest": true,
+   "cn": 1,
+   "socket": "LGA1700",
+   "gpu": "RTX 5060",
+   "gi": 47,
+   "gd": false,
+   "gbest": false,
+   "gn": 6,
+   "vram": 8,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1084,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i5-12400F",
+     "eur": 145,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5060",
+     "eur": 319,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4",
+     "eur": 100,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "650 W power supply",
+     "eur": 50,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 15,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1080p",
+   "tier": "mid",
+   "vendor": "amd",
+   "cpu": "Ryzen 7 7800X3D",
+   "ci": 78,
+   "cd": false,
+   "cbest": false,
+   "cn": 7,
+   "socket": "AM5",
+   "gpu": "RX 9070",
+   "gi": 90,
+   "gd": false,
+   "gbest": true,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR5-6000",
+   "sto": "1TB NVMe",
+   "eur": 1743,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 7 7800X3D",
+     "eur": 324,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9070",
+     "eur": 589,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM5 motherboard",
+     "eur": 100,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "750 W power supply",
+     "eur": 80,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1080p",
+   "tier": "mid",
+   "vendor": "nv",
+   "cpu": "Core i5-12600KF",
+   "ci": 60,
+   "cd": true,
+   "cbest": true,
+   "cn": 2,
+   "socket": "LGA1700",
+   "gpu": "RTX 5070",
+   "gi": 68,
+   "gd": false,
+   "gbest": false,
+   "gn": 3,
+   "vram": 12,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1469,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i5-12600KF",
+     "eur": 170,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5070",
+     "eur": 629,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4",
+     "eur": 100,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "750 W power supply",
+     "eur": 80,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1080p",
+   "tier": "high",
+   "vendor": "amd",
+   "cpu": "Ryzen 7 9800X3D",
+   "ci": 97,
+   "cd": false,
+   "cbest": true,
+   "cn": 7,
+   "socket": "AM5",
+   "gpu": "RX 9070",
+   "gi": 90,
+   "gd": false,
+   "gbest": true,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR5-6000",
+   "sto": "2TB NVMe",
+   "eur": 1948,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 7 9800X3D",
+     "eur": 399,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9070",
+     "eur": 589,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "2TB NVMe",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM5 motherboard, upper tier",
+     "eur": 130,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "750 W power supply",
+     "eur": 80,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1080p",
+   "tier": "high",
+   "vendor": "nv",
+   "cpu": "Core Ultra 7 270K Plus",
+   "ci": 78,
+   "cd": false,
+   "cbest": false,
+   "cn": 3,
+   "socket": "LGA1851",
+   "gpu": "RTX 5070 Ti",
+   "gi": 84,
+   "gd": false,
+   "gbest": false,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR5-6000",
+   "sto": "2TB NVMe",
+   "eur": 2268,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core Ultra 7 270K Plus",
+     "eur": 314,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5070 Ti",
+     "eur": 949,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "2TB NVMe",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1851 motherboard",
+     "eur": 125,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "850 W power supply",
+     "eur": 90,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "360 mm AIO",
+     "eur": 75,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1440p",
+   "tier": "entry",
+   "vendor": "amd",
+   "cpu": "Ryzen 5 5600",
+   "ci": 51,
+   "cd": false,
+   "cbest": false,
+   "cn": 2,
+   "socket": "AM4",
+   "gpu": "RX 9060 XT 16GB",
+   "gi": 54,
+   "gd": false,
+   "gbest": true,
+   "gn": 6,
+   "vram": 16,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1150,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 5 5600",
+     "eur": 131,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9060 XT 16GB",
+     "eur": 414,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM4 motherboard",
+     "eur": 85,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "650 W power supply",
+     "eur": 50,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 15,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1440p",
+   "tier": "entry",
+   "vendor": "nv",
+   "cpu": "Core i5-12400F",
+   "ci": 55,
+   "cd": true,
+   "cbest": true,
+   "cn": 1,
+   "socket": "LGA1700",
+   "gpu": "RTX 5060 Ti 16GB",
+   "gi": 49,
+   "gd": false,
+   "gbest": false,
+   "gn": 6,
+   "vram": 16,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1335,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i5-12400F",
+     "eur": 145,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5060 Ti 16GB",
+     "eur": 562,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4",
+     "eur": 100,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "750 W power supply",
+     "eur": 58,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 15,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1440p",
+   "tier": "mid",
+   "vendor": "amd",
+   "cpu": "Ryzen 7 7800X3D",
+   "ci": 78,
+   "cd": false,
+   "cbest": false,
+   "cn": 7,
+   "socket": "AM5",
+   "gpu": "RX 9070",
+   "gi": 72,
+   "gd": false,
+   "gbest": true,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR5-6000",
+   "sto": "1TB NVMe",
+   "eur": 1743,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 7 7800X3D",
+     "eur": 324,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9070",
+     "eur": 589,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM5 motherboard",
+     "eur": 100,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "750 W power supply",
+     "eur": 80,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1440p",
+   "tier": "mid",
+   "vendor": "nv",
+   "cpu": "Core i5-14600K",
+   "ci": 68,
+   "cd": true,
+   "cbest": true,
+   "cn": 5,
+   "socket": "LGA1700",
+   "gpu": "RTX 5070 Ti",
+   "gi": 70,
+   "gd": false,
+   "gbest": false,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1883,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i5-14600K",
+     "eur": 229,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5070 Ti",
+     "eur": 949,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4, upper tier",
+     "eur": 125,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "850 W power supply",
+     "eur": 90,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1440p",
+   "tier": "high",
+   "vendor": "amd",
+   "cpu": "Ryzen 7 9800X3D",
+   "ci": 97,
+   "cd": false,
+   "cbest": true,
+   "cn": 7,
+   "socket": "AM5",
+   "gpu": "RX 9070 XT",
+   "gi": 81,
+   "gd": false,
+   "gbest": true,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR5-6000",
+   "sto": "2TB NVMe",
+   "eur": 2038,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 7 9800X3D",
+     "eur": 399,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9070 XT",
+     "eur": 669,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "2TB NVMe",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM5 motherboard, upper tier",
+     "eur": 130,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "850 W power supply",
+     "eur": 90,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "1440p",
+   "tier": "high",
+   "vendor": "nv",
+   "cpu": "Core Ultra 7 270K Plus",
+   "ci": 78,
+   "cd": false,
+   "cbest": false,
+   "cn": 3,
+   "socket": "LGA1851",
+   "gpu": "RTX 5080",
+   "gi": 76,
+   "gd": false,
+   "gbest": false,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR5-6000",
+   "sto": "2TB NVMe",
+   "eur": 2535,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core Ultra 7 270K Plus",
+     "eur": 314,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5080",
+     "eur": 1216,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "2TB NVMe",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1851 motherboard",
+     "eur": 125,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "850 W power supply",
+     "eur": 90,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "360 mm AIO",
+     "eur": 75,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "4K",
+   "tier": "entry",
+   "vendor": "amd",
+   "cpu": "Ryzen 7 5800X3D",
+   "ci": 69,
+   "cd": false,
+   "cbest": false,
+   "cn": 7,
+   "socket": "AM4",
+   "gpu": "RX 9070",
+   "gi": 56,
+   "gd": false,
+   "gbest": true,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1602,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 7 5800X3D",
+     "eur": 358,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9070",
+     "eur": 589,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM4 motherboard",
+     "eur": 85,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "750 W power supply",
+     "eur": 80,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "4K",
+   "tier": "entry",
+   "vendor": "nv",
+   "cpu": "Core i5-12600KF",
+   "ci": 60,
+   "cd": true,
+   "cbest": true,
+   "cn": 2,
+   "socket": "LGA1700",
+   "gpu": "RTX 5070 Ti",
+   "gi": 57,
+   "gd": false,
+   "gbest": false,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1799,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i5-12600KF",
+     "eur": 170,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5070 Ti",
+     "eur": 949,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4",
+     "eur": 100,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "850 W power supply",
+     "eur": 90,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "4K",
+   "tier": "mid",
+   "vendor": "amd",
+   "cpu": "Ryzen 7 7800X3D",
+   "ci": 78,
+   "cd": false,
+   "cbest": false,
+   "cn": 7,
+   "socket": "AM5",
+   "gpu": "RX 9070 XT",
+   "gi": 65,
+   "gd": false,
+   "gbest": true,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR5-6000",
+   "sto": "1TB NVMe",
+   "eur": 1833,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 7 7800X3D",
+     "eur": 324,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9070 XT",
+     "eur": 669,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM5 motherboard",
+     "eur": 100,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "850 W power supply",
+     "eur": 90,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "4K",
+   "tier": "mid",
+   "vendor": "nv",
+   "cpu": "Core i5-14600K",
+   "ci": 68,
+   "cd": true,
+   "cbest": true,
+   "cn": 5,
+   "socket": "LGA1700",
+   "gpu": "RTX 5080",
+   "gi": 64,
+   "gd": false,
+   "gbest": false,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 2150,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i5-14600K",
+     "eur": 229,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5080",
+     "eur": 1216,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR4-3200",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 140,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4, upper tier",
+     "eur": 125,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "850 W power supply",
+     "eur": 90,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "4K",
+   "tier": "high",
+   "vendor": "amd",
+   "cpu": "Ryzen 7 9800X3D",
+   "ci": 97,
+   "cd": false,
+   "cbest": true,
+   "cn": 7,
+   "socket": "AM5",
+   "gpu": "RX 9070 XT",
+   "gi": 65,
+   "gd": false,
+   "gbest": true,
+   "gn": 3,
+   "vram": 16,
+   "ram": "32GB DDR5-6000",
+   "sto": "2TB NVMe",
+   "eur": 2038,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 7 9800X3D",
+     "eur": 399,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9070 XT",
+     "eur": 669,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "2TB NVMe",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM5 motherboard, upper tier",
+     "eur": 130,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "850 W power supply",
+     "eur": 90,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "Dual-tower air cooler",
+     "eur": 35,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  },
+  {
+   "res": "4K",
+   "tier": "high",
+   "vendor": "nv",
+   "cpu": "Core Ultra 7 270K Plus",
+   "ci": 78,
+   "cd": false,
+   "cbest": false,
+   "cn": 3,
+   "socket": "LGA1851",
+   "gpu": "RTX 5090",
+   "gi": 100,
+   "gd": false,
+   "gbest": false,
+   "gn": 3,
+   "vram": 32,
+   "ram": "32GB DDR5-6000",
+   "sto": "2TB NVMe",
+   "eur": 5593,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core Ultra 7 270K Plus",
+     "eur": 314,
+     "src": "tweakers"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5090",
+     "eur": 4249,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Memory",
+     "part": "32GB DDR5-6000",
+     "eur": 400,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Storage",
+     "part": "2TB NVMe",
+     "eur": 240,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1851 motherboard",
+     "eur": 125,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Power supply",
+     "part": "1000 W power supply",
+     "eur": 115,
+     "src": "tweakers"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "360 mm AIO",
+     "eur": 75,
+     "src": "tweakers"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 75,
+     "src": "tweakers"
+    }
+   ]
+  }
+ ],
+ "not_picked": [
+  {
+   "part": "RX 9070 GRE",
+   "eur": 555,
+   "gi": 60,
+   "gd": true,
+   "why": "an RX 9070 is +20% for €34 more",
+   "vram": 12
+  },
+  {
+   "part": "RX 7900 XT",
+   "eur": 736,
+   "gi": 73,
+   "gd": false,
+   "why": "a 9070 XT beats it for €67 less",
+   "vram": 20
+  },
+  {
+   "part": "RX 9060 XT 8GB",
+   "eur": 341,
+   "gi": 25,
+   "gd": false,
+   "why": "the 16GB more than doubles it for €73",
+   "vram": 8
+  },
+  {
+   "part": "RTX 5060 Ti 8GB",
+   "eur": 345,
+   "gi": 40,
+   "gd": false,
+   "why": "the 16GB twin is +23% for €217",
+   "vram": 8
+  },
+  {
+   "part": "Arc B580",
+   "eur": 289,
+   "gi": 33,
+   "gd": false,
+   "why": "fine at 1080p, out of its depth above",
+   "vram": 12
+  }
+ ],
+ "prices": [
+  {
+   "part": "1TB NVMe",
+   "eur": 140,
+   "src": "tweakers"
+  },
+  {
+   "part": "2TB NVMe",
+   "eur": 240,
+   "src": "tweakers"
+  },
+  {
+   "part": "32GB DDR4-3200",
+   "eur": 240,
+   "src": "tweakers"
+  },
+  {
+   "part": "32GB DDR5-6000",
+   "eur": 400,
+   "src": "tweakers"
+  },
+  {
+   "part": "Arc B570",
+   "eur": 267,
+   "src": "tweakers"
+  },
+  {
+   "part": "Arc B580",
+   "eur": 289,
+   "src": "tweakers"
+  },
+  {
+   "part": "Core Ultra 5 250K Plus",
+   "eur": 219,
+   "src": "tweakers"
+  },
+  {
+   "part": "Core Ultra 7 270K Plus",
+   "eur": 314,
+   "src": "tweakers"
+  },
+  {
+   "part": "Core Ultra 9 285K",
+   "eur": 549,
+   "src": "tweakers"
+  },
+  {
+   "part": "Core i5-12400F",
+   "eur": 145,
+   "src": "tweakers"
+  },
+  {
+   "part": "Core i5-12600KF",
+   "eur": 170,
+   "src": "tweakers"
+  },
+  {
+   "part": "Core i5-14600K",
+   "eur": 229,
+   "src": "tweakers"
+  },
+  {
+   "part": "Core i7-14700K",
+   "eur": 392,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 4080",
+   "eur": 1589,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 4090",
+   "eur": 3489,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 5050",
+   "eur": 279,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 5060",
+   "eur": 319,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 5060 Ti 16GB",
+   "eur": 562,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 5060 Ti 8GB",
+   "eur": 345,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 5070",
+   "eur": 629,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 5070 Ti",
+   "eur": 949,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 5080",
+   "eur": 1216,
+   "src": "tweakers"
+  },
+  {
+   "part": "RTX 5090",
+   "eur": 4249,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 7600",
+   "eur": 283,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 7600 XT",
+   "eur": 536,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 7700 XT",
+   "eur": 500,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 7800 XT",
+   "eur": 900,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 7900 XT",
+   "eur": 736,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 7900 XTX",
+   "eur": 1325,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 9060 XT 16GB",
+   "eur": 414,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 9060 XT 8GB",
+   "eur": 341,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 9070",
+   "eur": 589,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 9070 GRE",
+   "eur": 555,
+   "src": "tweakers"
+  },
+  {
+   "part": "RX 9070 XT",
+   "eur": 669,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 5 5500X3D",
+   "eur": 150,
+   "src": "aliexpress"
+  },
+  {
+   "part": "Ryzen 5 5600",
+   "eur": 131,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 5 5600X",
+   "eur": 146,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 5 7500F",
+   "eur": 130,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 5 7500X3D",
+   "eur": 209,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 5 7600X",
+   "eur": 150,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 5 9600X",
+   "eur": 161,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 7 5800X3D",
+   "eur": 358,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 7 7800X3D",
+   "eur": 324,
+   "src": "tweakers"
+  },
+  {
+   "part": "Ryzen 7 9800X3D",
+   "eur": 399,
+   "src": "tweakers"
+  },
+  {
+   "part": "case",
+   "eur": 75,
+   "src": "tweakers"
+  },
+  {
+   "part": "cooler_aio",
+   "eur": 75,
+   "src": "tweakers"
+  },
+  {
+   "part": "cooler_entry",
+   "eur": 15,
+   "src": "tweakers"
+  },
+  {
+   "part": "cooler_mid",
+   "eur": 35,
+   "src": "tweakers"
+  },
+  {
+   "part": "mb_am4",
+   "eur": 85,
+   "src": "tweakers"
+  },
+  {
+   "part": "mb_am5",
+   "eur": 100,
+   "src": "tweakers"
+  },
+  {
+   "part": "mb_am5_great",
+   "eur": 130,
+   "src": "tweakers"
+  },
+  {
+   "part": "mb_lga1700_ddr4",
+   "eur": 100,
+   "src": "tweakers"
+  },
+  {
+   "part": "mb_lga1700_ddr4_great",
+   "eur": 125,
+   "src": "tweakers"
+  },
+  {
+   "part": "mb_lga1700_ddr5",
+   "eur": 100,
+   "src": "tweakers"
+  },
+  {
+   "part": "mb_lga1700_ddr5_great",
+   "eur": 125,
+   "src": "tweakers"
+  },
+  {
+   "part": "mb_lga1851",
+   "eur": 125,
+   "src": "tweakers"
+  },
+  {
+   "part": "psu_1000",
+   "eur": 115,
+   "src": "tweakers"
+  },
+  {
+   "part": "psu_650",
+   "eur": 50,
+   "src": "tweakers"
+  },
+  {
+   "part": "psu_750a",
+   "eur": 80,
+   "src": "tweakers"
+  },
+  {
+   "part": "psu_750b",
+   "eur": 58,
+   "src": "tweakers"
+  },
+  {
+   "part": "psu_850",
+   "eur": 90,
+   "src": "tweakers"
+  }
+ ]
+}

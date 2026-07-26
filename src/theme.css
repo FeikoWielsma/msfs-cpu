@@ -1,0 +1,61 @@
+/* Palette, shared by every page on the site.
+ *
+ * Both the SPA (style.css) and the build guide (specs.css) import this, so the two
+ * cannot drift apart on a colour. The theme is chosen by data-theme on <html>, set
+ * before first paint by an inline script and remembered in localStorage["msfs-theme"].
+ *
+ * :root repeats the dark values so the page is still themed if that script has not
+ * run yet (or is blocked) and no data-theme attribute is present.
+ */
+:root {
+  --bg:#000000; --card:#0d0e12; --card-2:#15181f;
+  --ink:#ffffff; --ink-2:#cccccc; --muted:#818693; --faint:#555964;
+  --line:#222631; --line-2:#1b1d26;
+  --amd:#e63935; --amd-deep:#a32320;
+  --intel:#00b4ff; --intel-deep:#0087c2;
+  --accent:#00b4ff; --on-accent:#000000;
+  --track:#131620; --hover:#1b202e; --pin-bg:#111520;
+  --pos:#2ec4b6; --pos-bg:#0e3636; --neg:#e71d36; --neg-bg:#400b12;
+  --shadow:0 1px 3px rgba(0,0,0,.5), 0 12px 36px -16px rgba(0,0,0,.9);
+  --radius:4px;
+}
+html[data-theme="dark"] {
+  --bg:#000000; --card:#0d0e12; --card-2:#15181f;
+  --ink:#ffffff; --ink-2:#cccccc; --muted:#818693; --faint:#555964;
+  --line:#202430; --line-2:#1c202a;
+  --amd:#e63935; --amd-deep:#a32320;
+  --intel:#00b4ff; --intel-deep:#0087c2;
+  --nvidia:#76b900; --nvidia-deep:#568700;
+  --accent:#00b4ff; --on-accent:#000000;
+  --track:#131620; --hover:#1b202e; --pin-bg:#111520;
+  --pos:#2ec4b6; --pos-bg:#0e3636; --neg:#e71d36; --neg-bg:#400b12;
+  --shadow:0 1px 3px rgba(0,0,0,.5), 0 12px 36px -16px rgba(0,0,0,.9);
+}
+html[data-theme="light"] {
+  --bg:#edeef0; --card:#ffffff; --card-2:#fafbfd;
+  --ink:#000000; --ink-2:#22252a; --muted:#656b7c; --faint:#d5d8e1;
+  --line:#dbdee6; --line-2:#e6e9f0;
+  --amd:#d32f2f; --amd-deep:#a12220;
+  --intel:#007cc0; --intel-deep:#005c90;
+  --nvidia:#5c8f00; --nvidia-deep:#406400;
+  --accent:#007cc0; --on-accent:#ffffff;
+  --track:#edf0f5; --hover:#e2e5ec; --pin-bg:#edf0f6;
+  --pos:#00897b; --pos-bg:#e0f2f1; --neg:#d32f2f; --neg-bg:#ffebee;
+  --shadow:0 1px 3px rgba(0,0,0,.08), 0 12px 36px -16px rgba(0,0,0,.15);
+}
+
+/* Build-guide additions. The two index chips have to stay tellable apart at 10px, so
+ * they are the same cyan/green split the PNG cards use; the money colour is a violet
+ * that belongs to neither vendor, because a price is not a team. */
+:root, html[data-theme="dark"] {
+  --idx-cpu:#00b4ff; --idx-cpu-bg:#0e1b26;
+  --idx-gpu:#16b378; --idx-gpu-bg:#0d1f1a;
+  --gold:#c9a6ff; --gold-bg:#161425; --gold-line:#2a2440;
+  --warn:#f2c14e; --warn-bg:#3a2e10; --crit:#ff8f9d; --crit-bg:#4a1520;
+}
+html[data-theme="light"] {
+  --idx-cpu:#0069a8; --idx-cpu-bg:#e2f1fa;
+  --idx-gpu:#0a7a51; --idx-gpu-bg:#e2f5ee;
+  --gold:#6b3fb5; --gold-bg:#f2ecfd; --gold-line:#ded1f5;
+  --warn:#7a5a00; --warn-bg:#fdf3d8; --crit:#a3212f; --crit-bg:#fde7e9;
+}

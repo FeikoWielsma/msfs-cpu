@@ -2,15 +2,21 @@
 
     python make_build_table.py
 
-Rewrites the block between the BUILDS markers in tierlist_card_build.html, so the
-card's data is never hand-maintained. Edit the two CSVs, not the HTML.
+Writes two things from the same pass, so the PNG card and the site page can never
+disagree about a price:
+
+  - the block between the BUILDS markers in tierlist_card_build.html (the card is
+    rendered from file:// by headless Chrome, so it cannot fetch anything)
+  - public/builds.json, which /specs fetches at runtime like the rest of the site
+
+Edit the two CSVs, not either output.
 
 Deliberately noisy: a missing price, an unknown part name or a socket/memory mismatch
 prints a warning and (for prices) renders a dash rather than a plausible-looking wrong
 number. A build table that is quietly wrong about money is worse than one that admits
 it does not know.
 """
-import csv, datetime, os, re, sys
+import csv, datetime, json, os, re, sys
 
 from msfs_index import (cpu_index, gpu_index, CPU_SPECS, CPU_VENDOR, GPU_SPECS,
                         coverage)
@@ -19,6 +25,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CARD = os.path.join(HERE, 'tierlist_card_build.html')
 SPECS_CSV = os.path.join(HERE, 'build_specs.csv')
 PRICES_CSV = os.path.join(HERE, 'build_prices.csv')
+# public/ is copied verbatim into dist/, so writing here publishes it at /builds.json
+JSON_OUT = os.path.join(HERE, 'public', 'builds.json')
 BEGIN, END = '// <<< BUILDS', '// >>> BUILDS'
 
 RES = ['1080p', '1440p', '4K']
@@ -78,6 +86,30 @@ MB_GREAT = {'Ryzen 7 9800X3D', 'Core i5-14600K'}
 COOLER_AIO = {'Core Ultra 9 285K', 'Core Ultra 7 270K Plus', 'Core i7-14700K'}
 COOLER_MID = {'Ryzen 7 9800X3D', 'Ryzen 7 7800X3D', 'Ryzen 7 5800X3D',
               'Core i5-12600KF', 'Core i5-14600K', 'Ryzen 5 9600X'}
+
+
+# Human names for the composed parts. The card only ever shows their combined cost, but
+# /specs itemises a build, and "psu_750a" is not a thing anyone recognises. A composed
+# part with no entry here is warned about rather than shown by its key.
+PART_LABEL = {
+    'psu_650': '650 W power supply',
+    'psu_750a': '750 W power supply',
+    'psu_750b': '750 W power supply',
+    'psu_850': '850 W power supply',
+    'psu_1000': '1000 W power supply',
+    'mb_am4': 'AM4 motherboard',
+    'mb_am5': 'AM5 motherboard',
+    'mb_am5_great': 'AM5 motherboard, upper tier',
+    'mb_lga1700_ddr4': 'LGA1700 motherboard, DDR4',
+    'mb_lga1700_ddr4_great': 'LGA1700 motherboard, DDR4, upper tier',
+    'mb_lga1700_ddr5': 'LGA1700 motherboard, DDR5',
+    'mb_lga1700_ddr5_great': 'LGA1700 motherboard, DDR5, upper tier',
+    'mb_lga1851': 'LGA1851 motherboard',
+    'cooler_entry': '120 mm tower cooler',
+    'cooler_mid': 'Dual-tower air cooler',
+    'cooler_aio': '360 mm AIO',
+    'case': 'Case',
+}
 
 
 def psu_for(gpu):
@@ -207,9 +239,14 @@ def main():
         mb = mb_for(cpu, socket, ram)
         if mb is None:
             warn('no motherboard rule for %s on %r' % (cpu, socket))
-        parts = [cpu, gpu, ram, sto, psu_for(gpu), cooler_for(cpu), 'case']
+        # (slot, part key) in the order a build is read. The card shows only the sum;
+        # /specs itemises it, which is the one thing a PNG cannot do.
+        bom = [('CPU', cpu), ('GPU', gpu), ('Memory', ram), ('Storage', sto)]
         if mb:
-            parts.append(mb)
+            bom.append(('Motherboard', mb))
+        bom += [('Power supply', psu_for(gpu)), ('CPU cooler', cooler_for(cpu)),
+                ('Case', 'case')]
+        parts = [p for _, p in bom]
         missing = [p for p in parts if p not in prices]
         for p in missing:
             warn('no price for %r (needed by %s/%s/%s)' % (p, res, tier, ven))
@@ -217,12 +254,25 @@ def main():
         # approximate if any component price is still a placeholder
         approx = any(price_src.get(p, 'est') != 'tweakers' for p in parts if p in prices)
 
+        items = []
+        for slot, part in bom:
+            if part in PART_LABEL:
+                name = PART_LABEL[part]
+            elif re.match(r'^(psu|mb|cooler)_', part) or part == 'case':
+                warn('composed part %r has no entry in PART_LABEL' % part)
+                name = part
+            else:
+                name = part                      # a real product name, as written
+            items.append({'slot': slot, 'part': name,
+                          'eur': prices.get(part),
+                          'src': price_src.get(part)})
+
         builds[(res, tier, ven)] = {
             'cpu': cpu, 'ci': ci, 'cd': cd, 'cn': cpu_cov.get(cpu_key, 0),
             'gpu': gpu, 'gi': gi, 'gd': gd, 'gn': gpu_cov.get(gpu, 0),
             'ram': ram, 'sto': sto, 'total': total, 'approx': approx,
             'vram': GPU_SPECS.get(gpu, {}).get('vram') or VRAM_EXTRA.get(gpu),
-            'cbest': False, 'gbest': False,
+            'cbest': False, 'gbest': False, 'socket': socket, 'items': items,
         }
 
     for res in RES:
@@ -281,7 +331,7 @@ def main():
 
     # the "priced but not picked" strip, indexed at 1440p
     ref = prices_by_res['1440p']
-    js.append('const NOT_PICKED = [')
+    skipped = []
     for part, reason in NOT_PICKED:
         idx, derived = ref.get(part), False
         if idx is None:
@@ -293,11 +343,17 @@ def main():
         if part not in prices:
             warn('NOT_PICKED entry %r has no price' % part)
             continue
+        skipped.append({'part': part, 'eur': prices[part], 'gi': round(idx),
+                        'gd': derived, 'why': reason,
+                        'vram': GPU_SPECS.get(part, {}).get('vram')
+                        or VRAM_EXTRA.get(part)})
+
+    js.append('const NOT_PICKED = [')
+    for n in skipped:
         js.append('  { p:%s, eur:%d, gi:%d, gd:%s, vram:%s, why:%s },'
-                  % (js_str(part), prices[part], round(idx),
-                     'true' if derived else 'false',
-                     fmt(GPU_SPECS.get(part, {}).get('vram')
-                         or VRAM_EXTRA.get(part)), js_str(reason)))
+                  % (js_str(n['part']), n['eur'], n['gi'],
+                     'true' if n['gd'] else 'false', fmt(n['vram']),
+                     js_str(n['why'])))
     js.append('];')
     block = '\n'.join(js)
 
@@ -306,13 +362,60 @@ def main():
     _, post = rest.split(END, 1)
     open(CARD, 'w', encoding='utf-8').write(pre + BEGIN + '\n' + block + '\n' + END + post)
 
-    print('wrote %d builds into %s' % (len(builds), os.path.basename(CARD)))
+    write_json(builds, skipped, prices, price_src, priced_on)
+
+    print('wrote %d builds into %s and %s'
+          % (len(builds), os.path.basename(CARD), os.path.basename(JSON_OUT)))
     if warnings:
         print('\n%d warning(s):' % len(warnings), file=sys.stderr)
         for w in warnings:
             print('  ! ' + w, file=sys.stderr)
     else:
         print('no warnings — every part priced, indexed and socket-consistent')
+
+
+def write_json(builds, skipped, prices, price_src, priced_on):
+    """The same picks as the card, for /specs to fetch at runtime.
+
+    The site never inlines data — the SPA fetches data.json, and this page fetches
+    this. One generator run feeds both outputs, so the card and the page cannot drift
+    apart on a price.
+    """
+    rows = []
+    for res in RES:
+        for tier in TIERS:
+            for ven in VENDORS:
+                b = builds.get((res, tier, ven))
+                if not b:
+                    continue
+                rows.append({
+                    'res': res, 'tier': tier, 'vendor': ven,
+                    'cpu': b['cpu'], 'ci': rnd(b['ci']), 'cd': b['cd'],
+                    'cbest': b['cbest'], 'cn': b['cn'], 'socket': b['socket'],
+                    'gpu': b['gpu'], 'gi': rnd(b['gi']), 'gd': b['gd'],
+                    'gbest': b['gbest'], 'gn': b['gn'], 'vram': b['vram'],
+                    'ram': b['ram'], 'sto': b['sto'],
+                    'eur': b['total'], 'approx': b['approx'], 'items': b['items'],
+                })
+    doc = {
+        'priced_on': priced_on,
+        'currency': 'EUR', 'region': 'Netherlands', 'source': 'Tweakers.net',
+        'resolutions': RES, 'tiers': TIERS, 'vendors': VENDORS,
+        'builds': rows,
+        'not_picked': skipped,
+        # every priced part, including the ones no build uses — the page lists them so
+        # you can re-total a build you have changed
+        'prices': [{'part': p, 'eur': prices[p], 'src': price_src.get(p, 'est')}
+                   for p in sorted(prices)],
+    }
+    os.makedirs(os.path.dirname(JSON_OUT), exist_ok=True)
+    with open(JSON_OUT, 'w', encoding='utf-8') as f:
+        json.dump(doc, f, indent=1, ensure_ascii=False)
+        f.write('\n')
+
+
+def rnd(v):
+    return None if v is None else int(round(v))
 
 
 def pf(prices, part):
