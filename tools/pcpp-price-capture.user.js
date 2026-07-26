@@ -91,12 +91,17 @@
 
   // Symbol → code, for when the page's own markup is more specific than the region
   // default (a US page quoting CAD, say). Longest first so 'CA$' beats '$'.
+  //
+  // A null code means "this symbol does not identify a currency, ask the region". Both
+  // '$' and 'kr' are shared: ca.pcpartpicker.com writes a plain '$' for Canadian dollars,
+  // as does Australia, so asserting USD on sight of a dollar sign silently labels CAD and
+  // AUD figures as US ones — the amounts stay right and the column header lies.
   const SYMBOLS = [
     ['A$', 'AUD'], ['C$', 'CAD'], ['CA$', 'CAD'], ['NZ$', 'NZD'], ['R$', 'BRL'],
     ['US$', 'USD'], ['CHF', 'CHF'], ['SEK', 'SEK'], ['NOK', 'NOK'], ['DKK', 'DKK'],
     ['PLN', 'PLN'], ['CZK', 'CZK'], ['HUF', 'HUF'], ['RON', 'RON'], ['SAR', 'SAR'],
     ['zł', 'PLN'], ['Kč', 'CZK'], ['Ft', 'HUF'], ['lei', 'RON'], ['kr', null],
-    ['€', 'EUR'], ['£', 'GBP'], ['$', 'USD'], ['¥', 'JPY'], ['₹', 'INR'],
+    ['€', 'EUR'], ['£', 'GBP'], ['$', null], ['¥', 'JPY'], ['₹', 'INR'],
   ];
 
   // Politeness. The floor is not configurable downward on purpose.
