@@ -424,6 +424,67 @@ def main():
                         'vram': GPU_SPECS.get(part, {}).get('vram')
                         or VRAM_EXTRA.get(part)})
 
+    # ---- prose figures -------------------------------------------------------------
+    # Every number the card's prose quotes, computed here rather than typed into the
+    # HTML. Hand-written figures in that callout went stale on three separate price
+    # refreshes and each time the card argued against its own table -- which is worse
+    # than useless, since the prose exists to explain the table.
+    def pr(part):
+        return prices.get(part)
+
+    def gidx(part, res):
+        """Index for a card at a resolution, measured or derived."""
+        v = prices_by_res[res].get(part)
+        return v if v is not None else DERIVED_GPU.get(part, {}).get(res)
+
+    def pct(better, worse, res='1080p'):
+        """How much faster `better` is than `worse`, as a whole percentage."""
+        a, b = gidx(better, res), gidx(worse, res)
+        return int(round((a / b - 1) * 100)) if a and b else None
+
+    def vram_pct(res):
+        """What the second 8 GB is worth, averaged over every 8/16 GB matched pair we
+        measure. The claim in the prose is about pairs of the SAME card, not about one
+        model against another, so it has to be computed that way or it is a different
+        statement wearing the same number."""
+        gains = []
+        for part in prices_by_res[res]:
+            if not part.endswith('8GB'):
+                continue
+            twin = part[:-3] + '16GB'
+            lo, hi = gidx(part, res), gidx(twin, res)
+            if lo and hi:
+                gains.append(hi / lo - 1)
+        return int(round(sum(gains) / len(gains) * 100)) if gains else None
+
+    totals = [b['total'] for b in builds.values() if b['total']]
+    prose = {
+        'ddr5': pr('32GB DDR5-6000'), 'ddr4': pr('32GB DDR4-3200'),
+        'cheapest': (min(totals) // 50) * 50 if totals else None,
+        'gpu_xt': pr('RX 9070 XT'), 'gpu_5070ti': pr('RTX 5070 Ti'),
+        'gre': pr('RX 9070 GRE'),
+        'gre_gap': (pr('RX 9070') - pr('RX 9070 GRE')) if pr('RX 9070') and pr('RX 9070 GRE') else None,
+        'gpu_5060': pr('RTX 5060'),
+        'saving_5060': (pr('RTX 5060 Ti 16GB') - pr('RTX 5060'))
+                       if pr('RTX 5060 Ti 16GB') and pr('RTX 5060') else None,
+        'xt8': pr('RX 9060 XT 8GB'), 'xt16': pr('RX 9060 XT 16GB'),
+        'xt_gap': (pr('RX 9060 XT 16GB') - pr('RX 9060 XT 8GB'))
+                  if pr('RX 9060 XT 16GB') and pr('RX 9060 XT 8GB') else None,
+        'cpu_14600k': pr('Core i5-14600K'), 'cpu_285k': pr('Core Ultra 9 285K'),
+        'cpu_250k': pr('Core Ultra 5 250K Plus'),
+        'plat_ddr4': (pr('Core i5-14600K') + pr('32GB DDR4-3200'))
+                     if pr('Core i5-14600K') and pr('32GB DDR4-3200') else None,
+        'plat_ddr5': (pr('Core Ultra 5 250K Plus') + pr('32GB DDR5-6000'))
+                     if pr('Core Ultra 5 250K Plus') and pr('32GB DDR5-6000') else None,
+        'xt_pct': pct('RX 9060 XT 16GB', 'RX 9060 XT 8GB'),
+        'gre_pct': pct('RX 9070', 'RX 9070 GRE', '1440p'),
+        'v8_1080_pct': vram_pct('1080p'), 'v8_1440_pct': vram_pct('1440p'),
+    }
+    missing = sorted(k for k, v in prose.items() if v is None)
+    if missing:
+        warn('prose figures could not be computed: %s' % ', '.join(missing))
+    js.append('const PROSE = %s;' % json.dumps(prose))
+
     js.append('const NOT_PICKED = [')
     for n in skipped:
         js.append('  { p:%s, eur:%d, gi:%d, gd:%s, vram:%s, why:%s },'

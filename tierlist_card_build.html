@@ -158,19 +158,19 @@ h1 em{font-style:normal;color:var(--acc)}
   <div class="call">
     <h3>Reading the matrix</h3>
     <p><b>Memory is the story in 2026, and it decides the entry platform.</b> 32 GB of
-    DDR5 is <b>€399</b> against <b>€229</b> for DDR4 — so entry stays on <b>AM4 and
-    LGA1700</b> deliberately. Nobody puts €399 of memory in a €1,200 build. Mid and high
+    DDR5 is <b><span data-p="ddr5"></span></b> against <b><span data-p="ddr4"></span></b> for DDR4 — so entry stays on <b>AM4 and
+    LGA1700</b> deliberately. Nobody puts <span data-p="ddr5"></span> of memory in a <span data-p="cheapest"></span> build. Mid and high
     move to DDR5 where the platform earns it. Nothing takes 64 GB: that kit now costs more
     than a 9800X3D.</p>
-    <p><b>Radeon is better value at every tier right now.</b> A <b>9070 XT at €699 is both
-    cheaper and faster than a 5070 Ti at €959</b> (81 against 70 at 1440p), which is why
+    <p><b>Radeon is better value at every tier right now.</b> A <b>9070 XT at <span data-p="gpu_xt"></span> is both
+    cheaper and faster than a 5070 Ti at <span data-p="gpu_5070ti"></span></b> (81 against 70 at 1440p), which is why
     the XT tops the 1440p and 4K blocks while the Nvidia column spends more for less. The
-    <b>9070 GRE at €559 is squeezed out entirely</b>: a plain RX 9070 is €40 more for +20%,
+    <b>9070 GRE at <span data-p="gre"></span> is squeezed out entirely</b>: a plain RX 9070 is <span data-p="gre_gap"></span> more for <span data-p="gre_pct"></span>,
     so there is no resolution at which the GRE is the right buy.</p>
     <p><b>8 GB is a 1080p-only compromise, and only on the Nvidia side.</b> A
-    <b>5060 8 GB at €317</b> saves €262 over a 5060 Ti 16 GB and the penalty at 1080p is
-    the mildest it gets (+29%, against +59% at 1440p). On AMD it is a trap: the 8 GB
-    9060 XT costs <b>€348 against €438</b> for the 16 GB, and that €90 buys <b>+66%</b> at
+    <b>5060 8 GB at <span data-p="gpu_5060"></span></b> saves <span data-p="saving_5060"></span> over a 5060 Ti 16 GB and the penalty at 1080p is
+    the mildest it gets (<span data-p="v8_1080_pct"></span>, against <span data-p="v8_1440_pct"></span> at 1440p). On AMD it is a trap: the 8 GB
+    9060 XT costs <b><span data-p="xt8"></span> against <span data-p="xt16"></span></b> for the 16 GB, and that <span data-p="xt_gap"></span> buys <b><span data-p="xt_pct"></span></b> at
     1080p. Cheapest way into V-Cache at all is a <b>5500X3D, about €150</b> — AliExpress
     only, and unbenchmarked, so it gets no row; a 5600X3D reads 61 and it clocks lower.</p>
     <p><b>The two columns are alternatives, not packages — mix them.</b> A <b>✔</b> marks
@@ -178,11 +178,11 @@ h1 em{font-style:normal;color:var(--acc)}
     drags the RAM cost along. Nothing stops an Intel chip driving a Radeon card, and at
     these prices that is repeatedly the cheaper build: the DDR4 Intel platforms win most
     of the CPU rows while <b>Radeon wins nearly every GPU row</b>. Read across, not down.</p>
-    <p><b>The 14600K on DDR4 is the sleeper.</b> €236 plus a €229 DDR4 kit is a
-    <b>€465 platform against €626</b> for a 250K Plus on DDR5, for an index of 68 against
+    <p><b>The 14600K on DDR4 is the sleeper.</b> <span data-p="cpu_14600k"></span> plus a <span data-p="ddr4"></span> DDR4 kit is a
+    <b><span data-p="plat_ddr4"></span> platform against <span data-p="plat_ddr5"></span></b> for a 250K Plus on DDR5, for an index of 68 against
     77 — so it wins wherever the GPU is the limit, which is why it takes 1440p and 4K mid
     but not 1080p, where the CPU is. Intel's ladder is flat here in any case: a
-    <b>285K at €551 scores 78</b>, two points over a €227 250K Plus, so the flagship
+    <b>285K at <span data-p="cpu_285k"></span> scores 78</b>, two points over a <span data-p="cpu_250k"></span> 250K Plus, so the flagship
     appears nowhere on this card. AMD's ladder is not flat — a 9800X3D reaches 97.</p>
     <p><b>1080p tops out deliberately low.</b> The GPU field compresses to a
     <b>5.5× spread</b> there and the CPU becomes the limit, so the 1080p high build pairs
@@ -262,6 +262,7 @@ const BUILDS = {
   ],
 },
 };
+const PROSE = {"ddr5": 399, "ddr4": 229, "cheapest": 1050, "gpu_xt": 699, "gpu_5070ti": 959, "gre": 559, "gre_gap": 40, "gpu_5060": 317, "saving_5060": 262, "xt8": 348, "xt16": 438, "xt_gap": 90, "cpu_14600k": 236, "cpu_285k": 551, "cpu_250k": 227, "plat_ddr4": 465, "plat_ddr5": 626, "xt_pct": 63, "gre_pct": 20, "v8_1080_pct": 29, "v8_1440_pct": 59};
 const NOT_PICKED = [
   { p:"RX 9070 GRE", eur:559, gi:60, gd:true, vram:12, why:"an RX 9070 is +20% for €40 more" },
   { p:"RX 7900 XT", eur:736, gi:73, gd:false, vram:20, why:"a 9070 XT beats it for €37 less" },
@@ -342,4 +343,14 @@ for (const n of NOT_PICKED) {
 h += `</div>`;
 document.getElementById("grid").innerHTML = h;
 document.getElementById("pon").textContent = PRICED_ON || "unknown";
+
+// Prose figures come from PROSE, computed by make_build_table.py from the same prices
+// the table above uses. Typed by hand they went stale on every refresh, and a callout
+// that argues against its own table is worse than no callout.
+for (const el of document.querySelectorAll("[data-p]")) {
+  const k = el.dataset.p, v = PROSE[k];
+  el.textContent = (v === null || v === undefined) ? "—"
+    : /_pct$/.test(k) ? "+" + v + "%"
+    : "€" + v.toLocaleString("en-US");
+}
 </script>
