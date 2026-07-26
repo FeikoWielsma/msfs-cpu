@@ -11,19 +11,122 @@ PCPartPicker page.
 
 ## The one thing worth knowing
 
-**Make a single saved part list containing every part you track.** The same `/list/xxxxx`
-path works on every regional subdomain, so a full multi-currency refresh is *one page load
-per region* — around twenty — instead of one per part per region, which would be hundreds.
-Everything else here is built around that.
+**Use one filtered category page per part type, not part lists.** A PCPartPicker list holds
+only one CPU, one motherboard, one case and one PSU, so it cannot hold fifteen chips — but
+`/products/cpu/` with your filters returns a hundred rows in a single load. Eight category
+pages (CPU, cooler, motherboard, memory, storage, video card, PSU, case) therefore cover
+every part you track, and the same paths serve every regional subdomain:
 
-1. Build the list on PCPartPicker and save it. You want the `/list/xxxxx` URL.
-2. Open it, hit **€ → Add this page**, give it a label.
-3. Tick the regions you want on that target.
-4. **Run.** It walks them one at a time, in one tab, and stops on its own.
-5. **Copy CSV** for one currency, or **Copy all currencies** for a wide table.
+> **8 pages × the regions you want** — about 24 loads for three currencies — rather than one
+> page per part per region, which would be hundreds.
 
-A filtered product page (`/products/video-card/` with your filters in the URL) works as a
-target too, and captures every row it lists.
+1. Open `/products/cpu/`, set your filters, and get the URL you want to keep.
+2. Hit **€ → Add this page**, give it a label.
+3. Tick the regions for that target. Repeat for the other categories.
+4. Fill in the **watchlist** (below) so a hundred rows come back as your forty parts.
+5. **Run.** It walks them one at a time, in one tab, and stops on its own.
+6. **Copy CSV** for one currency, or **Copy all currencies** for a wide table.
+
+If a filter spans more than one page of results, add `?page=2` as its own target. A saved
+part list works as a target too, and is the better shape when you want the exact parts of
+one specific build rather than a category.
+
+## The watchlist
+
+A category page gives you a hundred rows; your CSV wants forty, under its own names. The
+watchlist is that mapping, and without it the export is unusable noise.
+
+```
+Ryzen 7 9800X3D                          name is also the pattern
+RX 9070 XT = Radeon RX 9070 XT           different pattern
+RTX 5070 = /RTX 5070(?! Ti)/             a regex, where a substring would be ambiguous
+32GB DDR5-6000 = /\b32 GB\b.*DDR5-6000/  matches the spec columns too
+```
+
+Patterns match against the name **and the spec columns**, which is what makes half of a real
+watchlist possible at all: PCPP's name for a card is "GeForce RTX 5060 Ti Asus DUAL OC" with
+`16 GB` in a column of its own, and a memory kit is "G.Skill Flare X5" with `32 GB` and
+`DDR5-6000` beside it.
+
+**Mind the loose pattern.** `RX 9070` matches an RX 9070 XT; `RTX 5060` matches a 5060 Ti;
+`Ryzen 5 5600` matches a 5600X. Recording the faster card's price under the slower card's
+name is the exact failure this tool exists to prevent, so use a lookahead.
+
+The script checks for it rather than trusting you. A loose entry usually *looks* fine —
+`RX 9070` picks the cheapest of its matches, and the plain card is normally cheaper than the
+XT, so the right price lands by luck; on a page where the XT is discounted it would not, and
+nothing would appear wrong. So any entry whose pattern reaches **another entry's product** is
+flagged even when today's pick was correct, with a suggested tightening:
+
+```
+"RX 9070" also matches RX 9070 XT's product ("Radeon RX 9070 XT ASRock Challenger")
+  — tighten it, e.g. /RX 9070(?! XT)/
+```
+
+The panel shows which watched parts have **no price yet in the current region**, which is
+how you know a run actually finished.
+
+<details>
+<summary>Ready-to-paste watchlist for this repo's <code>build_prices.csv</code></summary>
+
+Checked against saved snapshots of every category: 37 of 44 resolve to the right product,
+with no clashes. The seven that do not are absent from PCPP or from those filters — the
+AliExpress-only 5500X3D, and last-generation cards the snapshots filtered out.
+
+```
+# CPUs
+Ryzen 7 9800X3D
+Ryzen 7 7800X3D
+Ryzen 7 5800X3D
+Ryzen 5 9600X = /Ryzen 5 9600X(?!3D)/
+Ryzen 5 7600X = /Ryzen 5 7600X(?!3D)/
+Ryzen 5 7500X3D
+Ryzen 5 7500F
+Ryzen 5 5600 = /Ryzen 5 5600(?!X|G)/
+Ryzen 5 5600X = /Ryzen 5 5600X(?!3D|T)/
+Ryzen 5 5500X3D
+Core Ultra 9 285K = /Core Ultra 9 285K(?!F)/
+Core Ultra 7 270K Plus
+Core Ultra 5 250K Plus
+Core i7-14700K = /Core i7-14700K(?!F|S)/
+Core i5-14600K = /Core i5-14600K(?!F)/
+Core i5-12400F
+Core i5-12600KF
+# GPUs — a base model needs a lookahead or it matches its own faster sibling
+RX 9070 XT = /RX 9070 XT/
+RX 9070 = /RX 9070(?! XT| GRE)/
+RX 9070 GRE
+RX 9060 XT 16GB = /RX 9060 XT.*\b16 GB/
+RX 9060 XT 8GB = /RX 9060 XT.*\b8 GB/
+RX 7600 = /RX 7600(?! XT)/
+RX 7600 XT
+RX 7700 XT
+RX 7800 XT
+RX 7900 XT = /RX 7900 XT(?!X)/
+RX 7900 XTX
+RTX 5090
+RTX 5080 = /RTX 5080(?! Ti| Super)/
+RTX 5070 Ti = /RTX 5070 Ti/
+RTX 5070 = /RTX 5070(?! Ti)/
+RTX 5060 Ti 16GB = /RTX 5060 Ti.*\b16 GB/
+RTX 5060 Ti 8GB = /RTX 5060 Ti.*\b8 GB/
+RTX 5060 = /RTX 5060(?! Ti)/
+RTX 5050
+RTX 4090
+RTX 4080 = /RTX 4080(?! Super)/
+Arc B580
+Arc B570
+# Memory and storage — the distinguishing bits live in the spec columns
+32GB DDR5-6000 = /\b32 GB\b.*DDR5-6000/
+32GB DDR4-3200 = /\b32 GB\b.*DDR4-3200/
+1TB NVMe = /\b1 TB\b.*(NVME|M\.2)/
+2TB NVMe = /\b2 TB\b.*(NVME|M\.2)/
+```
+
+The PSU, board, case and cooler rows in `build_prices.csv` are tier bundles
+(`psu_650`, `mb_am4`, …) rather than named products, so they are not watchable — price
+those from the category pages by eye.
+</details>
 
 ## Being a good guest
 

@@ -23,16 +23,21 @@
  *
  * HOW TO USE IT WITHOUT ANNOYING PCPP
  *
- * Make ONE saved part list on PCPartPicker containing every part you track, then add it
- * here as a target with the regions you care about. The same list path works on every
- * regional subdomain, so a full multi-currency refresh is one page load per region —
- * about twenty — rather than one per part per region, which would be hundreds. That is
- * the whole design: fewer, richer pages.
+ * One filtered CATEGORY page per part type, not part lists. A PCPP list holds only one
+ * CPU, one motherboard, one case and one PSU, so it cannot carry fifteen chips — but
+ * /products/cpu/ with your filters returns a hundred rows in a single load. Eight such
+ * pages cover every part you track, and the same paths serve every regional subdomain, so
+ * a three-currency refresh is about two dozen page loads rather than several hundred.
+ * That is the whole design: fewer, richer pages.
  *
- *   1. Build the list at pcpartpicker.com/list/ and save it. Copy its /list/xxxxx path.
- *   2. Open the panel (the ⛽ button, bottom right) → "Add this page" while on it.
- *   3. Tick the regions you want. Hit Run.
- *   4. Export → paste into your CSV.
+ *   1. Open /products/cpu/, set your filters, keep the URL.
+ *   2. Open the panel (the € button, bottom right) → "Add this page".
+ *   3. Tick the regions you want. Repeat for the other categories.
+ *   4. Fill in the watchlist so a hundred rows come back as your forty parts.
+ *   5. Hit Run, then Export → paste into your CSV.
+ *
+ * A saved part list works as a target too, and is the better shape when you want the
+ * exact parts of one specific build rather than a whole category.
  *
  * It walks one tab, sequentially, with a randomised delay of several seconds between
  * loads, and it STOPS on anything that looks like a bot check rather than trying to get
@@ -100,6 +105,7 @@
     walk: 'pcpp_walk',
     opts: 'pcpp_opts',
     taught: 'pcpp_taught',
+    watch: 'pcpp_watch',
   };
 
   // ---------------------------------------------------------------- storage
@@ -112,6 +118,7 @@
   };
   const save = (k, v) => GM_setValue(k, JSON.stringify(v));
 
+  let watchText = load(KEY.watch, '');
   let targets = load(KEY.targets, []);
   let prices = load(KEY.prices, {});     // { partKey: { CUR: {eur, region, at, url} } }
   let opts = Object.assign({ delay: DEFAULT_DELAY_MS, autoOpen: false }, load(KEY.opts, {}));
@@ -374,7 +381,9 @@
       if (!bad.length) break;
       // depth 0 goes in front: a video card reads better as "Radeon RX 9070 XT Asus DUAL"
       bad.forEach(g => g.forEach(r => {
-        const extra = r.specs[depth];
+        // skip money-ish specs: a memory table has a "price / GB" column, and folding
+        // "$1.21" into a product name helps nobody tell two kits apart
+        const extra = r.specs.filter(s => !looksLikeMoney(s))[depth];
         if (extra) r.name = depth === 0 ? `${extra} ${r.name}` : `${r.name} ${extra}`;
       }));
     }
@@ -403,6 +412,89 @@
     return CHALLENGE.test(h);
   }
 
+  // ---------------------------------------------------------------- watchlist
+
+  /**
+   * The parts you actually track, and how to recognise them.
+   *
+   * A category page is the efficient thing to load — one visit to /products/cpu/ returns
+   * a hundred rows — but you do not want a hundred rows, you want the fifteen that are in
+   * your CSV, under the names your CSV calls them. PCPP calls a chip "AMD Ryzen 7 9800X3D
+   * 4.7 GHz 8-Core Processor"; the CSV calls it "Ryzen 7 9800X3D". The watchlist is that
+   * mapping, and it is what makes the export paste-ready.
+   *
+   *   Ryzen 7 9800X3D                  name is also the pattern
+   *   RX 9070 XT = Radeon RX 9070 XT   different pattern
+   *   RTX 5060 = /RTX 5060(?! Ti)/     a regex, for when a substring is ambiguous
+   *
+   * Lines starting with # are comments. An empty list means "capture every row", which
+   * is what you want when reading a part list rather than a category page.
+   */
+  function watchlist() {
+    return String(watchText || '').split('\n').map(line => {
+      const s = line.trim();
+      if (!s || s.startsWith('#')) return null;
+      const i = s.indexOf('=');
+      const name = (i === -1 ? s : s.slice(0, i)).trim();
+      const pat = (i === -1 ? s : s.slice(i + 1)).trim() || name;
+      if (!name) return null;
+      let re;
+      const m = pat.match(/^\/(.*)\/([a-z]*)$/);
+      try {
+        re = m ? new RegExp(m[1], m[2] || 'i')
+               // a plain pattern is a substring, but spaces match loosely so
+               // "RX 9070 XT" still finds "RX  9070 XT" and "RX 9070  XT"
+               : new RegExp(pat.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                               .replace(/\s+/g, '\\s+'), 'i');
+      } catch (e) { return null; }
+      return { name, pat, re };
+    }).filter(Boolean);
+  }
+
+  /**
+   * Cheapest row matching each watch entry — in stock for preference, since an
+   * out-of-stock listing is not a price.
+   *
+   * Patterns are matched against the name AND the spec columns, because the thing that
+   * distinguishes two otherwise identical parts usually lives in a spec: PCPP's name for
+   * a card is "GeForce RTX 5060 Ti Asus DUAL OC" with "16 GB" in its own column, and a
+   * memory kit is "G.Skill Flare X5" with "32 GB" and "DDR5-6000" beside it. Without the
+   * specs in the haystack, half of a real watchlist could not be written at all.
+   */
+  function matchWatch(rows, list) {
+    const out = [], clash = [];
+    const hay = r => [r.name].concat(r.specs || []).join(' ');
+    const claimed = new Map();
+    for (const w of list) {
+      const hits = rows.filter(r => w.re.test(hay(r)));
+      if (!hits.length) continue;
+      const live = hits.filter(r => r.stock !== false);
+      const pool = live.length ? live : hits;
+      const best = pool.reduce((a, b) => (b.amount < a.amount ? b : a));
+
+      const id = best.product || best.name;
+      claimed.set(id, w.name);
+      out.push(Object.assign({}, best, { name: w.name, seen: best.name, w }));
+    }
+
+    // Overlap check. Landing on the same product is the obvious failure, but the
+    // dangerous one is quieter: "RX 9070" also matches every RX 9070 XT, and only picked
+    // the right card because that page happened to price the XT higher. On a page where
+    // it did not, the XT's price would be filed under the plain 9070 and nothing would
+    // look wrong. So an entry whose pattern reaches another entry's product is flagged
+    // even when today's cheapest happened to be correct.
+    for (const w of list) {
+      for (const r of out) {
+        if (r.w === w) continue;
+        if (!w.re.test(hay(r))) continue;
+        clash.push(`"${w.name}" also matches ${r.name}'s product ("${r.seen}") — ` +
+                   `tighten it, e.g. /${w.pat}(?! XT)/`);
+      }
+    }
+    out.forEach(r => { delete r.w; });
+    return { rows: out, clash: [...new Set(clash)] };
+  }
+
   // ---------------------------------------------------------------- capture
 
   /**
@@ -414,6 +506,17 @@
     const region = currentRegion();
     const cur = REGION_CUR[region] || 'UNKNOWN';
     let rows = scrapeRows();
+
+    // The watchlist, where you have one, decides both which rows are kept and what they
+    // are called — so a hundred-row category page yields only your parts, under your
+    // names, ready to paste. Without one, everything on the page is captured as-is.
+    const list = watchlist();
+    let clash = [];
+    if (list.length) {
+      const picked = matchWatch(rows, list);
+      rows = picked.rows;
+      clash = picked.clash;
+    }
 
     if (target && target.match) {
       let re = null;
@@ -444,14 +547,14 @@
         if (ratio > 3 || ratio < 1 / 3) suspect = prev.amount;
       }
       prices[key][cc] = {
-        amount, region, at: stamp, url, seen: r.name,
+        amount, region, at: stamp, url, seen: r.seen || r.name,
         stock: r.stock !== false, slot: r.slot || null,
         suspect: suspect,      // the previous figure, when this one jumped hard
         product: r.product || null,
       };
     }
     if (rows.length) save(KEY.prices, prices);
-    return { challenged: false, n: rows.length };
+    return { challenged: false, n: rows.length, clash };
   }
 
   // ---------------------------------------------------------------- the walk
@@ -521,6 +624,10 @@
       return;
     }
     w.log.push({ region: step.region, path: step.path, n: res.n });
+    if (res.clash && res.clash.length) {
+      w.clash = (w.clash || []).concat(res.clash);
+      toast('Watchlist clash: ' + res.clash[0], 12000);
+    }
     w.misses = res.n ? 0 : w.misses + 1;
     if (w.misses >= MAX_MISSES) {
       w.running = false;
@@ -701,6 +808,10 @@
   input, select { background: #12151d; border: 1px solid #2a2f3d; color: #e8eaf0;
     border-radius: 6px; padding: 5px 7px; font: inherit; font-size: 12.5px; }
   input[type=text] { flex: 1; min-width: 90px; }
+  textarea { width: 100%; background: #12151d; border: 1px solid #2a2f3d; color: #e8eaf0;
+    border-radius: 6px; padding: 6px 8px; font: 11.5px/1.5 ui-monospace, Consolas, monospace;
+    resize: vertical; }
+  textarea:focus { outline: none; border-color: #4cc2ff; }
   .sec { margin-top: 14px; padding-top: 11px; border-top: 1px solid #1d2230; }
   .sec h3 { margin: 0 0 7px; font-size: 11px; text-transform: uppercase;
     letter-spacing: .07em; color: #7d8494; font-weight: 700; }
@@ -777,6 +888,11 @@
     const region = currentRegion();
     const cur = REGION_CUR[region] || '?';
     const seen = scrapeRows();
+    // what the watchlist still has no price for, in this region — the thing you need to
+    // know before deciding a run is finished
+    const wmiss = watchlist()
+      .filter(w => !(prices[w.name] && prices[w.name][cur]))
+      .map(w => w.name);
     const p = ui.panel;
     p.textContent = '';
 
@@ -804,6 +920,16 @@
         <div class="note">One saved part list with everything on it is the whole trick:
           each region is then a single page load.</div>
         <div id="tlist"></div>
+      </div>
+
+      <div class="sec">
+        <h3>Watchlist — ${watchlist().length} parts${wmiss.length
+          ? `, <span style="color:#f2c14e">${wmiss.length} not seen in ${cur}</span>` : ''}</h3>
+        <div class="note" style="margin:0 0 6px">One per line. <b>CSV name = pattern</b>,
+          or just the name if PCPP spells it the same. <b>/regex/</b> works. Empty means
+          capture every row, which is what you want on a part list.</div>
+        <textarea id="watch" rows="4" placeholder="Ryzen 7 9800X3D&#10;RX 9070 XT = Radeon RX 9070 XT&#10;RTX 5060 = /RTX 5060(?! Ti)/">${escapeHtml(watchText)}</textarea>
+        ${wmiss.length ? `<div class="note">Not yet in ${cur}: ${escapeHtml(wmiss.slice(0, 12).join(', '))}${wmiss.length > 12 ? ` +${wmiss.length - 12}` : ''}</div>` : ''}
       </div>
 
       <div class="sec">
@@ -894,7 +1020,9 @@
     if (a === 'grab') {
       const r = capture(null);
       toast(r.challenged ? 'That is a bot check, not a page of prices.'
-                         : `Captured ${r.n} row${r.n === 1 ? '' : 's'}.`);
+            : (r.clash && r.clash.length) ? `Captured ${r.n}, but: ${r.clash[0]}`
+            : `Captured ${r.n} row${r.n === 1 ? '' : 's'}.`,
+            (r.clash && r.clash.length) ? 12000 : 5000);
       render();
     }
     if (a === 'teach') startTeach();
@@ -930,6 +1058,12 @@
       else t.regions = t.regions.filter(x => x !== v);
       save(KEY.targets, targets); return;
     }
+    if (e.target.id === 'watch') {
+      watchText = e.target.value;
+      save(KEY.watch, watchText);
+      // no re-render: it would replace the textarea under the cursor mid-edit
+      return;
+    }
     if (e.target.id === 'oos') {
       opts.includeOOS = e.target.checked;
       save(KEY.opts, opts); render(); return;
@@ -951,7 +1085,7 @@
   // wrong, `__pcppCapture.rows()` shows exactly what the scraper sees before Teach.
   window.__pcppCapture = {
     rows: scrapeRows, money: parseMoney, shape: pageShape, region: currentRegion,
-    prices: () => prices,
+    prices: () => prices, watchlist, captureHere: () => capture(null),
   };
 
   function boot() {
