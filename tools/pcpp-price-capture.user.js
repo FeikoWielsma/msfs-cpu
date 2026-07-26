@@ -23,21 +23,29 @@
  *
  * HOW TO USE IT WITHOUT ANNOYING PCPP
  *
- * One filtered CATEGORY page per part type, not part lists. A PCPP list holds only one
- * CPU, one motherboard, one case and one PSU, so it cannot carry fifteen chips — but
- * /products/cpu/ with your filters returns a hundred rows in a single load. Eight such
- * pages cover every part you track, and the same paths serve every regional subdomain, so
- * a three-currency refresh is about two dozen page loads rather than several hundred.
- * That is the whole design: fewer, richer pages.
+ * Let PCPP do the choosing. Half of a price CSV is not a product but a judgement —
+ * "the cheapest decent AM4 board", "a decent 650 W unit" — and PCPP's own parametric
+ * selections already answer exactly that. So: a handful of saved lists, each one a set of
+ * parametrics, each NAMED for what its slots mean:
  *
- *   1. Open /products/cpu/, set your filters, keep the URL.
- *   2. Open the panel (the € button, bottom right) → "Add this page".
- *   3. Tick the regions you want. Repeat for the other categories.
- *   4. Fill in the watchlist so a hundred rows come back as your forty parts.
- *   5. Hit Run, then Export → paste into your CSV.
+ *   MSFS_LGA1700_DDR4_SINGLETOWER_ALLGPU
+ *   MSFS_LGA1700_DDR5_DUALTOWER_ENTRY_PSU
  *
- * A saved part list works as a target too, and is the better shape when you want the
- * exact parts of one specific build rather than a whole category.
+ * One line of config then maps every list at once (see List rules, below):
+ *
+ *   LGA1700_DDR4 : Motherboard  = mb_lga1700_ddr4
+ *   SINGLETOWER  : CPU Cooler   = cooler_entry
+ *
+ * Add a list, name it to the convention, and it maps itself. Each list is one page load
+ * per region, and a list can hold every GPU besides.
+ *
+ * CPUs are the exception: a list holds one, so they come from /products/cpu/ instead,
+ * where a single load carries a hundred rows and the watchlist names the ones you track.
+ *
+ *   1. Build and save the lists. Add each as a target ("Add this page").
+ *   2. Add /products/cpu/ with your filters as one more target.
+ *   3. Tick the regions on each. Write the list rules and the watchlist once.
+ *   4. Hit Run, then Export → paste into your CSV.
  *
  * It walks one tab, sequentially, with a randomised delay of several seconds between
  * loads, and it STOPS on anything that looks like a bot check rather than trying to get
@@ -106,6 +114,7 @@
     opts: 'pcpp_opts',
     taught: 'pcpp_taught',
     watch: 'pcpp_watch',
+    rules: 'pcpp_rules',
   };
 
   // ---------------------------------------------------------------- storage
@@ -119,6 +128,7 @@
   const save = (k, v) => GM_setValue(k, JSON.stringify(v));
 
   let watchText = load(KEY.watch, '');
+  let rulesText = load(KEY.rules, '');
   let targets = load(KEY.targets, []);
   let prices = load(KEY.prices, {});     // { partKey: { CUR: {eur, region, at, url} } }
   let opts = Object.assign({ delay: DEFAULT_DELAY_MS, autoOpen: false }, load(KEY.opts, {}));
@@ -430,7 +440,41 @@
    * Lines starting with # are comments. An empty list means "capture every row", which
    * is what you want when reading a part list rather than a category page.
    */
+  /**
+   * Parse watch lines into matchers, merging repeated names into one group.
+   *
+   * Repeating a name is how "cheapest of these" is written, and it is the only way to
+   * price the rows that are a quality judgement rather than a filter. PCPP can filter a
+   * PSU to 650 W and 80+ Gold, neither of which says whether the unit is any good; the
+   * same is true of an SSD's capacity and interface. So the approved set is named
+   * explicitly and the cheapest member in stock wins:
+   *
+   *   psu_650 = Corsair RM650e
+   *   psu_650 = Seasonic Focus GX-650
+   *   psu_650 = MSI MAG A650BN
+   *
+   * which is a parametric whose parameter is your own tier list rather than a spec sheet.
+   */
   function parseWatch(text) {
+    const entries = parseWatchLines(text);
+    const byName = new Map();
+    for (const e of entries) {
+      const prev = byName.get(e.name);
+      if (!prev) { byName.set(e.name, e); continue; }
+      const tests = (prev.tests || [prev.test]).concat([e.test]);
+      byName.set(e.name, {
+        name: e.name,
+        pat: (prev.pats || [prev.pat]).concat([e.pat]).join(' | '),
+        pats: (prev.pats || [prev.pat]).concat([e.pat]),
+        tests,
+        slot: prev.slot || e.slot,
+        test: r => tests.some(t => t(r)),
+      });
+    }
+    return [...byName.values()];
+  }
+
+  function parseWatchLines(text) {
     return String(text || '').split('\n').map(line => {
       const s = line.trim();
       if (!s || s.startsWith('#')) return null;
@@ -465,12 +509,60 @@
 
   const watchlist = () => parseWatch(watchText);
 
-  /** A target's own mappings win over the global list, then the global list fills in the
-   *  rest — so one page can yield both this list's Motherboard row and every GPU on it. */
+  /** Whatever this page calls itself, plus what the target calls it. Rules match against
+   *  both, so they work off a saved list's name without depending on PCPP's title
+   *  markup — "Add this page" seeds the target label from the title anyway. */
+  function pageTitle() {
+    const h = txt($('h1.pageTitle')) || txt($('h1'));
+    const t = (document.title || '').replace(/\s*[-–|]\s*PCPartPicker.*$/i, '').trim();
+    return [h, t].filter(Boolean).join(' ');
+  }
+
+  /**
+   * List rules: name the list well once, and every list maps itself.
+   *
+   *   LGA1700_DDR4 : Motherboard  = mb_lga1700_ddr4
+   *   SINGLETOWER  : CPU Cooler   = cooler_entry
+   *   ENTRY_PSU    : Power Supply = psu_650
+   *
+   * A list called MSFS_LGA1700_DDR4_SINGLETOWER_ALLGPU then files its Motherboard row as
+   * mb_lga1700_ddr4 and its cooler as cooler_entry with no per-target setup at all. The
+   * point is that the parametric already encodes the choice — "cheapest decent B760 DDR4
+   * board" — so the only thing left is to say which CSV row that slot is, and the list's
+   * own name is the natural place for it. Add a list, it maps itself.
+   */
+  function parseRules(text) {
+    return String(text || '').split('\n').map(line => {
+      const s = line.trim();
+      if (!s || s.startsWith('#')) return null;
+      const m = s.match(/^(.+?)\s*:\s*(.+?)\s*=\s*(.+)$/);
+      if (!m) return null;
+      return { token: m[1].trim(), slot: m[2].trim(), name: m[3].trim() };
+    }).filter(Boolean);
+  }
+
+  /** The rules that fire for this page, as watch entries. */
+  function rulesFor(target) {
+    const hay = [(target && target.label) || '', pageTitle()].join(' ').toLowerCase();
+    return parseRules(rulesText)
+      .filter(r => hay.includes(r.token.toLowerCase()))
+      .map(r => {
+        const want = r.slot.toLowerCase();
+        return { name: r.name, pat: `slot:${r.slot} (via ${r.token})`, slot: want,
+                 test: row => String(row.slot || '').trim().toLowerCase() === want };
+      });
+  }
+
+  /** Precedence: a target's own mappings, then what its name implies, then the global
+   *  watchlist — so one list yields its board by slot and every GPU on it by name. */
   function watchFor(target) {
-    const own = parseWatch(target && target.map);
-    const taken = new Set(own.map(w => w.name));
-    return own.concat(watchlist().filter(w => !taken.has(w.name)));
+    const out = [], taken = new Set();
+    for (const w of parseWatch(target && target.map).concat(rulesFor(target), watchlist())) {
+      if (taken.has(w.name)) continue;
+      taken.add(w.name);
+      out.push(w);
+    }
+    return out;
   }
 
   /**
@@ -485,38 +577,47 @@
    */
   function matchWatch(rows, list) {
     const out = [], clash = [];
-    const hay = r => [r.name].concat(r.specs || []).join(' ');
-    const claimed = new Map();
+    const idOf = r => r.product || r.name;
+    const hitSets = new Map();
     for (const w of list) {
       const hits = rows.filter(w.test);
       if (!hits.length) continue;
+      hitSets.set(w, new Set(hits.map(idOf)));
       const live = hits.filter(r => r.stock !== false);
       const pool = live.length ? live : hits;
       const best = pool.reduce((a, b) => (b.amount < a.amount ? b : a));
-
-      const id = best.product || best.name;
-      claimed.set(id, w.name);
-      out.push(Object.assign({}, best, { name: w.name, seen: best.name, w }));
+      out.push(Object.assign({}, best, { name: w.name, seen: best.name }));
     }
 
-    // Overlap check. Landing on the same product is the obvious failure, but the
-    // dangerous one is quieter: "RX 9070" also matches every RX 9070 XT, and only picked
-    // the right card because that page happened to price the XT higher. On a page where
-    // it did not, the XT's price would be filed under the plain 9070 and nothing would
-    // look wrong. So an entry whose pattern reaches another entry's product is flagged
-    // even when today's cheapest happened to be correct.
-    for (const w of list) {
-      for (const r of out) {
-        if (r.w === w) continue;
-        if (!w.test(r)) continue;
-        clash.push(w.slot
-          ? `"${w.name}" and "${r.name}" both take the ${w.slot} row — a slot: mapping ` +
-            `only works where that slot holds one row`
-          : `"${w.name}" also matches ${r.name}'s product ("${r.seen}") — ` +
-            `tighten it, e.g. /${w.pat}(?! XT)/`);
+    // Overlap check, on the full match sets rather than on the winners.
+    //
+    // Comparing winners is not enough, and both ways it fails are silent. "RX 9070"
+    // matches every RX 9070 XT and only picks the right card because the XT is usually
+    // dearer — on a page where it is not, the XT's price is filed under the plain 9070.
+    // And a model approved in two tiers (an RM850e listed under both psu_750 and
+    // psu_850) may win neither today while being ready to give one product two prices
+    // tomorrow. Intersecting what each entry *could* claim catches both now.
+    const ents = [...hitSets.keys()];
+    for (let i = 0; i < ents.length; i++) {
+      for (let j = i + 1; j < ents.length; j++) {
+        const a = ents[i], b = ents[j];
+        const shared = [...hitSets.get(a)].filter(x => hitSets.get(b).has(x));
+        if (!shared.length) continue;
+        // name the listing readably, and name the entry that is too broad — the one
+        // claiming more rows — since that is the one to go and fix
+        const row = rows.find(r => idOf(r) === shared[0]);
+        const what = row ? row.name : shared[0];
+        const wide = hitSets.get(a).size >= hitSets.get(b).size ? a : b;
+        clash.push(a.slot || b.slot
+          ? `"${a.name}" and "${b.name}" both claim the ${a.slot || b.slot} row — either ` +
+            `two list rules match this list's name, or that slot holds more than one row`
+          : (a.pats || b.pats)
+          ? `"${a.name}" and "${b.name}" both cover ${shared.length} of the same ` +
+            `listing(s), e.g. "${what}" — a model cannot be approved for two entries`
+          : `"${a.name}" and "${b.name}" both match "${what}" — "${wide.name}" is the ` +
+            `broader; give it a lookahead so it stops reaching the other`);
       }
     }
-    out.forEach(r => { delete r.w; });
     return { rows: out, clash: [...new Set(clash)] };
   }
 
@@ -928,6 +1029,9 @@
     const wmiss = watchlist()
       .filter(w => !(prices[w.name] && prices[w.name][cur]))
       .map(w => w.name);
+    // which list rules this page satisfies, judged against the target it belongs to
+    const here = targets.find(t => pathOf(regionUrl(currentRegion(), t.path)) === pathOf());
+    const fired = rulesFor(here || { label: '' });
     const p = ui.panel;
     p.textContent = '';
 
@@ -955,6 +1059,18 @@
         <div class="note">One saved part list with everything on it is the whole trick:
           each region is then a single page load.</div>
         <div id="tlist"></div>
+      </div>
+
+      <div class="sec">
+        <h3>List rules — ${parseRules(rulesText).length}${fired.length
+          ? `, <span style="color:#4cc2ff">${fired.length} firing here</span>` : ''}</h3>
+        <div class="note" style="margin:0 0 6px"><b>TOKEN : Slot = csv row</b>. Any list
+          whose name contains the token files that slot under that name, so a list called
+          <i>MSFS_LGA1700_DDR4_SINGLETOWER</i> maps itself. Matched against the target's
+          label and the page title.</div>
+        <textarea id="rules" rows="4" placeholder="LGA1700_DDR4 : Motherboard  = mb_lga1700_ddr4&#10;SINGLETOWER  : CPU Cooler   = cooler_entry&#10;ENTRY_PSU    : Power Supply = psu_650">${escapeHtml(rulesText)}</textarea>
+        <div class="note">This page reads as <b>${escapeHtml(pageTitle().slice(0, 60) || '(untitled)')}</b>${
+          fired.length ? ` → ${escapeHtml(fired.map(f => f.name).join(', '))}` : ''}</div>
       </div>
 
       <div class="sec">
@@ -1117,6 +1233,10 @@
       targets[Number(d.single)].single = e.target.checked;
       save(KEY.targets, targets); render(); return;
     }
+    if (e.target.id === 'rules') {
+      rulesText = e.target.value;
+      save(KEY.rules, rulesText); return;      // no re-render: the cursor is in there
+    }
     if (e.target.id === 'watch') {
       watchText = e.target.value;
       save(KEY.watch, watchText);
@@ -1144,7 +1264,7 @@
   // wrong, `__pcppCapture.rows()` shows exactly what the scraper sees before Teach.
   window.__pcppCapture = {
     rows: scrapeRows, money: parseMoney, shape: pageShape, region: currentRegion,
-    prices: () => prices, watchlist, captureHere: () => capture(null), captureWith: t => capture(t),
+    prices: () => prices, watchlist, captureHere: () => capture(null), captureWith: t => capture(t), rulesFor,
   };
 
   function boot() {

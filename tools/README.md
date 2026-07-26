@@ -11,25 +11,64 @@ PCPartPicker page.
 
 ## The one thing worth knowing
 
-**Use one filtered category page per part type, not part lists.** A PCPartPicker list holds
-only one CPU, one motherboard, one case and one PSU, so it cannot hold fifteen chips — but
-`/products/cpu/` with your filters returns a hundred rows in a single load. Eight category
-pages (CPU, cooler, motherboard, memory, storage, video card, PSU, case) therefore cover
-every part you track, and the same paths serve every regional subdomain:
+**Let PCPartPicker do the choosing.** Half of a price CSV is not a product but a judgement
+— *the cheapest decent AM4 board*, *a decent 650 W unit* — and no filter expresses it: 80+
+Gold says nothing about whether a PSU is any good, and capacity says nothing about whether
+an SSD is. PCPP's own **parametric selections** answer exactly that question, so the trick
+is to let them, and to name each list for what its slots mean:
 
-> **8 pages × the regions you want** — about 24 loads for three currencies — rather than one
-> page per part per region, which would be hundreds.
+```
+MSFS_LGA1700_DDR4_SINGLETOWER_ALLGPU
+MSFS_LGA1700_DDR5_DUALTOWER_ENTRY_PSU
+```
 
-1. Open `/products/cpu/`, set your filters, and get the URL you want to keep.
-2. Hit **€ → Add this page**, give it a label.
-3. Tick the regions for that target. Repeat for the other categories.
-4. Fill in the **watchlist** (below) so a hundred rows come back as your forty parts.
-5. **Run.** It walks them one at a time, in one tab, and stops on its own.
-6. **Copy CSV** for one currency, or **Copy all currencies** for a wide table.
+One block of config then maps every list at once, present and future:
 
-If a filter spans more than one page of results, add `?page=2` as its own target. A saved
-part list works as a target too, and is the better shape when you want the exact parts of
-one specific build rather than a category.
+```
+LGA1700_DDR4 : Motherboard  = mb_lga1700_ddr4
+LGA1700_DDR5 : Motherboard  = mb_lga1700_ddr5
+SINGLETOWER  : CPU Cooler   = cooler_entry
+DUALTOWER    : CPU Cooler   = cooler_mid
+ENTRY_PSU    : Power Supply = psu_650
+```
+
+Add a list, name it to the convention, and **it maps itself** — no per-list setup. Each
+list is one page load per region, and a list can carry every GPU besides, so `ALLGPU`
+lists pay for themselves.
+
+**CPUs are the exception.** A list holds one CPU, so they come from `/products/cpu/`
+instead, where a single load carries a hundred rows and the watchlist names the ones you
+track. That is the only category that needs it.
+
+1. Build and save the lists. Add each as a target (**€ → Add this page**).
+2. Add `/products/cpu/` with your filters as one more target.
+3. Tick the regions on each. Write the list rules and the watchlist once.
+4. **Run.** It walks them one at a time, in one tab, and stops on its own.
+5. **Copy CSV** for one currency, or **Copy all currencies** for a wide table.
+
+If a category filter spans more than one page of results, add `?page=2` as its own target.
+
+## List rules
+
+`TOKEN : Slot = csv row`. Any list whose name contains the token files that slot under
+that name. Matched against both the target's label and the page's own title, so it does
+not depend on PCPP's title markup.
+
+The slot names are PCPP's own Component column: `Motherboard`, `CPU Cooler`,
+`Power Supply`, `Case`, `Memory`, `Storage`, `Video Card`.
+
+Verified against a real list, with three different names over the same page:
+
+| List name | Rules that fire |
+| --- | --- |
+| `MSFS_LGA1700_DDR4_SINGLETOWER_ALLGPU` | `mb_lga1700_ddr4`, `cooler_entry`, `case` |
+| `MSFS_LGA1700_DDR5_DUALTOWER_ENTRY_PSU` | `mb_lga1700_ddr5`, `cooler_mid`, `psu_650`, `case` |
+| `MSFS_AM5_AIO_ALLGPU` | `mb_am5`, `cooler_aio`, `case` |
+
+Tokens are plain substrings, so keep them distinctive — and if two rules end up claiming
+one slot, or a slot holds more than one row, the script says so rather than picking one.
+Slots that legitimately repeat (Memory, Storage, Video Card) belong in the watchlist,
+matched by spec, not here.
 
 ## The watchlist
 
@@ -135,56 +174,67 @@ see the next section, which is about exactly them.
 
 Half of `build_prices.csv` is not a product at all. `psu_650` means *the cheapest decent
 650 W unit*, and `mb_am4` means *the cheapest decent AM4 board* — the answer changes every
-month, so no name pattern can track it. Two mechanisms cover this, and which you want
-depends on whether PCPP can express "decent" as a filter.
+month, so no name pattern can track it — and **no filter expresses it either**. 80+ Gold
+and a wattage say nothing about whether a PSU is decent; capacity and interface say nothing
+about whether an SSD is. Both are minefields where the answer is a curated set, not a spec
+query. Three mechanisms, in the order you should reach for them.
 
-### Cheapest row on a filtered page
+### 1. A parametric in a named list
 
-Set the filters until the page contains only units you would actually buy, then tick
-**"cheapest row on this page is the answer"** on that target and give it a label. The
-watchlist is skipped for that target — the page *is* the query.
+The main one, described at the top. A parametric row resolves to whichever board is
+cheapest this week, so its product name is worthless as a key while its Component column
+never moves — hence mapping by slot, via the list's name. Verified against a real list:
+21 rows in, 20 captured, no clashes, the board by slot and all thirteen GPUs by name from
+a single page.
 
-This is the answer for **PSUs**, and it sidesteps the parametric problem entirely: a
-parametric PSU inside a list sizes itself against every GPU in that list, so a list holding
-a dozen cards asks for 3600 W and comes back `No Prices`. A filtered category page has no
-such coupling. Five targets — 650 / 750 basic / 750 / 850 / 1000, each with its efficiency
-and form-factor filters set — give five tier prices per region.
+A target can also carry its **own** mapping — a textarea on that target, same
+`name = slot:Motherboard` syntax — which beats the list rules. For the one-off that fits
+no convention.
 
-The same shape works for `case` and the cooler tiers.
+### 2. Cheapest of an approved set
 
-### Parametric part lists, mapped by slot
-
-Where "decent" is easier to say as a PCPP parametric than as a filter, put it in a list and
-map the row by the **slot** it occupies rather than by what it resolved to:
+Where the set is yours rather than PCPP's, name the models and let the cheapest win.
+Repeat the name; the patterns merge into one group:
 
 ```
-mb_lga1700_ddr4 = slot:Motherboard
-case            = slot:Case
-cooler_entry    = slot:CPU Cooler
+psu_650 = Corsair RM650e
+psu_650 = Seasonic Focus GX-650
+psu_650 = MSI MAG A650BN
 ```
 
-A parametric row resolves to whichever board is cheapest this week, so its product name is
-worthless as a key while its Component column never moves. Target mappings apply **only on
-that target's pages** and take precedence over the global watchlist, so one list can yield
-both its own board (by slot) and every GPU on it (by name) in a single load — verified
-against a real "biglist": 21 rows in, 20 captured, no clashes.
+That is a parametric whose parameter is your own tier list rather than a spec sheet, and
+it is the honest way to price a PSU or an SSD. It works from an ordinary category page —
+one load, and the cheapest approved model in stock wins.
 
-`slot:` needs the slot to hold exactly one row, which is true for Motherboard, Case, CPU
-Cooler and PSU. Memory, Storage and Video Card can repeat, so match those by spec pattern
-instead; if a `slot:` mapping is ambiguous the script says so rather than picking one.
+If the same model ends up approved for two entries, the script says so, even when neither
+entry picked it today.
+
+### 3. Cheapest row on a filtered page
+
+For the cases where filters *are* enough — a case, say. Tick **"cheapest row on this page
+is the answer"** on that target and give it a label; the watchlist is skipped there,
+because the page is the query.
+
+### Where PSUs bite
+
+A parametric PSU inside a list sizes itself against every GPU in that list, so a list
+holding a dozen cards asks for 3600 W and comes back `No Prices`. Keep PSUs in their own
+small lists with no GPUs in them — `..._ENTRY_PSU`, `..._MID_PSU` — which is exactly what
+the naming convention is for.
 
 ### So, the whole set
 
 | `build_prices.csv` rows | Where they come from |
 | --- | --- |
 | CPUs | one `/products/cpu/` target + the watchlist — all fifteen in one load |
-| GPUs | one `/products/video-card/` target, or a list holding them all |
-| Memory, storage | either; spec patterns work on both page shapes |
-| `mb_*` | one parametric list per platform, mapped `slot:Motherboard` |
-| `psu_*` | one filtered PSU page per tier, "cheapest row" |
-| `case`, `cooler_*` | either |
+| GPUs | an `ALLGPU` list, or one `/products/video-card/` target |
+| Memory, storage | a list slot, or a category page; spec patterns work on both |
+| `mb_*` | one named parametric list per platform |
+| `cooler_*` | the cooler token in each list's name |
+| `psu_*` | a GPU-free `..._PSU` list, or an approved-set watchlist entry |
+| `case` | any list carrying one, or "cheapest row" on a filtered page |
 
-CPUs need no list at all — a list holds one, and the category page holds a hundred.
+CPUs are the only category that cannot come from a list, because a list holds one.
 
 ## Being a good guest
 
