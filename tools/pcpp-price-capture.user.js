@@ -149,6 +149,18 @@
     return m && REGION_CUR[m[1].toLowerCase()] !== undefined ? m[1].toLowerCase() : '';
   }
 
+  /** Storage key for the site we are on. '' is the US site, which needs a name. */
+  function regionKey(region) {
+    const r = region === undefined ? currentRegion() : region;
+    return r || 'us';
+  }
+
+  /** "nl EUR", for headers and pickers. */
+  function regionLabel(rk) {
+    const r = rk === 'us' ? '' : rk;
+    return `${rk} ${REGION_CUR[r] || '?'}`;
+  }
+
   function regionUrl(region, path) {
     const host = region ? `${region}.pcpartpicker.com` : 'pcpartpicker.com';
     return `https://${host}${path}`;
@@ -705,19 +717,27 @@
       const amount = Math.round(r.amount * 100) / 100;
       prices[key] = prices[key] || {};
 
+      // Keyed by REGION, not by currency. The Netherlands, Germany and France all quote
+      // euros at different prices, so keying on EUR would have each overwrite the last
+      // and silently reduce three countries to whichever was captured most recently.
+      // The currency rides along inside for the export header.
+      const rk = regionKey();
+
       // A flagship card that is out of stock everywhere collects marketplace listings at
       // ten times its real price, and PCPP shows the cheapest of those. Nothing in the
       // page marks such a number as nonsense, so the only cheap check available is the
       // one you already have: what this part cost last time. A large jump is not
       // rejected — prices do move — it is flagged and kept out of exports until seen.
-      const prev = prices[key][cc];
+      // Comparing within one region is also the only fair comparison: a German price is
+      // not a jump from a Dutch one.
+      const prev = prices[key][rk];
       let suspect = null;
       if (prev && prev.amount > 0 && !prev.suspect) {
         const ratio = amount / prev.amount;
         if (ratio > 3 || ratio < 1 / 3) suspect = prev.amount;
       }
-      prices[key][cc] = {
-        amount, region, at: stamp, url, seen: r.seen || r.name,
+      prices[key][rk] = {
+        amount, cur: cc, region, at: stamp, url, seen: r.seen || r.name,
         stock: r.stock !== false, slot: r.slot || null,
         suspect: suspect,      // the previous figure, when this one jumped hard
         product: r.product || null,
@@ -940,10 +960,21 @@
 
   // ---------------------------------------------------------------- export
 
-  function currencies() {
+  /** Regions captured so far, in the order REGIONS lists them so a picker reads sanely. */
+  function regionsSeen() {
     const set = new Set();
-    Object.values(prices).forEach(byCur => Object.keys(byCur).forEach(c => set.add(c)));
-    return [...set].sort();
+    Object.values(prices).forEach(byReg => Object.keys(byReg).forEach(r => set.add(r)));
+    const order = REGIONS.map(r => regionKey(r[0]));
+    return [...set].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  }
+
+  /** The currency a region's captures are actually in, from the data rather than the
+   *  table — if a site ever quotes something unexpected, the export should say so. */
+  function curOf(rk) {
+    for (const byReg of Object.values(prices)) {
+      if (byReg[rk] && byReg[rk].cur) return byReg[rk].cur;
+    }
+    return REGION_CUR[rk === 'us' ? '' : rk] || '?';
   }
 
   const csvCell = s => /[",\n]/.test(s) ? `"${String(s).replace(/"/g, '""')}"` : String(s);
@@ -957,34 +988,37 @@
     : row.suspect ? `was ${row.suspect}` : null;
   const usable = row => row && (!doubt(row) || opts.includeOOS);
 
-  /** build_prices.csv shape, for one currency: part,<cur>,src */
-  function exportOne(cur) {
+  /** build_prices.csv shape, for one region: part,<cur>,src */
+  function exportOne(rk) {
+    const cur = curOf(rk);
     const rows = [], skipped = [];
     Object.keys(prices).sort().forEach(part => {
-      const row = prices[part][cur];
+      const row = prices[part][rk];
       if (!row) return;
       const why = doubt(row);
       if (why && !opts.includeOOS) { skipped.push(`${part} (${why})`); return; }
       const tag = row.stock === false ? ':oos' : row.suspect ? ':check' : '';
-      rows.push([csvCell(part), row.amount, `pcpp:${row.region || 'us'}${tag}`].join(','));
+      rows.push([csvCell(part), row.amount, `pcpp:${rk}${tag}`].join(','));
     });
-    const head = [`# PCPartPicker ${cur}, captured ${nowISO()} — check before trusting.`];
+    const head = [`# PCPartPicker ${rk} (${cur}), captured ${nowISO()} — check before trusting.`];
     if (skipped.length) {
       head.push(`# ${skipped.length} left out: ${skipped.join('; ')}`);
     }
     return head.concat(`part,${cur.toLowerCase()},src`, rows).join('\n') + '\n';
   }
 
-  /** Every currency as columns, for keeping several CSVs in step. */
+  /** Every region as columns. Euro countries are separate columns on purpose — they
+   *  share a currency, not a price. */
   function exportWide() {
-    const curs = currencies();
-    const lines = [['part', ...curs, 'slot', 'captured'].map(csvCell).join(',')];
+    const regs = regionsSeen();
+    const lines = [['part', ...regs.map(r => `${r}_${curOf(r).toLowerCase()}`),
+                    'slot', 'captured'].map(csvCell).join(',')];
     Object.keys(prices).sort().forEach(part => {
-      const byCur = prices[part];
-      const at = Object.values(byCur).map(v => v.at).sort().pop() || '';
-      const slot = (Object.values(byCur).find(v => v.slot) || {}).slot || '';
+      const byReg = prices[part];
+      const at = Object.values(byReg).map(v => v.at).sort().pop() || '';
+      const slot = (Object.values(byReg).find(v => v.slot) || {}).slot || '';
       lines.push([csvCell(part),
-                  ...curs.map(c => (usable(byCur[c]) ? byCur[c].amount : '')),
+                  ...regs.map(r => (usable(byReg[r]) ? byReg[r].amount : '')),
                   csvCell(slot), at].join(','));
     });
     return lines.join('\n') + '\n';
@@ -1105,7 +1139,7 @@
     // what the watchlist still has no price for, in this region — the thing you need to
     // know before deciding a run is finished
     const wmiss = watchlist()
-      .filter(w => !(prices[w.name] && prices[w.name][cur]))
+      .filter(w => !(prices[w.name] && prices[w.name][regionKey()]))
       .map(w => w.name);
     // which list rules this page satisfies, judged against the target it belongs to
     const here = targets.find(t => pathOf(regionUrl(currentRegion(), t.path)) === pathOf());
@@ -1159,19 +1193,21 @@
 
       <div class="sec">
         <h3>Watchlist — ${watchlist().length} parts${wmiss.length
-          ? `, <span style="color:#f2c14e">${wmiss.length} not seen in ${cur}</span>` : ''}</h3>
+          ? `, <span style="color:#f2c14e">${wmiss.length} not seen in ${regionKey()}</span>` : ''}</h3>
         <div class="note" style="margin:0 0 6px">One per line. <b>CSV name = pattern</b>,
           or just the name if PCPP spells it the same. <b>/regex/</b> works. Empty means
           capture every row, which is what you want on a part list.</div>
         <textarea id="watch" rows="4" placeholder="Ryzen 7 9800X3D&#10;RX 9070 XT = Radeon RX 9070 XT&#10;RTX 5060 = /RTX 5060(?! Ti)/">${escapeHtml(watchText)}</textarea>
-        ${wmiss.length ? `<div class="note">Not yet in ${cur}: ${escapeHtml(wmiss.slice(0, 12).join(', '))}${wmiss.length > 12 ? ` +${wmiss.length - 12}` : ''}</div>` : ''}
+        ${wmiss.length ? `<div class="note">Not yet in ${regionKey()} (${cur}): ${escapeHtml(wmiss.slice(0, 12).join(', '))}${wmiss.length > 12 ? ` +${wmiss.length - 12}` : ''}</div>` : ''}
       </div>
 
       <div class="sec">
-        <h3>Captured — ${Object.keys(prices).length} parts, ${currencies().join(' ') || 'none'}</h3>
+        <h3>Captured — ${Object.keys(prices).length} parts across ${regionsSeen().length}
+          region(s): ${regionsSeen().join(' ') || 'none'}</h3>
         <div id="plist"></div>
         <div class="row" style="margin-top:9px">
-          <select id="expcur">${currencies().map(c => `<option>${c}</option>`).join('')}</select>
+          <select id="expcur">${regionsSeen().map(r =>
+            `<option value="${r}">${regionLabel(r)}</option>`).join('')}</select>
           <button class="b" data-a="exp1">Copy CSV</button>
           <button class="b" data-a="expw">Copy all currencies</button>
           <button class="b" data-a="clear">Clear</button>
@@ -1236,7 +1272,7 @@
     if (!parts.length) {
       pl.innerHTML = `<div class="note">Nothing captured yet.</div>`;
     } else {
-      const curs = currencies();
+      const curs = regionsSeen();
       const cell = v => !v ? '·'
         : v.stock === false ? `${v.amount} <b title="out of stock">!</b>`
         : v.suspect ? `${v.amount} <b title="was ${v.suspect} — check it">?</b>`
@@ -1298,7 +1334,7 @@
     }
     if (a === 'exp1') {
       const c = ui.panel.querySelector('#expcur').value;
-      if (c) copy(exportOne(c), `${c} CSV`);
+      if (c) copy(exportOne(c), `${regionLabel(c)} CSV`);
     }
     if (a === 'expw') copy(exportWide(), 'All-currency CSV');
     if (a === 'clear') {

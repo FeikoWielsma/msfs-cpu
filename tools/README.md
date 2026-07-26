@@ -296,7 +296,14 @@ stores a selector for that page shape.
 `__pcppCapture.rows()` in the console shows exactly what the scraper currently sees, which
 is the fastest way to tell a markup change from an empty page.
 
-## Currencies
+## Currencies and regions
+
+Captures are keyed by **region, not currency**. The Netherlands, Germany and France all
+quote euros at different prices, so a EUR key would have each overwrite the last and
+silently reduce three countries to whichever ran most recently. Export therefore offers one
+entry per region (`nl EUR`, `de EUR`, `uk GBP`, …), and the wide CSV gives each its own
+column. The big-jump guard compares within a region too — a German price is not a jump from
+a Dutch one.
 
 The regional subdomain decides the currency (`nl.` → EUR, `uk.` → GBP, bare → USD), and any
 symbol or ISO code in the price overrides it. The number parser handles both conventions:
