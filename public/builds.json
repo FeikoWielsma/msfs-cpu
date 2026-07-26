@@ -1718,6 +1718,15 @@
     "vendor": "Intel",
     "socket": "LGA1851",
     "eur": 149,
+    "by": {
+     "nl": 149,
+     "de": 141,
+     "fr": 148,
+     "uk": 134,
+     "ca": 217,
+     "au": 225,
+     "us": 163
+    },
     "cov": 1,
     "idx": {
      "DDR5": 75
@@ -1727,12 +1736,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115
+      "eur": 115,
+      "key": "mb_lga1851",
+      "by": {
+       "nl": 115,
+       "de": 107,
+       "fr": 116,
+       "uk": 110,
+       "ca": 155,
+       "au": 199,
+       "us": 110
+      }
      }
     }
    },
@@ -1741,6 +1770,15 @@
     "vendor": "Intel",
     "socket": "LGA1851",
     "eur": 186,
+    "by": {
+     "nl": 186,
+     "de": 178,
+     "fr": 200,
+     "uk": 170,
+     "ca": 261,
+     "au": 299,
+     "us": 180
+    },
     "cov": 4,
     "idx": {
      "DDR5": 75
@@ -1750,12 +1788,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115
+      "eur": 115,
+      "key": "mb_lga1851",
+      "by": {
+       "nl": 115,
+       "de": 107,
+       "fr": 116,
+       "uk": 110,
+       "ca": 155,
+       "au": 199,
+       "us": 110
+      }
      }
     }
    },
@@ -1764,6 +1822,15 @@
     "vendor": "Intel",
     "socket": "LGA1851",
     "eur": 227,
+    "by": {
+     "nl": 227,
+     "de": 217,
+     "fr": 239,
+     "uk": 206,
+     "ca": 300,
+     "au": 345,
+     "us": 217
+    },
     "cov": 3,
     "idx": {
      "DDR5": 77
@@ -1773,12 +1840,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115
+      "eur": 115,
+      "key": "mb_lga1851",
+      "by": {
+       "nl": 115,
+       "de": 107,
+       "fr": 116,
+       "uk": 110,
+       "ca": 155,
+       "au": 199,
+       "us": 110
+      }
      }
     }
    },
@@ -1787,6 +1874,15 @@
     "vendor": "Intel",
     "socket": "LGA1851",
     "eur": 325,
+    "by": {
+     "nl": 325,
+     "de": 316,
+     "fr": 360,
+     "uk": 295,
+     "ca": 440,
+     "au": 528,
+     "us": 309
+    },
     "cov": 3,
     "idx": {
      "DDR5": 78
@@ -1796,12 +1892,32 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 52
+     "eur": 52,
+     "key": "cooler_aio",
+     "by": {
+      "nl": 52,
+      "de": 48,
+      "fr": 49,
+      "uk": 30,
+      "ca": 69,
+      "au": 69,
+      "us": 45
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115
+      "eur": 115,
+      "key": "mb_lga1851",
+      "by": {
+       "nl": 115,
+       "de": 107,
+       "fr": 116,
+       "uk": 110,
+       "ca": 155,
+       "au": 199,
+       "us": 110
+      }
      }
     }
    },
@@ -1810,6 +1926,15 @@
     "vendor": "Intel",
     "socket": "LGA1851",
     "eur": 551,
+    "by": {
+     "nl": 551,
+     "de": 499,
+     "fr": 550,
+     "uk": 525,
+     "ca": 713,
+     "au": 842,
+     "us": 496
+    },
     "cov": 6,
     "idx": {
      "DDR5": 78
@@ -1819,12 +1944,32 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 52
+     "eur": 52,
+     "key": "cooler_aio",
+     "by": {
+      "nl": 52,
+      "de": 48,
+      "fr": 49,
+      "uk": 30,
+      "ca": 69,
+      "au": 69,
+      "us": 45
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115
+      "eur": 115,
+      "key": "mb_lga1851",
+      "by": {
+       "nl": 115,
+       "de": 107,
+       "fr": 116,
+       "uk": 110,
+       "ca": 155,
+       "au": 199,
+       "us": 110
+      }
      }
     }
    },
@@ -1833,6 +1978,15 @@
     "vendor": "Intel",
     "socket": "LGA1700",
     "eur": 107,
+    "by": {
+     "nl": 107,
+     "de": 107,
+     "fr": 108,
+     "uk": 95,
+     "ca": 125,
+     "au": 139,
+     "us": 105
+    },
     "cov": 1,
     "idx": {
      "DDR4": 52,
@@ -1844,16 +1998,46 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89
+      "eur": 89,
+      "key": "mb_lga1700_ddr4",
+      "by": {
+       "nl": 89,
+       "de": 86,
+       "fr": 90,
+       "uk": 83,
+       "ca": 135,
+       "au": 149,
+       "us": 100
+      }
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107
+      "eur": 107,
+      "key": "mb_lga1700_ddr5",
+      "by": {
+       "nl": 107,
+       "de": 78,
+       "fr": 107,
+       "uk": 95,
+       "ca": 210,
+       "au": 189,
+       "us": 110
+      }
      }
     }
    },
@@ -1862,6 +2046,15 @@
     "vendor": "Intel",
     "socket": "LGA1700",
     "eur": 150,
+    "by": {
+     "nl": 150,
+     "de": 143,
+     "fr": 155,
+     "uk": 140,
+     "ca": 190,
+     "au": 209,
+     "us": 164
+    },
     "cov": 1,
     "idx": {
      "DDR4": 55,
@@ -1873,16 +2066,46 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89
+      "eur": 89,
+      "key": "mb_lga1700_ddr4",
+      "by": {
+       "nl": 89,
+       "de": 86,
+       "fr": 90,
+       "uk": 83,
+       "ca": 135,
+       "au": 149,
+       "us": 100
+      }
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107
+      "eur": 107,
+      "key": "mb_lga1700_ddr5",
+      "by": {
+       "nl": 107,
+       "de": 78,
+       "fr": 107,
+       "uk": 95,
+       "ca": 210,
+       "au": 189,
+       "us": 110
+      }
      }
     }
    },
@@ -1891,6 +2114,15 @@
     "vendor": "Intel",
     "socket": "LGA1700",
     "eur": 219,
+    "by": {
+     "nl": 219,
+     "de": 192,
+     "fr": 220,
+     "uk": 202,
+     "ca": 336,
+     "au": 299,
+     "us": 298
+    },
     "cov": 2,
     "idx": {
      "DDR4": 60,
@@ -1902,16 +2134,46 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89
+      "eur": 89,
+      "key": "mb_lga1700_ddr4",
+      "by": {
+       "nl": 89,
+       "de": 86,
+       "fr": 90,
+       "uk": 83,
+       "ca": 135,
+       "au": 149,
+       "us": 100
+      }
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107
+      "eur": 107,
+      "key": "mb_lga1700_ddr5",
+      "by": {
+       "nl": 107,
+       "de": 78,
+       "fr": 107,
+       "uk": 95,
+       "ca": 210,
+       "au": 189,
+       "us": 110
+      }
      }
     }
    },
@@ -1920,6 +2182,15 @@
     "vendor": "Intel",
     "socket": "LGA1700",
     "eur": 185,
+    "by": {
+     "nl": 185,
+     "de": 174,
+     "fr": 181,
+     "uk": 164,
+     "ca": 411,
+     "au": 259,
+     "us": 189
+    },
     "cov": 2,
     "idx": {
      "DDR4": 60,
@@ -1931,16 +2202,46 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34
+     "eur": 34,
+     "key": "cooler_mid",
+     "by": {
+      "nl": 34,
+      "de": 33,
+      "fr": 30,
+      "uk": 25,
+      "ca": 47,
+      "au": 45,
+      "us": 25
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89
+      "eur": 89,
+      "key": "mb_lga1700_ddr4",
+      "by": {
+       "nl": 89,
+       "de": 86,
+       "fr": 90,
+       "uk": 83,
+       "ca": 135,
+       "au": 149,
+       "us": 100
+      }
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107
+      "eur": 107,
+      "key": "mb_lga1700_ddr5",
+      "by": {
+       "nl": 107,
+       "de": 78,
+       "fr": 107,
+       "uk": 95,
+       "ca": 210,
+       "au": 189,
+       "us": 110
+      }
      }
     }
    },
@@ -1949,6 +2250,15 @@
     "vendor": "Intel",
     "socket": "LGA1700",
     "eur": 180,
+    "by": {
+     "nl": 180,
+     "de": 190,
+     "fr": 222,
+     "uk": 175,
+     "ca": 277,
+     "au": 329,
+     "us": 245
+    },
     "cov": 1,
     "idx": {
      "DDR4": 52,
@@ -1960,16 +2270,46 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89
+      "eur": 89,
+      "key": "mb_lga1700_ddr4",
+      "by": {
+       "nl": 89,
+       "de": 86,
+       "fr": 90,
+       "uk": 83,
+       "ca": 135,
+       "au": 149,
+       "us": 100
+      }
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107
+      "eur": 107,
+      "key": "mb_lga1700_ddr5",
+      "by": {
+       "nl": 107,
+       "de": 78,
+       "fr": 107,
+       "uk": 95,
+       "ca": 210,
+       "au": 189,
+       "us": 110
+      }
      }
     }
    },
@@ -1978,6 +2318,15 @@
     "vendor": "Intel",
     "socket": "LGA1700",
     "eur": 175,
+    "by": {
+     "nl": 175,
+     "de": 165,
+     "fr": 186,
+     "uk": 168,
+     "ca": 240,
+     "au": 255,
+     "us": 179
+    },
     "cov": 1,
     "idx": {
      "DDR4": 53,
@@ -1989,16 +2338,46 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89
+      "eur": 89,
+      "key": "mb_lga1700_ddr4",
+      "by": {
+       "nl": 89,
+       "de": 86,
+       "fr": 90,
+       "uk": 83,
+       "ca": 135,
+       "au": 149,
+       "us": 100
+      }
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107
+      "eur": 107,
+      "key": "mb_lga1700_ddr5",
+      "by": {
+       "nl": 107,
+       "de": 78,
+       "fr": 107,
+       "uk": 95,
+       "ca": 210,
+       "au": 189,
+       "us": 110
+      }
      }
     }
    },
@@ -2007,6 +2386,15 @@
     "vendor": "Intel",
     "socket": "LGA1700",
     "eur": 236,
+    "by": {
+     "nl": 236,
+     "de": 226,
+     "fr": 269,
+     "uk": 233,
+     "ca": 320,
+     "au": 502,
+     "us": 248
+    },
     "cov": 5,
     "idx": {
      "DDR4": 68,
@@ -2018,16 +2406,62 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34
+     "eur": 34,
+     "key": "cooler_mid",
+     "by": {
+      "nl": 34,
+      "de": 33,
+      "fr": 30,
+      "uk": 25,
+      "ca": 47,
+      "au": 45,
+      "us": 25
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4, upper tier",
-      "eur": 125
+      "eur": 125,
+      "key": "mb_lga1700_ddr4_great",
+      "by": {
+       "nl": 125,
+       "de": 86,
+       "fr": 90,
+       "uk": 83,
+       "ca": 135,
+       "au": 149,
+       "us": 100
+      },
+      "approx_in": [
+       "de",
+       "fr",
+       "uk",
+       "ca",
+       "au",
+       "us"
+      ]
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5, upper tier",
-      "eur": 125
+      "eur": 125,
+      "key": "mb_lga1700_ddr5_great",
+      "by": {
+       "nl": 125,
+       "de": 78,
+       "fr": 107,
+       "uk": 95,
+       "ca": 210,
+       "au": 189,
+       "us": 110
+      },
+      "approx_in": [
+       "de",
+       "fr",
+       "uk",
+       "ca",
+       "au",
+       "us"
+      ]
      }
     }
    },
@@ -2036,6 +2470,15 @@
     "vendor": "Intel",
     "socket": "LGA1700",
     "eur": 398,
+    "by": {
+     "nl": 398,
+     "de": 380,
+     "fr": 410,
+     "uk": 344,
+     "ca": 500,
+     "au": 595,
+     "us": 366
+    },
     "cov": 6,
     "idx": {
      "DDR4": 71,
@@ -2047,16 +2490,46 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 52
+     "eur": 52,
+     "key": "cooler_aio",
+     "by": {
+      "nl": 52,
+      "de": 48,
+      "fr": 49,
+      "uk": 30,
+      "ca": 69,
+      "au": 69,
+      "us": 45
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89
+      "eur": 89,
+      "key": "mb_lga1700_ddr4",
+      "by": {
+       "nl": 89,
+       "de": 86,
+       "fr": 90,
+       "uk": 83,
+       "ca": 135,
+       "au": 149,
+       "us": 100
+      }
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107
+      "eur": 107,
+      "key": "mb_lga1700_ddr5",
+      "by": {
+       "nl": 107,
+       "de": 78,
+       "fr": 107,
+       "uk": 95,
+       "ca": 210,
+       "au": 189,
+       "us": 110
+      }
      }
     }
    },
@@ -2065,6 +2538,15 @@
     "vendor": "AMD",
     "socket": "AM4",
     "eur": 135,
+    "by": {
+     "nl": 135,
+     "de": 127,
+     "fr": 149,
+     "uk": 122,
+     "ca": 206,
+     "au": 169,
+     "us": 148
+    },
     "cov": 2,
     "idx": {
      "DDR4": 51
@@ -2074,12 +2556,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "AM4 motherboard",
-      "eur": 85
+      "eur": 85,
+      "key": "mb_am4",
+      "by": {
+       "nl": 85,
+       "de": 83,
+       "fr": 85,
+       "uk": 76,
+       "ca": 94,
+       "au": 129,
+       "us": 80
+      }
      }
     }
    },
@@ -2088,6 +2590,15 @@
     "vendor": "AMD",
     "socket": "AM5",
     "eur": 133,
+    "by": {
+     "nl": 133,
+     "de": 129,
+     "fr": 138,
+     "uk": 124,
+     "ca": 268,
+     "au": 239,
+     "us": 175
+    },
     "cov": 2,
     "idx": {
      "DDR5": 59
@@ -2097,12 +2608,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112
+      "eur": 112,
+      "key": "mb_am5",
+      "by": {
+       "nl": 112,
+       "de": 105,
+       "fr": 124,
+       "uk": 110,
+       "ca": 140,
+       "au": 139,
+       "us": 100
+      }
      }
     }
    },
@@ -2111,6 +2642,15 @@
     "vendor": "AMD",
     "socket": "AM5",
     "eur": 219,
+    "by": {
+     "nl": 219,
+     "de": 210,
+     "fr": 224,
+     "uk": 200,
+     "ca": 478,
+     "au": 398,
+     "us": 300
+    },
     "cov": 1,
     "idx": {
      "DDR5": 72
@@ -2120,12 +2660,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112
+      "eur": 112,
+      "key": "mb_am5",
+      "by": {
+       "nl": 112,
+       "de": 105,
+       "fr": 124,
+       "uk": 110,
+       "ca": 140,
+       "au": 139,
+       "us": 100
+      }
      }
     }
    },
@@ -2134,6 +2694,15 @@
     "vendor": "AMD",
     "socket": "AM5",
     "eur": 153,
+    "by": {
+     "nl": 153,
+     "de": 149,
+     "fr": 154,
+     "uk": 136,
+     "ca": 210,
+     "au": 245,
+     "us": 164
+    },
     "cov": 2,
     "idx": {
      "DDR5": 59
@@ -2143,12 +2712,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112
+      "eur": 112,
+      "key": "mb_am5",
+      "by": {
+       "nl": 112,
+       "de": 105,
+       "fr": 124,
+       "uk": 110,
+       "ca": 140,
+       "au": 139,
+       "us": 100
+      }
      }
     }
    },
@@ -2157,6 +2746,15 @@
     "vendor": "AMD",
     "socket": "AM5",
     "eur": 183,
+    "by": {
+     "nl": 183,
+     "de": 179,
+     "fr": 183,
+     "uk": 165,
+     "ca": 275,
+     "au": 320,
+     "us": 175
+    },
     "cov": 3,
     "idx": {
      "DDR5": 69
@@ -2166,12 +2764,32 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34
+     "eur": 34,
+     "key": "cooler_mid",
+     "by": {
+      "nl": 34,
+      "de": 33,
+      "fr": 30,
+      "uk": 25,
+      "ca": 47,
+      "au": 45,
+      "us": 25
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112
+      "eur": 112,
+      "key": "mb_am5",
+      "by": {
+       "nl": 112,
+       "de": 105,
+       "fr": 124,
+       "uk": 110,
+       "ca": 140,
+       "au": 139,
+       "us": 100
+      }
      }
     }
    },
@@ -2180,6 +2798,15 @@
     "vendor": "AMD",
     "socket": "AM4",
     "eur": 209,
+    "by": {
+     "nl": 209,
+     "de": 194,
+     "fr": 194,
+     "uk": 190,
+     "ca": 290,
+     "au": 299,
+     "us": 210
+    },
     "cov": 2,
     "idx": {
      "DDR4": 52
@@ -2189,12 +2816,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "AM4 motherboard",
-      "eur": 85
+      "eur": 85,
+      "key": "mb_am4",
+      "by": {
+       "nl": 85,
+       "de": 83,
+       "fr": 85,
+       "uk": 76,
+       "ca": 94,
+       "au": 129,
+       "us": 80
+      }
      }
     }
    },
@@ -2203,6 +2850,15 @@
     "vendor": "AMD",
     "socket": "AM4",
     "eur": 358,
+    "by": {
+     "nl": 358,
+     "de": 352,
+     "fr": 359,
+     "uk": 300,
+     "ca": 492,
+     "au": 548,
+     "us": 347
+    },
     "cov": 7,
     "idx": {
      "DDR4": 69
@@ -2212,12 +2868,32 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34
+     "eur": 34,
+     "key": "cooler_mid",
+     "by": {
+      "nl": 34,
+      "de": 33,
+      "fr": 30,
+      "uk": 25,
+      "ca": 47,
+      "au": 45,
+      "us": 25
+     }
     },
     "mobo": {
      "DDR4": {
       "part": "AM4 motherboard",
-      "eur": 85
+      "eur": 85,
+      "key": "mb_am4",
+      "by": {
+       "nl": 85,
+       "de": 83,
+       "fr": 85,
+       "uk": 76,
+       "ca": 94,
+       "au": 129,
+       "us": 80
+      }
      }
     }
    },
@@ -2226,6 +2902,15 @@
     "vendor": "AMD",
     "socket": "AM5",
     "eur": 214,
+    "by": {
+     "nl": 214,
+     "de": 203,
+     "fr": 218,
+     "uk": 200,
+     "ca": 327,
+     "au": 399,
+     "us": 230
+    },
     "cov": 5,
     "idx": {
      "DDR5": 68
@@ -2235,12 +2920,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112
+      "eur": 112,
+      "key": "mb_am5",
+      "by": {
+       "nl": 112,
+       "de": 105,
+       "fr": 124,
+       "uk": 110,
+       "ca": 140,
+       "au": 139,
+       "us": 100
+      }
      }
     }
    },
@@ -2249,6 +2954,15 @@
     "vendor": "AMD",
     "socket": "AM5",
     "eur": 349,
+    "by": {
+     "nl": 349,
+     "de": 345,
+     "fr": 354,
+     "uk": 290,
+     "ca": 450,
+     "au": 498,
+     "us": 280
+    },
     "cov": 1,
     "idx": {
      "DDR5": 75
@@ -2258,12 +2972,32 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26
+     "eur": 26,
+     "key": "cooler_entry",
+     "by": {
+      "nl": 26,
+      "de": 17,
+      "fr": 16,
+      "uk": 20,
+      "ca": 25,
+      "au": 25,
+      "us": 18
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112
+      "eur": 112,
+      "key": "mb_am5",
+      "by": {
+       "nl": 112,
+       "de": 105,
+       "fr": 124,
+       "uk": 110,
+       "ca": 140,
+       "au": 139,
+       "us": 100
+      }
      }
     }
    },
@@ -2272,6 +3006,15 @@
     "vendor": "AMD",
     "socket": "AM5",
     "eur": 299,
+    "by": {
+     "nl": 299,
+     "de": 286,
+     "fr": 320,
+     "uk": 272,
+     "ca": 460,
+     "au": 492,
+     "us": 339
+    },
     "cov": 7,
     "idx": {
      "DDR5": 78
@@ -2281,12 +3024,32 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34
+     "eur": 34,
+     "key": "cooler_mid",
+     "by": {
+      "nl": 34,
+      "de": 33,
+      "fr": 30,
+      "uk": 25,
+      "ca": 47,
+      "au": 45,
+      "us": 25
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112
+      "eur": 112,
+      "key": "mb_am5",
+      "by": {
+       "nl": 112,
+       "de": 105,
+       "fr": 124,
+       "uk": 110,
+       "ca": 140,
+       "au": 139,
+       "us": 100
+      }
      }
     }
    },
@@ -2295,6 +3058,15 @@
     "vendor": "AMD",
     "socket": "AM5",
     "eur": 399,
+    "by": {
+     "nl": 399,
+     "de": 378,
+     "fr": 409,
+     "uk": 350,
+     "ca": 570,
+     "au": 648,
+     "us": 429
+    },
     "cov": 7,
     "idx": {
      "DDR5": 97
@@ -2304,12 +3076,40 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34
+     "eur": 34,
+     "key": "cooler_mid",
+     "by": {
+      "nl": 34,
+      "de": 33,
+      "fr": 30,
+      "uk": 25,
+      "ca": 47,
+      "au": 45,
+      "us": 25
+     }
     },
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard, upper tier",
-      "eur": 130
+      "eur": 130,
+      "key": "mb_am5_great",
+      "by": {
+       "nl": 130,
+       "de": 105,
+       "fr": 124,
+       "uk": 110,
+       "ca": 140,
+       "au": 139,
+       "us": 100
+      },
+      "approx_in": [
+       "de",
+       "fr",
+       "uk",
+       "ca",
+       "au",
+       "us"
+      ]
      }
     }
    }
@@ -2319,6 +3119,9 @@
     "part": "Arc B570",
     "vendor": "Intel",
     "eur": 267,
+    "by": {
+     "nl": 267
+    },
     "cov": 6,
     "idx": {
      "1080p": 34,
@@ -2329,13 +3132,26 @@
     "vram": 10,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59
+     "eur": 59,
+     "key": "psu_650",
+     "by": {
+      "nl": 59,
+      "de": 55,
+      "fr": 45,
+      "uk": 40,
+      "ca": 80,
+      "au": 59,
+      "us": 42
+     }
     }
    },
    {
     "part": "Arc B580",
     "vendor": "Intel",
     "eur": 289,
+    "by": {
+     "nl": 289
+    },
     "cov": 6,
     "idx": {
      "1080p": 39,
@@ -2346,13 +3162,32 @@
     "vram": 12,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59
+     "eur": 59,
+     "key": "psu_650",
+     "by": {
+      "nl": 59,
+      "de": 55,
+      "fr": 45,
+      "uk": 40,
+      "ca": 80,
+      "au": 59,
+      "us": 42
+     }
     }
    },
    {
     "part": "RTX 5050",
     "vendor": "Nvidia",
     "eur": 285,
+    "by": {
+     "nl": 285,
+     "de": 263,
+     "fr": 287,
+     "uk": 214,
+     "ca": 420,
+     "au": 359,
+     "us": 290
+    },
     "cov": 3,
     "idx": {
      "1080p": 38,
@@ -2363,13 +3198,32 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59
+     "eur": 59,
+     "key": "psu_650",
+     "by": {
+      "nl": 59,
+      "de": 55,
+      "fr": 45,
+      "uk": 40,
+      "ca": 80,
+      "au": 59,
+      "us": 42
+     }
     }
    },
    {
     "part": "RTX 5060",
     "vendor": "Nvidia",
     "eur": 317,
+    "by": {
+     "nl": 317,
+     "de": 299,
+     "fr": 321,
+     "uk": 275,
+     "ca": 441,
+     "au": 449,
+     "us": 340
+    },
     "cov": 6,
     "idx": {
      "1080p": 47,
@@ -2380,13 +3234,32 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59
+     "eur": 59,
+     "key": "psu_650",
+     "by": {
+      "nl": 59,
+      "de": 55,
+      "fr": 45,
+      "uk": 40,
+      "ca": 80,
+      "au": 59,
+      "us": 42
+     }
     }
    },
    {
     "part": "RTX 5060 Ti 16GB",
     "vendor": "Nvidia",
     "eur": 579,
+    "by": {
+     "nl": 579,
+     "de": 539,
+     "fr": 555,
+     "uk": 500,
+     "ca": 810,
+     "au": 749,
+     "us": 570
+    },
     "cov": 6,
     "idx": {
      "1080p": 59,
@@ -2397,13 +3270,32 @@
     "vram": 16,
     "psu": {
      "part": "750 W power supply",
-     "eur": 88
+     "eur": 88,
+     "key": "psu_750b",
+     "by": {
+      "nl": 88,
+      "de": 78,
+      "fr": 91,
+      "uk": 80,
+      "ca": 86,
+      "au": 115,
+      "us": 62
+     }
     }
    },
    {
     "part": "RTX 5060 Ti 8GB",
     "vendor": "Nvidia",
     "eur": 352,
+    "by": {
+     "nl": 352,
+     "de": 342,
+     "fr": 356,
+     "uk": 320,
+     "ca": 500,
+     "au": 499,
+     "us": 360
+    },
     "cov": 6,
     "idx": {
      "1080p": 47,
@@ -2414,13 +3306,32 @@
     "vram": 8,
     "psu": {
      "part": "750 W power supply",
-     "eur": 88
+     "eur": 88,
+     "key": "psu_750b",
+     "by": {
+      "nl": 88,
+      "de": 78,
+      "fr": 91,
+      "uk": 80,
+      "ca": 86,
+      "au": 115,
+      "us": 62
+     }
     }
    },
    {
     "part": "RTX 5070",
     "vendor": "Nvidia",
     "eur": 639,
+    "by": {
+     "nl": 639,
+     "de": 579,
+     "fr": 629,
+     "uk": 533,
+     "ca": 850,
+     "au": 859,
+     "us": 630
+    },
     "cov": 3,
     "idx": {
      "1080p": 68,
@@ -2431,13 +3342,26 @@
     "vram": 12,
     "psu": {
      "part": "750 W power supply",
-     "eur": 80
+     "eur": 80,
+     "key": "psu_750a",
+     "by": {
+      "nl": 80
+     }
     }
    },
    {
     "part": "RTX 5070 Ti",
     "vendor": "Nvidia",
     "eur": 959,
+    "by": {
+     "nl": 959,
+     "de": 899,
+     "fr": 949,
+     "uk": 830,
+     "ca": 1320,
+     "au": 1329,
+     "us": 950
+    },
     "cov": 3,
     "idx": {
      "1080p": 84,
@@ -2448,13 +3372,32 @@
     "vram": 16,
     "psu": {
      "part": "850 W power supply",
-     "eur": 90
+     "eur": 90,
+     "key": "psu_850",
+     "by": {
+      "nl": 90,
+      "de": 89,
+      "fr": 92,
+      "uk": 90,
+      "ca": 125,
+      "au": 125,
+      "us": 80
+     }
     }
    },
    {
     "part": "RTX 5080",
     "vendor": "Nvidia",
     "eur": 1259,
+    "by": {
+     "nl": 1259,
+     "de": 1187,
+     "fr": 1189,
+     "uk": 1100,
+     "ca": 1770,
+     "au": 1699,
+     "us": 1290
+    },
     "cov": 3,
     "idx": {
      "1080p": 87,
@@ -2465,13 +3408,32 @@
     "vram": 16,
     "psu": {
      "part": "850 W power supply",
-     "eur": 90
+     "eur": 90,
+     "key": "psu_850",
+     "by": {
+      "nl": 90,
+      "de": 89,
+      "fr": 92,
+      "uk": 90,
+      "ca": 125,
+      "au": 125,
+      "us": 80
+     }
     }
    },
    {
     "part": "RTX 5090",
     "vendor": "Nvidia",
     "eur": 4249,
+    "by": {
+     "nl": 4249,
+     "de": 3929,
+     "fr": 4099,
+     "uk": 3260,
+     "ca": 5800,
+     "au": 6299,
+     "us": 4000
+    },
     "cov": 3,
     "idx": {
      "1080p": 100,
@@ -2482,13 +3444,26 @@
     "vram": 32,
     "psu": {
      "part": "1000 W power supply",
-     "eur": 81
+     "eur": 81,
+     "key": "psu_1000",
+     "by": {
+      "nl": 81,
+      "de": 78,
+      "fr": 72,
+      "uk": 86,
+      "ca": 128,
+      "au": 115,
+      "us": 75
+     }
     }
    },
    {
     "part": "RX 7600",
     "vendor": "AMD",
     "eur": 283,
+    "by": {
+     "nl": 283
+    },
     "cov": 6,
     "idx": {
      "1080p": 20,
@@ -2499,13 +3474,32 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59
+     "eur": 59,
+     "key": "psu_650",
+     "by": {
+      "nl": 59,
+      "de": 55,
+      "fr": 45,
+      "uk": 40,
+      "ca": 80,
+      "au": 59,
+      "us": 42
+     }
     }
    },
    {
     "part": "RX 9060 XT 16GB",
     "vendor": "AMD",
     "eur": 438,
+    "by": {
+     "nl": 438,
+     "de": 405,
+     "fr": 439,
+     "uk": 399,
+     "ca": 630,
+     "au": 529,
+     "us": 445
+    },
     "cov": 6,
     "idx": {
      "1080p": 63,
@@ -2516,13 +3510,32 @@
     "vram": 16,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59
+     "eur": 59,
+     "key": "psu_650",
+     "by": {
+      "nl": 59,
+      "de": 55,
+      "fr": 45,
+      "uk": 40,
+      "ca": 80,
+      "au": 59,
+      "us": 42
+     }
     }
    },
    {
     "part": "RX 9060 XT 8GB",
     "vendor": "AMD",
     "eur": 348,
+    "by": {
+     "nl": 348,
+     "de": 334,
+     "fr": 366,
+     "uk": 320,
+     "ca": 550,
+     "au": 449,
+     "us": 360
+    },
     "cov": 3,
     "idx": {
      "1080p": 38,
@@ -2533,13 +3546,32 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59
+     "eur": 59,
+     "key": "psu_650",
+     "by": {
+      "nl": 59,
+      "de": 55,
+      "fr": 45,
+      "uk": 40,
+      "ca": 80,
+      "au": 59,
+      "us": 42
+     }
     }
    },
    {
     "part": "RX 9070",
     "vendor": "AMD",
     "eur": 599,
+    "by": {
+     "nl": 599,
+     "de": 580,
+     "fr": 629,
+     "uk": 549,
+     "ca": 869,
+     "au": 829,
+     "us": 640
+    },
     "cov": 3,
     "idx": {
      "1080p": 90,
@@ -2550,13 +3582,26 @@
     "vram": 16,
     "psu": {
      "part": "750 W power supply",
-     "eur": 80
+     "eur": 80,
+     "key": "psu_750a",
+     "by": {
+      "nl": 80
+     }
     }
    },
    {
     "part": "RX 9070 GRE",
     "vendor": null,
     "eur": 559,
+    "by": {
+     "nl": 559,
+     "de": 545,
+     "fr": 564,
+     "uk": 490,
+     "ca": 760,
+     "au": 849,
+     "us": 550
+    },
     "cov": 0,
     "idx": {
      "1080p": 74,
@@ -2566,13 +3611,32 @@
     "vram": 12,
     "psu": {
      "part": "750 W power supply",
-     "eur": 88
+     "eur": 88,
+     "key": "psu_750b",
+     "by": {
+      "nl": 88,
+      "de": 78,
+      "fr": 91,
+      "uk": 80,
+      "ca": 86,
+      "au": 115,
+      "us": 62
+     }
     }
    },
    {
     "part": "RX 9070 XT",
     "vendor": "AMD",
     "eur": 699,
+    "by": {
+     "nl": 699,
+     "de": 649,
+     "fr": 686,
+     "uk": 600,
+     "ca": 965,
+     "au": 949,
+     "us": 700
+    },
     "cov": 3,
     "idx": {
      "1080p": 96,
@@ -2583,7 +3647,17 @@
     "vram": 16,
     "psu": {
      "part": "850 W power supply",
-     "eur": 90
+     "eur": 90,
+     "key": "psu_850",
+     "by": {
+      "nl": 90,
+      "de": 89,
+      "fr": 92,
+      "uk": 90,
+      "ca": 125,
+      "au": 125,
+      "us": 80
+     }
     }
    }
   ],
@@ -2592,41 +3666,130 @@
     "part": "32GB DDR4-3200",
     "kind": "DDR4",
     "eur": 229,
-    "min": false
+    "min": false,
+    "by": {
+     "nl": 229,
+     "de": 206,
+     "fr": 200,
+     "au": 319,
+     "us": 190
+    }
    },
    {
     "part": "32GB DDR5-6000",
     "kind": "DDR5",
     "eur": 399,
-    "min": false
+    "min": false,
+    "by": {
+     "nl": 399,
+     "de": 361,
+     "uk": 330,
+     "ca": 550,
+     "us": 388
+    }
    },
    {
     "part": "2x8GB DDR4-3200",
     "kind": "DDR4",
     "eur": 103,
-    "min": true
+    "min": true,
+    "by": {
+     "nl": 103,
+     "de": 110,
+     "fr": 58,
+     "uk": 113,
+     "ca": 168,
+     "us": 100
+    }
    },
    {
     "part": "2x8GB DDR5-6000",
     "kind": "DDR5",
     "eur": 229,
-    "min": true
+    "min": true,
+    "by": {
+     "nl": 229,
+     "de": 269,
+     "fr": 260,
+     "uk": 221,
+     "ca": 330,
+     "au": 389,
+     "us": 190
+    }
    }
   ],
   "storage": [
    {
     "part": "1TB NVMe",
-    "eur": 140
+    "eur": 140,
+    "by": {
+     "nl": 140,
+     "de": 139,
+     "fr": 146,
+     "uk": 122,
+     "ca": 190,
+     "au": 243,
+     "us": 146
+    }
    },
    {
     "part": "2TB NVMe",
-    "eur": 220
+    "eur": 220,
+    "by": {
+     "nl": 220,
+     "de": 228,
+     "fr": 211,
+     "uk": 217,
+     "ca": 360,
+     "au": 399,
+     "us": 280
+    }
    }
   ],
   "case": {
    "part": "Case",
-   "eur": 60
+   "eur": 60,
+   "key": "case",
+   "by": {
+    "nl": 60,
+    "de": 60,
+    "fr": 67,
+    "uk": 50,
+    "ca": 85,
+    "au": 89,
+    "us": 44
+   }
   },
+  "regions": [
+   {
+    "key": "nl",
+    "cur": "EUR"
+   },
+   {
+    "key": "de",
+    "cur": "EUR"
+   },
+   {
+    "key": "fr",
+    "cur": "EUR"
+   },
+   {
+    "key": "uk",
+    "cur": "GBP"
+   },
+   {
+    "key": "ca",
+    "cur": "CAD"
+   },
+   {
+    "key": "au",
+    "cur": "AUD"
+   },
+   {
+    "key": "us",
+    "cur": "USD"
+   }
+  ],
   "blend_cpu": {
    "1080p": 0.55,
    "1440p": 0.35,

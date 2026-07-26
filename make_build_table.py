@@ -25,6 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CARD = os.path.join(HERE, 'tierlist_card_build.html')
 SPECS_CSV = os.path.join(HERE, 'build_specs.csv')
 PRICES_CSV = os.path.join(HERE, 'build_prices.csv')
+REGIONS_CSV = os.path.join(HERE, 'build_prices_regions.csv')
 # public/ is copied verbatim into dist/, so writing here publishes it at /builds.json
 JSON_OUT = os.path.join(HERE, 'public', 'builds.json')
 BEGIN, END = '// <<< BUILDS', '// >>> BUILDS'
@@ -437,7 +438,15 @@ def main():
     _, post = rest.split(END, 1)
     open(CARD, 'w', encoding='utf-8').write(pre + BEGIN + '\n' + block + '\n' + END + post)
 
-    catalogue = build_catalogue(prices, cpu_idx, prices_by_res, cpu_cov, gpu_cov)
+    region_list, regs = load_regions()
+    # build_prices.csv IS the Netherlands price list, so anything it prices is priced in
+    # nl by definition. Seeding that here keeps the canonical region complete and means
+    # only the other six ever need a fallback.
+    if any(r['key'] == 'nl' for r in region_list):
+        for part, eur in prices.items():
+            regs.setdefault(part, {}).setdefault('nl', eur)
+    catalogue = build_catalogue(prices, cpu_idx, prices_by_res, cpu_cov, gpu_cov,
+                                regs, region_list)
     write_json(builds, skipped, prices, price_src, priced_on, catalogue)
 
     print('wrote %d builds (+ %d CPUs / %d GPUs for the generator) into %s and %s'
@@ -451,14 +460,76 @@ def main():
         print('no warnings — every part priced, indexed and socket-consistent')
 
 
-def named(prices, key):
-    """A composed part as the page shows it: {part, eur}, or None if unpriced."""
+def load_regions():
+    """build_prices_regions.csv -> ([{key,cur,label}], {part: {region: eur}}).
+
+    Feeds the generator's region selector and nothing else — build_prices.csv remains
+    the canonical EUR/NL file the site and cards are built from. A blank cell means that
+    region has no price for that part, which is carried through as a genuine absence: the
+    generator will not offer the part there rather than borrowing a Dutch figure.
+    """
+    if not os.path.exists(REGIONS_CSV):
+        warn('no build_prices_regions.csv — the generator will be single-region')
+        return [], {}
+    rows = read_csv(REGIONS_CSV)
+    if not rows:
+        return [], {}
+    cols = [c for c in rows[0].keys() if c and c != 'part' and c != 'flags']
+    regions = []
+    for c in cols:                       # "nl_eur" -> key nl, currency EUR
+        key, _, cur = c.partition('_')
+        regions.append({'key': key, 'cur': cur.upper(), 'col': c})
+    by_part = {}
+    for r in rows:
+        part = (r.get('part') or '').strip()
+        if not part:
+            continue
+        vals = {}
+        for reg in regions:
+            raw = (r.get(reg['col']) or '').strip()
+            if not raw:
+                continue
+            try:
+                vals[reg['key']] = int(round(float(raw)))
+            except ValueError:
+                warn('regions: %r has a non-numeric price for %s' % (part, reg['key']))
+        by_part[part] = vals
+    return [{'key': r['key'], 'cur': r['cur']} for r in regions], by_part
+
+
+def named(prices, key, regs=None):
+    """A composed part as the page shows it: {part, eur, by}, or None if unpriced.
+
+    `by` is the price per region for the generator's region selector. A board or cooler
+    that a region never priced simply has no entry there — see fill_region() for the one
+    documented exception.
+    """
     if key is None or key not in prices:
         return None
-    return {'part': PART_LABEL.get(key, key), 'eur': prices[key]}
+    out = {'part': PART_LABEL.get(key, key), 'eur': prices[key], 'key': key}
+    if regs is not None:
+        out['by'] = dict(regs.get(key, {}))
+    return out
 
 
-def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov):
+def fill_region(entry, regs, fallback_key):
+    """Where a region never priced the upper-tier board, fall back to the standard one
+    for that socket rather than dropping every build that wants it.
+
+    Only two chips ask for a "_great" board and only NL ever priced one, so without this
+    a 9800X3D could not be built in any other country -- a hole big enough to be worse
+    than the approximation, which is why the entry records that it happened."""
+    if not entry or not fallback_key:
+        return entry
+    base = regs.get(fallback_key, {})
+    for reg, val in base.items():
+        if reg not in entry.get('by', {}):
+            entry.setdefault('by', {})[reg] = val
+            entry.setdefault('approx_in', []).append(reg)
+    return entry
+
+
+def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov, regs, region_list):
     """Every part the budget generator may pick, with its platform costs resolved.
 
     The rules are applied here rather than in the browser so there is exactly one
@@ -475,7 +546,7 @@ def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov):
         if part in GEN_EXCLUDE:
             continue
         socket = CPU_SPECS.get(key, {}).get('socket')
-        cooler = named(prices, cooler_for(part))
+        cooler = named(prices, cooler_for(part), regs)
         if socket is None or cooler is None:
             warn('generator skips %r: no socket or no cooler price' % part)
             continue
@@ -485,7 +556,9 @@ def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov):
             want = SOCKET_MEM.get(socket, None)
             if want and want != kind:
                 continue                    # the socket cannot take this memory at all
-            board = named(prices, mb_for(part, socket, mem))
+            board = named(prices, mb_for(part, socket, mem), regs)
+            if board and board['key'].endswith('_great'):
+                board = fill_region(board, regs, board['key'][:-len('_great')])
             if board is None:
                 continue
             if socket == 'LGA1700' and kind == 'DDR4':
@@ -504,7 +577,8 @@ def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov):
             continue
 
         cpus.append({'part': part, 'vendor': CPU_VENDOR.get(key), 'socket': socket,
-                     'eur': prices[part], 'cov': cpu_cov.get(key, 0),
+                     'eur': prices[part], 'by': regs.get(part, {}),
+                     'cov': cpu_cov.get(key, 0),
                      'idx': {k: rnd(v) for k, v in idx.items()}, 'derived': derived,
                      'cooler': cooler, 'mobo': mobo})
 
@@ -523,25 +597,28 @@ def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov):
                 idx[res] = rnd(v)
         if not idx:
             continue                        # not a GPU, or one we cannot place
-        psu = named(prices, psu_for(part))
+        psu = named(prices, psu_for(part), regs)
         if psu is None:
             warn('generator skips %r: no PSU price for its class' % part)
             continue
         gpus.append({'part': part, 'vendor': GPU_VENDOR.get(part), 'eur': prices[part],
-                     'cov': gpu_cov.get(part, 0), 'idx': idx, 'derived': derived,
+                     'by': regs.get(part, {}), 'cov': gpu_cov.get(part, 0), 'idx': idx, 'derived': derived,
                      'vram': GPU_SPECS.get(part, {}).get('vram') or VRAM_EXTRA.get(part),
                      'psu': psu})
 
-    memory = [{'part': m, 'kind': k, 'eur': prices[m], 'min': mn}
+    memory = [{'part': m, 'kind': k, 'eur': prices[m], 'min': mn,
+                'by': regs.get(m, {})}
               for m, k, mn in GEN_MEMORY if m in prices]
-    storage = [{'part': s, 'eur': prices[s]} for s in GEN_STORAGE if s in prices]
+    storage = [{'part': s, 'eur': prices[s], 'by': regs.get(s, {})}
+               for s in GEN_STORAGE if s in prices]
     for want, got in (('memory', memory), ('storage', storage)):
         if not got:
             warn('generator has no %s priced — it cannot compose a build' % want)
 
     return {
         'cpus': cpus, 'gpus': gpus, 'memory': memory, 'storage': storage,
-        'case': named(prices, 'case'),
+        'case': named(prices, 'case', regs),
+        'regions': region_list,
         'blend_cpu': BLEND_CPU,
         'excluded': [{'part': p, 'why': w} for p, w in sorted(GEN_EXCLUDE.items())],
     }

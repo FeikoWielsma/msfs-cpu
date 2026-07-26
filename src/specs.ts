@@ -51,13 +51,15 @@ type NotPicked = {
 
 type Price = { part: string; eur: number; src: string };
 
-type Named = { part: string; eur: number };
+type Named = { part: string; eur: number; by?: Record<string, number>;
+               approx_in?: string[] };
 
 type CatCpu = {
   part: string;
   vendor: string | null;
   socket: string;
   eur: number;
+  by?: Record<string, number>;
   cov: number;
   idx: Record<string, number>;        // by memory kind: DDR4 / DDR5
   derived: Record<string, boolean>;
@@ -69,6 +71,7 @@ type CatGpu = {
   part: string;
   vendor: string | null;
   eur: number;
+  by?: Record<string, number>;
   cov: number;
   idx: Record<string, number>;        // by resolution
   derived: boolean;
@@ -79,9 +82,11 @@ type CatGpu = {
 type Catalogue = {
   cpus: CatCpu[];
   gpus: CatGpu[];
-  memory: { part: string; kind: string; eur: number; min?: boolean }[];
+  memory: { part: string; kind: string; eur: number; min?: boolean;
+            by?: Record<string, number> }[];
   storage: Named[];
   case: Named | null;
+  regions?: { key: string; cur: string }[];
   blend_cpu: Record<string, number>;
   excluded: { part: string; why: string }[];
 };
@@ -162,6 +167,29 @@ let res = "1440p";
 
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector<T>(sel);
 const eur = (n: number) => "€" + n.toLocaleString("en-US");
+
+/** What a part costs in the generator's selected region, or null if that region never
+ *  priced it — in which case nothing containing it can be offered there. build_prices.csv
+ *  is the Dutch list, so `nl` is always present and the other six may have holes. */
+const at = (p: { eur: number; by?: Record<string, number> } | null | undefined,
+            region: string): number | null => {
+  if (!p) return null;
+  if (!p.by) return region === "nl" ? p.eur : null;
+  const v = p.by[region];
+  return v === undefined ? null : v;
+};
+
+const REGION_NAME: Record<string, string> = {
+  nl: "Netherlands", de: "Germany", fr: "France", uk: "United Kingdom",
+  ca: "Canada", au: "Australia", us: "United States",
+};
+const CUR_SYM: Record<string, string> = { EUR: "€", GBP: "£", CAD: "CA$", AUD: "A$", USD: "$" };
+/** Money in the region's own currency. Never converted: these are seven separate price
+ *  lists, and an exchange rate would invent a number none of them quoted. */
+function money(n: number, region: string): string {
+  const cur = (DOC?.catalogue.regions || []).find(r => r.key === region)?.cur || "EUR";
+  return (CUR_SYM[cur] || cur + " ") + Math.round(n).toLocaleString("en-US");
+}
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -347,6 +375,7 @@ const VENDOR_CLASS: Record<string, string> = {
 };
 
 type GenState = {
+  region: string;
   budget: number;
   cpu: Set<string>;
   gpu: Set<string>;
@@ -362,9 +391,14 @@ type Cand = {
   ci: number;
   gi: number;
   cd: boolean;
+  memEur: number;
+  boardEur: number;
+  cpuEur: number;
+  gpuEur: number;
 };
 
 const gen: GenState = {
+  region: "nl",
   budget: 1500,
   cpu: new Set(CPU_VENDORS),
   gpu: new Set(GPU_VENDORS),
@@ -388,9 +422,16 @@ function candidates(doc: Doc, atRes: string, st: GenState): Cand[] {
     ? C.storage.reduce((a, b) => (b.eur < a.eur ? b : a)) : null;
   if (w === undefined || !store || !C.case) return [];
 
+  const R = st.region;
+  const caseEur = at(C.case, R), storeEur = at(store, R);
+  if (caseEur === null || storeEur === null) return [];
+
   const out: Cand[] = [];
   for (const cpu of C.cpus) {
     if (!cpu.vendor || !st.cpu.has(cpu.vendor)) continue;
+    const cpuEur = at(cpu, R);
+    const coolerEur = at(cpu.cooler, R);
+    if (cpuEur === null || coolerEur === null) continue;   // not sold here, or not priced
     for (const mem of C.memory) {
       // 16 GB kits are minimum-spec only. Capacity is not scored — nothing in the index
       // knows how much memory a build has — so as an ordinary option the cheapest kit
@@ -399,19 +440,23 @@ function candidates(doc: Doc, atRes: string, st: GenState): Cand[] {
       const ci = cpu.idx[mem.kind];
       const board = cpu.mobo[mem.kind];
       if (ci === undefined || !board) continue;      // socket cannot take this memory
-      const platform = cpu.eur + mem.eur + board.eur + cpu.cooler.eur
-        + C.case.eur + store.eur;
+      const memEur = at(mem, R), boardEur = at(board, R);
+      if (memEur === null || boardEur === null) continue;
+      const platform = cpuEur + memEur + boardEur + coolerEur + caseEur + storeEur;
       for (const gpu of C.gpus) {
         if (!gpu.vendor || !st.gpu.has(gpu.vendor)) continue;
         if (!vramOk(gpu, atRes, st.allow8)) continue;
         const gi = gpu.idx[atRes];
         if (gi === undefined) continue;
+        const gpuEur = at(gpu, R), psuEur = at(gpu.psu, R);
+        if (gpuEur === null || psuEur === null) continue;
         out.push({
           // weighted geometric mean: an unbalanced build is punished rather than
           // averaged out, which an arithmetic mean would not do
           score: Math.pow(ci, w) * Math.pow(gi, 1 - w),
-          eur: platform + gpu.eur + gpu.psu.eur,
+          eur: platform + gpuEur + psuEur,
           cpu, gpu, mem, ci, gi, cd: !!cpu.derived[mem.kind],
+          memEur, boardEur, cpuEur, gpuEur,
         });
       }
     }
@@ -463,25 +508,30 @@ function generate(doc: Doc, atRes: string, st: GenState): GenResult {
   // Leftover first buys its way back off minimum spec. "Minimum" means the generator may
   // drop to 16 GB when the budget demands it, not that it should leave 16 GB in a machine
   // that can afford 32 — and since capacity is not scored, only the money can decide.
-  let total = best.eur, mem = best.mem;
+  const R = st.region;
+  let total = best.eur, mem = best.mem, memEur = best.memEur;
   if (mem.min) {
     const full = C.memory
-      .filter(m => !m.min && m.kind === mem.kind && m.eur > mem.eur)
-      .sort((a, b) => a.eur - b.eur)[0];
-    if (full && total + (full.eur - mem.eur) <= st.budget) {
-      total += full.eur - mem.eur;
-      mem = full;
+      .map(m => ({ m, p: at(m, R) }))
+      .filter(x => !x.m.min && x.m.kind === mem.kind && x.p !== null && x.p > memEur)
+      .sort((a, b) => (a.p as number) - (b.p as number))[0];
+    if (full && total + ((full.p as number) - memEur) <= st.budget) {
+      total += (full.p as number) - memEur;
+      mem = full.m;
+      memEur = full.p as number;
     }
   }
 
   // Then storage. It buys no frames — it is simply the only thing left on the list that
   // money improves, so the build uses the budget rather than banking it.
-  const small = C.storage.reduce((a, b) => (b.eur < a.eur ? b : a));
-  const large = C.storage.reduce((a, b) => (b.eur > a.eur ? b : a));
-  let sto = small;
-  if (large !== small && total + (large.eur - small.eur) <= st.budget) {
-    total += large.eur - small.eur;
-    sto = large;
+  const priced = C.storage.map(x => ({ x, p: at(x, R) }))
+    .filter(y => y.p !== null) as { x: Named; p: number }[];
+  const small = priced.reduce((a, b) => (b.p < a.p ? b : a));
+  const large = priced.reduce((a, b) => (b.p > a.p ? b : a));
+  let sto = small.x, stoEur = small.p;
+  if (large.x !== small.x && total + (large.p - small.p) <= st.budget) {
+    total += large.p - small.p;
+    sto = large.x; stoEur = large.p;
   }
 
   // The next real step up, re-picked at its own price so the step is itself balanced
@@ -505,15 +555,15 @@ function generate(doc: Doc, atRes: string, st: GenState): GenResult {
 
   const board = best.cpu.mobo[best.mem.kind];
   const items: Item[] = [
-    { slot: "CPU", part: best.cpu.part, eur: best.cpu.eur, src: null },
-    { slot: "GPU", part: best.gpu.part, eur: best.gpu.eur, src: null },
-    { slot: "Memory", part: mem.part, eur: mem.eur, src: null },
-    { slot: "Storage", part: sto.part, eur: sto.eur, src: null },
-    { slot: "Motherboard", part: board.part, eur: board.eur, src: null },
-    { slot: "Power supply", part: best.gpu.psu.part, eur: best.gpu.psu.eur, src: null },
-    { slot: "CPU cooler", part: best.cpu.cooler.part, eur: best.cpu.cooler.eur, src: null },
+    { slot: "CPU", part: best.cpu.part, eur: best.cpuEur, src: null },
+    { slot: "GPU", part: best.gpu.part, eur: best.gpuEur, src: null },
+    { slot: "Memory", part: mem.part, eur: memEur, src: null },
+    { slot: "Storage", part: sto.part, eur: stoEur, src: null },
+    { slot: "Motherboard", part: board.part, eur: best.boardEur, src: null },
+    { slot: "Power supply", part: best.gpu.psu.part, eur: at(best.gpu.psu, R), src: null },
+    { slot: "CPU cooler", part: best.cpu.cooler.part, eur: at(best.cpu.cooler, R), src: null },
   ];
-  if (C.case) items.push({ slot: "Case", part: C.case.part, eur: C.case.eur, src: null });
+  if (C.case) items.push({ slot: "Case", part: C.case.part, eur: at(C.case, R), src: null });
 
   return { ok: true, best, total, sto, mem, items, next,
            headroom: st.budget - total, lopsided };
@@ -560,19 +610,20 @@ function genCard(r: Extract<GenResult, { ok: true }>): string {
       </span>
     </div>`).join("");
 
+  const m = (n: number) => money(n, gen.region);
   const bom = r.items.map(i => `
     <tr><th>${esc(i.slot)}</th><td>${esc(i.part)}</td>
-      <td class="num">${i.eur === null ? "—" : eur(i.eur)}</td></tr>`).join("");
+      <td class="num">${i.eur === null ? "—" : m(i.eur)}</td></tr>`).join("");
 
   const notes: string[] = [];
   if (r.headroom >= 40) {
     notes.push(r.next
-      ? `<b>${eur(r.headroom)} left over.</b> Nothing between here and
-         <b>${eur(r.next.eur)}</b> improves on it — that is where the next real step is.`
-      : `<b>${eur(r.headroom)} left over.</b> Nothing in the list improves on this build
+      ? `<b>${m(r.headroom)} left over.</b> Nothing between here and
+         <b>${m(r.next.eur)}</b> improves on it — that is where the next real step is.`
+      : `<b>${m(r.headroom)} left over.</b> Nothing in the list improves on this build
          at this resolution, at any price. Spend it on a monitor, a yoke or a headset.`);
   } else if (r.next) {
-    notes.push(`<b>${eur(r.next.eur - r.total)} more</b> would reach a
+    notes.push(`<b>${m(r.next.eur - r.total)} more</b> would reach a
       ${esc(r.next.cpu.part)} with a ${esc(r.next.gpu.part)} —
       ${Math.round(r.next.score - r.best.score)} points better.`);
   }
@@ -584,14 +635,14 @@ function genCard(r: Extract<GenResult, { ok: true }>): string {
         <span class="ven">Best build${b.cpu.vendor && b.gpu.vendor
           && b.cpu.vendor !== b.gpu.vendor ? ` · ${esc(b.cpu.vendor)} + ${esc(b.gpu.vendor)}`
           : b.cpu.vendor ? ` · ${esc(b.cpu.vendor)}` : ``}</span>
-        <span class="total">${eur(r.total)}</span>
+        <span class="total">${m(r.total)}</span>
       </div>
       ${body}
       <details class="bom" open>
         <summary>Full parts list</summary>
         <table>${bom}
           <tr class="sum"><th></th><td>Complete build</td>
-            <td class="num">${eur(r.total)}</td></tr>
+            <td class="num">${m(r.total)}</td></tr>
         </table>
       </details>
       ${notes.length ? `<div class="gen-notes">${notes.map(n => `<p>${n}</p>`).join("")}</div>` : ""}
@@ -611,8 +662,8 @@ function runGenerator(): void {
         ? `Every card from those vendors is under <b>16 GB</b>, which this page only
            allows at 1080p — above it a thin card falls off a cliff rather than
            degrading. Add another GPU vendor, or drop to 1080p.`
-        : `Nothing sensible fits ${eur(gen.budget)} at <b>${esc(res)}</b>. The cheapest
-           complete build here is <b>${eur(r.floor)}</b>${res === "1080p" && !gen.allow8
+        : `Nothing sensible fits ${money(gen.budget, gen.region)} at <b>${esc(res)}</b>. The cheapest
+           complete build here is <b>${money(r.floor, gen.region)}</b>${res === "1080p" && !gen.allow8
              ? `, or less with 8 GB cards allowed` : ``}.`;
     host.innerHTML = `<p class="gen-fail">${msg}</p>`;
     return;
@@ -631,6 +682,7 @@ function runGenerator(): void {
  *  stays in the hash, where it already was. */
 function syncGenUrl(): void {
   const p = new URLSearchParams();
+  if (gen.region !== "nl") p.set("region", gen.region);
   p.set("budget", String(gen.budget));
   if (gen.cpu.size !== CPU_VENDORS.length) p.set("cpu", [...gen.cpu].join(","));
   if (gen.gpu.size !== GPU_VENDORS.length) p.set("gpu", [...gen.gpu].join(","));
@@ -640,6 +692,8 @@ function syncGenUrl(): void {
 
 function readGenUrl(): void {
   const p = new URLSearchParams(location.search);
+  const reg = (p.get("region") || "").toLowerCase();
+  if (reg && (DOC?.catalogue.regions || []).some(r => r.key === reg)) gen.region = reg;
   const b = Number(p.get("budget"));
   if (Number.isFinite(b) && b > 0) gen.budget = Math.round(b);
   for (const [key, all, set] of [
@@ -661,19 +715,33 @@ function wireGenerator(): void {
   const allow8 = $<HTMLInputElement>("#genAllow8");
 
   // Slider bounds come from the parts bin, not from a guess: the floor is the cheapest
-  // complete build anyone could compose, the ceiling the dearest.
-  const all = candidates(DOC, "1080p",
-    { budget: Infinity, cpu: new Set(CPU_VENDORS), gpu: new Set(GPU_VENDORS), allow8: true });
-  if (all.length && range) {
-    const lo = Math.floor(Math.min(...all.map(c => c.eur)) / 50) * 50;
-    const hi = Math.ceil(Math.max(...all.map(c => c.eur)) / 100) * 100;
-    range.min = String(lo);
-    range.max = String(hi);
+  // complete build anyone could compose in that country, the ceiling the dearest. They
+  // are recomputed per region because a Canadian floor is not a Dutch one.
+  const bounds = () => {
+    if (!DOC) return { lo: 1000, hi: 6000 };
+    const all = candidates(DOC, "1080p", { region: gen.region, budget: Infinity,
+      cpu: new Set(CPU_VENDORS), gpu: new Set(GPU_VENDORS), allow8: true });
+    if (!all.length) return { lo: 1000, hi: 6000 };
+    return { lo: Math.floor(Math.min(...all.map(c => c.eur)) / 50) * 50,
+             hi: Math.ceil(Math.max(...all.map(c => c.eur)) / 100) * 100 };
+  };
+  const applyBounds = () => {
+    const { lo, hi } = bounds();
+    if (range) { range.min = String(lo); range.max = String(hi); }
     gen.budget = Math.min(Math.max(gen.budget, lo), hi);
-  }
-  if (num) num.value = String(gen.budget);
-  if (range) range.value = String(gen.budget);
+    if (num) num.value = String(gen.budget);
+    if (range) range.value = String(gen.budget);
+  };
+  applyBounds();
   if (allow8) allow8.checked = gen.allow8;
+
+  const curEl = $(".budget-row .cur");
+  const showCur = () => {
+    if (!curEl) return;
+    const cur = (DOC?.catalogue.regions || []).find(r => r.key === gen.region)?.cur || "EUR";
+    curEl.textContent = CUR_SYM[cur] || cur;
+  };
+  showCur();
 
   const setBudget = (v: number, echo: HTMLInputElement | null) => {
     if (!Number.isFinite(v)) return;
@@ -693,6 +761,30 @@ function wireGenerator(): void {
     syncGenUrl();
     runGenerator();
   });
+
+  const regionSel = $<HTMLSelectElement>("#genRegion");
+  const regions = DOC.catalogue.regions || [];
+  if (regionSel && regions.length) {
+    regionSel.innerHTML = regions.map(r =>
+      `<option value="${r.key}">${REGION_NAME[r.key] || r.key} · ${r.cur}</option>`).join("");
+    if (!regions.some(r => r.key === gen.region)) gen.region = regions[0].key;
+    regionSel.value = gen.region;
+    regionSel.addEventListener("change", () => {
+      gen.region = regionSel.value;
+      // budgets are not comparable across countries -- these are seven price lists in
+      // their own currencies, never converted -- so the slider is rescaled to the new
+      // one and the budget kept in proportion rather than carried over as a number.
+      const before = bounds();
+      const frac = before.hi > before.lo
+        ? (gen.budget - before.lo) / (before.hi - before.lo) : 0.5;
+      const after = bounds();
+      gen.budget = Math.round((after.lo + frac * (after.hi - after.lo)) / 50) * 50;
+      applyBounds();
+      showCur();
+      syncGenUrl();
+      runGenerator();
+    });
+  }
 
   vendorChips($("#genCpu"), CPU_VENDORS, gen.cpu);
   vendorChips($("#genGpu"), GPU_VENDORS, gen.gpu);
