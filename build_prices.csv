@@ -13,27 +13,41 @@
 part,eur,src
 priced_on,2026-07-26,
 # --- CPUs
-Ryzen 7 9800X3D,399,tweakers
-Ryzen 7 7800X3D,324,tweakers
-Ryzen 7 5800X3D,358,tweakers
-Ryzen 5 9600X,161,tweakers
-Ryzen 5 7600X,150,tweakers
-Ryzen 5 7500X3D,209,tweakers
-Ryzen 5 7500F,130,tweakers
-Ryzen 5 5600,131,tweakers
-Ryzen 5 5600X,146,tweakers
+Ryzen 7 9800X3D,399,pcpp
+Ryzen 7 7800X3D,299,pcpp
+Ryzen 7 5800X3D,358,pcpp
+Ryzen 5 9600X,183,pcpp
+Ryzen 5 7600X,153,pcpp
+Ryzen 5 7500X3D,219,pcpp
+Ryzen 5 7500F,133,pcpp
+Ryzen 5 5600,135,pcpp
+Ryzen 5 5600X,156,pcpp
+Ryzen 5 5600XT,159,pcpp
 # AliExpress-only Chinese-market SKU. Priced for reference but not used in the matrix:
 # no benchmark set covers it, so it would carry no index chip.
 Ryzen 5 5500X3D,150,aliexpress
-Core Ultra 9 285K,549,tweakers
-Core Ultra 7 270K Plus,314,tweakers
-Core Ultra 5 250K Plus,219,tweakers
-Core i7-14700K,392,tweakers
-Core i5-14600K,229,tweakers
-Core i5-12400F,145,tweakers
+Core Ultra 9 285K,551,pcpp
+Core Ultra 7 270K Plus,325,pcpp
+Core Ultra 5 250K Plus,227,pcpp
+Core i7-14700K,398,pcpp
+Core i5-14600K,236,pcpp
+Core i5-12400F,150,pcpp
 # Priced as the KF; identical silicon to the 12600K with the iGPU fused off, which is
 # how it resolves to an index. See CPU_ALIAS in make_build_table.py.
-Core i5-12600KF,170,tweakers
+Core i5-12600KF,185,pcpp
+# Cheap end, captured 2026-07-26. These exist so the generator can reach a genuinely
+# low budget: a 14100F is both cheaper AND faster than the 5600 that used to be the
+# floor, and a 225F scores 75 for 149. Only CPUs with a measured index can appear --
+# a 12100F or a 5500 is on PCPP but was never benchmarked, so it cannot be placed.
+Core i3-14100F,107,pcpp
+Core i5-13400F,180,pcpp
+Core i5-14400F,175,pcpp
+Core i5-12600K,219,pcpp
+Core Ultra 5 225F,149,pcpp
+Core Ultra 5 245K,186,pcpp
+Ryzen 7 5700X,209,pcpp
+Ryzen 7 7700X,214,pcpp
+Ryzen 7 7700X3D,349,pcpp
 # --- GPUs. Radeon is markedly better value at every tier at these prices; the 9070 XT
 # at 669 is both cheaper and faster than a 5070 Ti at 949.
 RX 9070 XT,699,pcpp

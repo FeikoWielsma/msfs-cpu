@@ -79,7 +79,7 @@ type CatGpu = {
 type Catalogue = {
   cpus: CatCpu[];
   gpus: CatGpu[];
-  memory: { part: string; kind: string; eur: number }[];
+  memory: { part: string; kind: string; eur: number; min?: boolean }[];
   storage: Named[];
   case: Named | null;
   blend_cpu: Record<string, number>;
@@ -358,7 +358,7 @@ type Cand = {
   eur: number;
   cpu: CatCpu;
   gpu: CatGpu;
-  mem: { part: string; kind: string; eur: number };
+  mem: { part: string; kind: string; eur: number; min?: boolean };
   ci: number;
   gi: number;
   cd: boolean;
@@ -392,6 +392,10 @@ function candidates(doc: Doc, atRes: string, st: GenState): Cand[] {
   for (const cpu of C.cpus) {
     if (!cpu.vendor || !st.cpu.has(cpu.vendor)) continue;
     for (const mem of C.memory) {
+      // 16 GB kits are minimum-spec only. Capacity is not scored — nothing in the index
+      // knows how much memory a build has — so as an ordinary option the cheapest kit
+      // would win every build, and a €5,000 machine would come back with 16 GB.
+      if (mem.min && !st.allow8) continue;
       const ci = cpu.idx[mem.kind];
       const board = cpu.mobo[mem.kind];
       if (ci === undefined || !board) continue;      // socket cannot take this memory
@@ -434,7 +438,8 @@ type GenResult =
   | { ok: false; reason: "vendors" }
   | { ok: false; reason: "vram" }
   | { ok: false; reason: "budget"; floor: number }
-  | { ok: true; best: Cand; total: number; sto: Named; items: Item[];
+  | { ok: true; best: Cand; total: number; sto: Named; mem: { part: string; eur: number };
+      items: Item[];
       next: Cand | null; headroom: number; lopsided: string | null };
 
 function generate(doc: Doc, atRes: string, st: GenState): GenResult {
@@ -455,11 +460,25 @@ function generate(doc: Doc, atRes: string, st: GenState): GenResult {
              floor: Math.min(...cands.map(c => c.eur)) };
   }
 
-  // Leftover goes on storage. It buys no frames — it is simply the only thing left on
-  // the list that money improves, so the build uses the budget rather than banking it.
+  // Leftover first buys its way back off minimum spec. "Minimum" means the generator may
+  // drop to 16 GB when the budget demands it, not that it should leave 16 GB in a machine
+  // that can afford 32 — and since capacity is not scored, only the money can decide.
+  let total = best.eur, mem = best.mem;
+  if (mem.min) {
+    const full = C.memory
+      .filter(m => !m.min && m.kind === mem.kind && m.eur > mem.eur)
+      .sort((a, b) => a.eur - b.eur)[0];
+    if (full && total + (full.eur - mem.eur) <= st.budget) {
+      total += full.eur - mem.eur;
+      mem = full;
+    }
+  }
+
+  // Then storage. It buys no frames — it is simply the only thing left on the list that
+  // money improves, so the build uses the budget rather than banking it.
   const small = C.storage.reduce((a, b) => (b.eur < a.eur ? b : a));
   const large = C.storage.reduce((a, b) => (b.eur > a.eur ? b : a));
-  let total = best.eur, sto = small;
+  let sto = small;
   if (large !== small && total + (large.eur - small.eur) <= st.budget) {
     total += large.eur - small.eur;
     sto = large;
@@ -488,7 +507,7 @@ function generate(doc: Doc, atRes: string, st: GenState): GenResult {
   const items: Item[] = [
     { slot: "CPU", part: best.cpu.part, eur: best.cpu.eur, src: null },
     { slot: "GPU", part: best.gpu.part, eur: best.gpu.eur, src: null },
-    { slot: "Memory", part: best.mem.part, eur: best.mem.eur, src: null },
+    { slot: "Memory", part: mem.part, eur: mem.eur, src: null },
     { slot: "Storage", part: sto.part, eur: sto.eur, src: null },
     { slot: "Motherboard", part: board.part, eur: board.eur, src: null },
     { slot: "Power supply", part: best.gpu.psu.part, eur: best.gpu.psu.eur, src: null },
@@ -496,7 +515,7 @@ function generate(doc: Doc, atRes: string, st: GenState): GenResult {
   ];
   if (C.case) items.push({ slot: "Case", part: C.case.part, eur: C.case.eur, src: null });
 
-  return { ok: true, best, total, sto, items, next,
+  return { ok: true, best, total, sto, mem, items, next,
            headroom: st.budget - total, lopsided };
 }
 
@@ -529,7 +548,7 @@ function genCard(r: Extract<GenResult, { ok: true }>): string {
       extra: chip(b.ci, "c", b.cd, b.cpu.cov), sub: b.cpu.socket },
     { label: "GPU", value: b.gpu.part, tint: VENDOR_CLASS[b.gpu.vendor || ""] || "",
       extra: vramTag(b.gpu.vram) + chip(b.gi, "g", b.gpu.derived, b.gpu.cov), sub: "" },
-    { label: "Memory", value: b.mem.part, tint: "", extra: "", sub: "" },
+    { label: "Memory", value: r.mem.part, tint: "", extra: "", sub: "" },
     { label: "Storage", value: r.sto.part, tint: "", extra: "", sub: "" },
   ];
   const body = rows.map(row => `

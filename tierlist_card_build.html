@@ -178,11 +178,11 @@ h1 em{font-style:normal;color:var(--acc)}
     drags the RAM cost along. Nothing stops an Intel chip driving a Radeon card, and at
     these prices that is repeatedly the cheaper build: the DDR4 Intel platforms win most
     of the CPU rows while <b>Radeon wins nearly every GPU row</b>. Read across, not down.</p>
-    <p><b>The 14600K on DDR4 is the sleeper.</b> €229 plus a €229 DDR4 kit is a
-    <b>€458 platform against €618</b> for a 250K Plus on DDR5, for an index of 68 against
+    <p><b>The 14600K on DDR4 is the sleeper.</b> €236 plus a €229 DDR4 kit is a
+    <b>€465 platform against €626</b> for a 250K Plus on DDR5, for an index of 68 against
     77 — so it wins wherever the GPU is the limit, which is why it takes 1440p and 4K mid
     but not 1080p, where the CPU is. Intel's ladder is flat here in any case: a
-    <b>285K at €549 scores 78</b>, two points over a €219 250K Plus, so the flagship
+    <b>285K at €551 scores 78</b>, two points over a €227 250K Plus, so the flagship
     appears nowhere on this card. AMD's ladder is not flat — a 9800X3D reaches 97.</p>
     <p><b>1080p tops out deliberately low.</b> The GPU field compresses to a
     <b>5.5× spread</b> there and the CPU becomes the limit, so the 1080p high build pairs
@@ -221,44 +221,44 @@ const PRICED_ON = "2026-07-26";
 const BUILDS = {
 "1080p": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 5 5600", ci:51, cd:false, cbest:false, gpu:"RX 9060 XT 16GB", gi:63, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1168, approx:false },
-    { v:"nv", cpu:"Core i5-12400F", ci:55, cd:true, cbest:true, gpu:"RTX 5060", gi:47, gd:false, gbest:true, vram:8, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1065, approx:false }
+    { v:"amd", cpu:"Ryzen 5 5600", ci:51, cd:false, cbest:false, gpu:"RX 9060 XT 16GB", gi:63, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1172, approx:false },
+    { v:"nv", cpu:"Core i5-12400F", ci:55, cd:true, cbest:true, gpu:"RTX 5060", gi:47, gd:false, gbest:true, vram:8, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1070, approx:false }
   ],
   "mid": [
-    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, cd:false, cbest:false, gpu:"RX 9070", gi:90, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1748, approx:false },
-    { v:"nv", cpu:"Core i5-12600KF", ci:60, cd:true, cbest:true, gpu:"RTX 5070", gi:68, gd:false, gbest:false, vram:12, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1441, approx:false }
+    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, cd:false, cbest:false, gpu:"RX 9070", gi:90, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1723, approx:false },
+    { v:"nv", cpu:"Core i5-12600KF", ci:60, cd:true, cbest:true, gpu:"RTX 5070", gi:68, gd:false, gbest:false, vram:12, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1456, approx:false }
   ],
   "high": [
     { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, cd:false, cbest:true, gpu:"RX 9070", gi:90, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:1921, approx:false },
-    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, cd:false, cbest:false, gpu:"RTX 5070 Ti", gi:84, gd:false, gbest:false, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2209, approx:false }
+    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, cd:false, cbest:false, gpu:"RTX 5070 Ti", gi:84, gd:false, gbest:false, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2220, approx:false }
   ],
 },
 "1440p": {
   "entry": [
-    { v:"amd", cpu:"Ryzen 5 5600", ci:51, cd:false, cbest:false, gpu:"RX 9060 XT 16GB", gi:54, gd:false, gbest:true, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1168, approx:false },
-    { v:"nv", cpu:"Core i5-12400F", ci:55, cd:true, cbest:true, gpu:"RTX 5060 Ti 16GB", gi:49, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1356, approx:false }
+    { v:"amd", cpu:"Ryzen 5 5600", ci:51, cd:false, cbest:false, gpu:"RX 9060 XT 16GB", gi:54, gd:false, gbest:true, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1172, approx:false },
+    { v:"nv", cpu:"Core i5-12400F", ci:55, cd:true, cbest:true, gpu:"RTX 5060 Ti 16GB", gi:49, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1361, approx:false }
   ],
   "mid": [
-    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, cd:false, cbest:false, gpu:"RX 9070", gi:72, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1748, approx:false },
-    { v:"nv", cpu:"Core i5-14600K", ci:68, cd:true, cbest:true, gpu:"RTX 5070 Ti", gi:70, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1866, approx:false }
+    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, cd:false, cbest:false, gpu:"RX 9070", gi:72, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1723, approx:false },
+    { v:"nv", cpu:"Core i5-14600K", ci:68, cd:true, cbest:true, gpu:"RTX 5070 Ti", gi:70, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1873, approx:false }
   ],
   "high": [
     { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, cd:false, cbest:true, gpu:"RX 9070 XT", gi:81, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2031, approx:false },
-    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, cd:false, cbest:false, gpu:"RTX 5080", gi:76, gd:false, gbest:false, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2509, approx:false }
+    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, cd:false, cbest:false, gpu:"RTX 5080", gi:76, gd:false, gbest:false, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2520, approx:false }
   ],
 },
 "4K": {
   "entry": [
     { v:"amd", cpu:"Ryzen 7 5800X3D", ci:69, cd:false, cbest:false, gpu:"RX 9070", gi:56, gd:false, gbest:true, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1585, approx:false },
-    { v:"nv", cpu:"Core i5-12600KF", ci:60, cd:true, cbest:true, gpu:"RTX 5070 Ti", gi:57, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1771, approx:false }
+    { v:"nv", cpu:"Core i5-12600KF", ci:60, cd:true, cbest:true, gpu:"RTX 5070 Ti", gi:57, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:1786, approx:false }
   ],
   "mid": [
-    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, cd:false, cbest:false, gpu:"RX 9070 XT", gi:65, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1858, approx:false },
-    { v:"nv", cpu:"Core i5-14600K", ci:68, cd:true, cbest:true, gpu:"RTX 5080", gi:64, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:2166, approx:false }
+    { v:"amd", cpu:"Ryzen 7 7800X3D", ci:78, cd:false, cbest:false, gpu:"RX 9070 XT", gi:65, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"1TB NVMe", eur:1833, approx:false },
+    { v:"nv", cpu:"Core i5-14600K", ci:68, cd:true, cbest:true, gpu:"RTX 5080", gi:64, gd:false, gbest:false, vram:16, ram:"32GB DDR4-3200", sto:"1TB NVMe", eur:2173, approx:false }
   ],
   "high": [
     { v:"amd", cpu:"Ryzen 7 9800X3D", ci:97, cd:false, cbest:true, gpu:"RX 9070 XT", gi:65, gd:false, gbest:true, vram:16, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:2031, approx:false },
-    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, cd:false, cbest:false, gpu:"RTX 5090", gi:100, gd:false, gbest:false, vram:32, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:5490, approx:false }
+    { v:"nv", cpu:"Core Ultra 7 270K Plus", ci:78, cd:false, cbest:false, gpu:"RTX 5090", gi:100, gd:false, gbest:false, vram:32, ram:"32GB DDR5-6000", sto:"2TB NVMe", eur:5501, approx:false }
   ],
 },
 };

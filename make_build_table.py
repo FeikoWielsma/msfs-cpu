@@ -50,6 +50,9 @@ DERIVED_GPU = {
 # in msfs_index.py already treats the K and KF bins as equal.
 CPU_ALIAS = {
     'Core i5-12600KF': 'Core i5-12600K',
+    # Same silicon with the iGPU fused off, and the cheapest chip on the whole card that
+    # still carries a measured index — the reason the generator can reach a low budget.
+    'Core i3-14100F': 'Core i3-14100',
 }
 
 # LGA1700 chips are indexed on DDR5, so pairing one with DDR4 has to be discounted or
@@ -187,7 +190,13 @@ GEN_EXCLUDE = {
 # The only memory and storage the generator considers. Explicit rather than pattern-
 # matched, so a new kit in the CSV cannot silently become an option: 32 GB is what every
 # build on this page runs, and 64 GB currently costs more than a 9800X3D.
-GEN_MEMORY = [('32GB DDR4-3200', 'DDR4'), ('32GB DDR5-6000', 'DDR5')]
+# (part, memory kind, minimum-spec only). 32 GB is what every build on this page runs and
+# what the generator picks by default. The 16 GB kits are marked `min` because capacity is
+# not scored — nothing in the index knows how much memory a build has — so if they were
+# ordinary options the generator would put 16 GB in a €5,000 machine purely because it is
+# cheaper. They are offered only when you ask for a minimum-spec build.
+GEN_MEMORY = [('32GB DDR4-3200', 'DDR4', False), ('32GB DDR5-6000', 'DDR5', False),
+              ('2x8GB DDR4-3200', 'DDR4', True), ('2x8GB DDR5-6000', 'DDR5', True)]
 GEN_STORAGE = ['1TB NVMe', '2TB NVMe']
 
 # Which src values in build_prices.csv are a real price someone looked up, as opposed to
@@ -472,7 +481,7 @@ def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov):
             continue
 
         idx, derived, mobo = {}, {}, {}
-        for mem, kind in GEN_MEMORY:
+        for mem, kind, _min in GEN_MEMORY:
             want = SOCKET_MEM.get(socket, None)
             if want and want != kind:
                 continue                    # the socket cannot take this memory at all
@@ -523,8 +532,8 @@ def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov):
                      'vram': GPU_SPECS.get(part, {}).get('vram') or VRAM_EXTRA.get(part),
                      'psu': psu})
 
-    memory = [{'part': m, 'kind': k, 'eur': prices[m]}
-              for m, k in GEN_MEMORY if m in prices]
+    memory = [{'part': m, 'kind': k, 'eur': prices[m], 'min': mn}
+              for m, k, mn in GEN_MEMORY if m in prices]
     storage = [{'part': s, 'eur': prices[s]} for s in GEN_STORAGE if s in prices]
     for want, got in (('memory', memory), ('storage', storage)):
         if not got:

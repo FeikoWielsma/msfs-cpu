@@ -36,14 +36,14 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1168,
+   "eur": 1172,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 5 5600",
-     "eur": 131,
-     "src": "tweakers"
+     "eur": 135,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -107,14 +107,14 @@
    "vram": 8,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1065,
+   "eur": 1070,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-12400F",
-     "eur": 145,
-     "src": "tweakers"
+     "eur": 150,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -178,14 +178,14 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1748,
+   "eur": 1723,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 7800X3D",
-     "eur": 324,
-     "src": "tweakers"
+     "eur": 299,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -249,14 +249,14 @@
    "vram": 12,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1441,
+   "eur": 1456,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-12600KF",
-     "eur": 170,
-     "src": "tweakers"
+     "eur": 185,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -327,7 +327,7 @@
      "slot": "CPU",
      "part": "Ryzen 7 9800X3D",
      "eur": 399,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -391,14 +391,14 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2209,
+   "eur": 2220,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core Ultra 7 270K Plus",
-     "eur": 314,
-     "src": "tweakers"
+     "eur": 325,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -462,14 +462,14 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1168,
+   "eur": 1172,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 5 5600",
-     "eur": 131,
-     "src": "tweakers"
+     "eur": 135,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -533,14 +533,14 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1356,
+   "eur": 1361,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-12400F",
-     "eur": 145,
-     "src": "tweakers"
+     "eur": 150,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -604,14 +604,14 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1748,
+   "eur": 1723,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 7800X3D",
-     "eur": 324,
-     "src": "tweakers"
+     "eur": 299,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -675,14 +675,14 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1866,
+   "eur": 1873,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-14600K",
-     "eur": 229,
-     "src": "tweakers"
+     "eur": 236,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -753,7 +753,7 @@
      "slot": "CPU",
      "part": "Ryzen 7 9800X3D",
      "eur": 399,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -817,14 +817,14 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2509,
+   "eur": 2520,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core Ultra 7 270K Plus",
-     "eur": 314,
-     "src": "tweakers"
+     "eur": 325,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -895,7 +895,7 @@
      "slot": "CPU",
      "part": "Ryzen 7 5800X3D",
      "eur": 358,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -959,14 +959,14 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1771,
+   "eur": 1786,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-12600KF",
-     "eur": 170,
-     "src": "tweakers"
+     "eur": 185,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -1030,14 +1030,14 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1858,
+   "eur": 1833,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 7800X3D",
-     "eur": 324,
-     "src": "tweakers"
+     "eur": 299,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -1101,14 +1101,14 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 2166,
+   "eur": 2173,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-14600K",
-     "eur": 229,
-     "src": "tweakers"
+     "eur": 236,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -1179,7 +1179,7 @@
      "slot": "CPU",
      "part": "Ryzen 7 9800X3D",
      "eur": 399,
-     "src": "tweakers"
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -1243,14 +1243,14 @@
    "vram": 32,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 5490,
+   "eur": 5501,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core Ultra 7 270K Plus",
-     "eur": 314,
-     "src": "tweakers"
+     "eur": 325,
+     "src": "pcpp"
     },
     {
      "slot": "GPU",
@@ -1386,39 +1386,69 @@
    "src": "tweakers"
   },
   {
+   "part": "Core Ultra 5 225F",
+   "eur": 149,
+   "src": "pcpp"
+  },
+  {
+   "part": "Core Ultra 5 245K",
+   "eur": 186,
+   "src": "pcpp"
+  },
+  {
    "part": "Core Ultra 5 250K Plus",
-   "eur": 219,
-   "src": "tweakers"
+   "eur": 227,
+   "src": "pcpp"
   },
   {
    "part": "Core Ultra 7 270K Plus",
-   "eur": 314,
-   "src": "tweakers"
+   "eur": 325,
+   "src": "pcpp"
   },
   {
    "part": "Core Ultra 9 285K",
-   "eur": 549,
-   "src": "tweakers"
+   "eur": 551,
+   "src": "pcpp"
+  },
+  {
+   "part": "Core i3-14100F",
+   "eur": 107,
+   "src": "pcpp"
   },
   {
    "part": "Core i5-12400F",
-   "eur": 145,
-   "src": "tweakers"
+   "eur": 150,
+   "src": "pcpp"
+  },
+  {
+   "part": "Core i5-12600K",
+   "eur": 219,
+   "src": "pcpp"
   },
   {
    "part": "Core i5-12600KF",
-   "eur": 170,
-   "src": "tweakers"
+   "eur": 185,
+   "src": "pcpp"
+  },
+  {
+   "part": "Core i5-13400F",
+   "eur": 180,
+   "src": "pcpp"
+  },
+  {
+   "part": "Core i5-14400F",
+   "eur": 175,
+   "src": "pcpp"
   },
   {
    "part": "Core i5-14600K",
-   "eur": 229,
-   "src": "tweakers"
+   "eur": 236,
+   "src": "pcpp"
   },
   {
    "part": "Core i7-14700K",
-   "eur": 392,
-   "src": "tweakers"
+   "eur": 398,
+   "src": "pcpp"
   },
   {
    "part": "RTX 4080",
@@ -1532,48 +1562,68 @@
   },
   {
    "part": "Ryzen 5 5600",
-   "eur": 131,
-   "src": "tweakers"
+   "eur": 135,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 5 5600X",
-   "eur": 146,
-   "src": "tweakers"
+   "eur": 156,
+   "src": "pcpp"
+  },
+  {
+   "part": "Ryzen 5 5600XT",
+   "eur": 159,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 5 7500F",
-   "eur": 130,
-   "src": "tweakers"
+   "eur": 133,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 5 7500X3D",
-   "eur": 209,
-   "src": "tweakers"
+   "eur": 219,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 5 7600X",
-   "eur": 150,
-   "src": "tweakers"
+   "eur": 153,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 5 9600X",
-   "eur": 161,
-   "src": "tweakers"
+   "eur": 183,
+   "src": "pcpp"
+  },
+  {
+   "part": "Ryzen 7 5700X",
+   "eur": 209,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 7 5800X3D",
    "eur": 358,
-   "src": "tweakers"
+   "src": "pcpp"
+  },
+  {
+   "part": "Ryzen 7 7700X",
+   "eur": 214,
+   "src": "pcpp"
+  },
+  {
+   "part": "Ryzen 7 7700X3D",
+   "eur": 349,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 7 7800X3D",
-   "eur": 324,
-   "src": "tweakers"
+   "eur": 299,
+   "src": "pcpp"
   },
   {
    "part": "Ryzen 7 9800X3D",
    "eur": 399,
-   "src": "tweakers"
+   "src": "pcpp"
   },
   {
    "part": "case",
@@ -1664,10 +1714,56 @@
  "catalogue": {
   "cpus": [
    {
+    "part": "Core Ultra 5 225F",
+    "vendor": "Intel",
+    "socket": "LGA1851",
+    "eur": 149,
+    "cov": 1,
+    "idx": {
+     "DDR5": 75
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "LGA1851 motherboard",
+      "eur": 115
+     }
+    }
+   },
+   {
+    "part": "Core Ultra 5 245K",
+    "vendor": "Intel",
+    "socket": "LGA1851",
+    "eur": 186,
+    "cov": 4,
+    "idx": {
+     "DDR5": 75
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "LGA1851 motherboard",
+      "eur": 115
+     }
+    }
+   },
+   {
     "part": "Core Ultra 5 250K Plus",
     "vendor": "Intel",
     "socket": "LGA1851",
-    "eur": 219,
+    "eur": 227,
     "cov": 3,
     "idx": {
      "DDR5": 77
@@ -1690,7 +1786,7 @@
     "part": "Core Ultra 7 270K Plus",
     "vendor": "Intel",
     "socket": "LGA1851",
-    "eur": 314,
+    "eur": 325,
     "cov": 3,
     "idx": {
      "DDR5": 78
@@ -1713,7 +1809,7 @@
     "part": "Core Ultra 9 285K",
     "vendor": "Intel",
     "socket": "LGA1851",
-    "eur": 549,
+    "eur": 551,
     "cov": 6,
     "idx": {
      "DDR5": 78
@@ -1733,10 +1829,39 @@
     }
    },
    {
+    "part": "Core i3-14100F",
+    "vendor": "Intel",
+    "socket": "LGA1700",
+    "eur": 107,
+    "cov": 1,
+    "idx": {
+     "DDR4": 52,
+     "DDR5": 58
+    },
+    "derived": {
+     "DDR4": true,
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "LGA1700 motherboard, DDR4",
+      "eur": 89
+     },
+     "DDR5": {
+      "part": "LGA1700 motherboard, DDR5",
+      "eur": 107
+     }
+    }
+   },
+   {
     "part": "Core i5-12400F",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 145,
+    "eur": 150,
     "cov": 1,
     "idx": {
      "DDR4": 55,
@@ -1762,10 +1887,39 @@
     }
    },
    {
+    "part": "Core i5-12600K",
+    "vendor": "Intel",
+    "socket": "LGA1700",
+    "eur": 219,
+    "cov": 2,
+    "idx": {
+     "DDR4": 60,
+     "DDR5": 64
+    },
+    "derived": {
+     "DDR4": true,
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "LGA1700 motherboard, DDR4",
+      "eur": 89
+     },
+     "DDR5": {
+      "part": "LGA1700 motherboard, DDR5",
+      "eur": 107
+     }
+    }
+   },
+   {
     "part": "Core i5-12600KF",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 170,
+    "eur": 185,
     "cov": 2,
     "idx": {
      "DDR4": 60,
@@ -1791,10 +1945,68 @@
     }
    },
    {
+    "part": "Core i5-13400F",
+    "vendor": "Intel",
+    "socket": "LGA1700",
+    "eur": 180,
+    "cov": 1,
+    "idx": {
+     "DDR4": 52,
+     "DDR5": 59
+    },
+    "derived": {
+     "DDR4": true,
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "LGA1700 motherboard, DDR4",
+      "eur": 89
+     },
+     "DDR5": {
+      "part": "LGA1700 motherboard, DDR5",
+      "eur": 107
+     }
+    }
+   },
+   {
+    "part": "Core i5-14400F",
+    "vendor": "Intel",
+    "socket": "LGA1700",
+    "eur": 175,
+    "cov": 1,
+    "idx": {
+     "DDR4": 53,
+     "DDR5": 59
+    },
+    "derived": {
+     "DDR4": true,
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "LGA1700 motherboard, DDR4",
+      "eur": 89
+     },
+     "DDR5": {
+      "part": "LGA1700 motherboard, DDR5",
+      "eur": 107
+     }
+    }
+   },
+   {
     "part": "Core i5-14600K",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 229,
+    "eur": 236,
     "cov": 5,
     "idx": {
      "DDR4": 68,
@@ -1823,7 +2035,7 @@
     "part": "Core i7-14700K",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 392,
+    "eur": 398,
     "cov": 6,
     "idx": {
      "DDR4": 71,
@@ -1852,7 +2064,7 @@
     "part": "Ryzen 5 5600",
     "vendor": "AMD",
     "socket": "AM4",
-    "eur": 131,
+    "eur": 135,
     "cov": 2,
     "idx": {
      "DDR4": 51
@@ -1875,7 +2087,7 @@
     "part": "Ryzen 5 7500F",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 130,
+    "eur": 133,
     "cov": 2,
     "idx": {
      "DDR5": 59
@@ -1898,7 +2110,7 @@
     "part": "Ryzen 5 7500X3D",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 209,
+    "eur": 219,
     "cov": 1,
     "idx": {
      "DDR5": 72
@@ -1921,7 +2133,7 @@
     "part": "Ryzen 5 7600X",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 150,
+    "eur": 153,
     "cov": 2,
     "idx": {
      "DDR5": 59
@@ -1944,7 +2156,7 @@
     "part": "Ryzen 5 9600X",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 161,
+    "eur": 183,
     "cov": 3,
     "idx": {
      "DDR5": 69
@@ -1960,6 +2172,29 @@
      "DDR5": {
       "part": "AM5 motherboard",
       "eur": 112
+     }
+    }
+   },
+   {
+    "part": "Ryzen 7 5700X",
+    "vendor": "AMD",
+    "socket": "AM4",
+    "eur": 209,
+    "cov": 2,
+    "idx": {
+     "DDR4": 52
+    },
+    "derived": {
+     "DDR4": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR4": {
+      "part": "AM4 motherboard",
+      "eur": 85
      }
     }
    },
@@ -1987,10 +2222,56 @@
     }
    },
    {
+    "part": "Ryzen 7 7700X",
+    "vendor": "AMD",
+    "socket": "AM5",
+    "eur": 214,
+    "cov": 5,
+    "idx": {
+     "DDR5": 68
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "AM5 motherboard",
+      "eur": 112
+     }
+    }
+   },
+   {
+    "part": "Ryzen 7 7700X3D",
+    "vendor": "AMD",
+    "socket": "AM5",
+    "eur": 349,
+    "cov": 1,
+    "idx": {
+     "DDR5": 75
+    },
+    "derived": {
+     "DDR5": false
+    },
+    "cooler": {
+     "part": "120 mm tower cooler",
+     "eur": 26
+    },
+    "mobo": {
+     "DDR5": {
+      "part": "AM5 motherboard",
+      "eur": 112
+     }
+    }
+   },
+   {
     "part": "Ryzen 7 7800X3D",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 324,
+    "eur": 299,
     "cov": 7,
     "idx": {
      "DDR5": 78
@@ -2310,12 +2591,26 @@
    {
     "part": "32GB DDR4-3200",
     "kind": "DDR4",
-    "eur": 229
+    "eur": 229,
+    "min": false
    },
    {
     "part": "32GB DDR5-6000",
     "kind": "DDR5",
-    "eur": 399
+    "eur": 399,
+    "min": false
+   },
+   {
+    "part": "2x8GB DDR4-3200",
+    "kind": "DDR4",
+    "eur": 103,
+    "min": true
+   },
+   {
+    "part": "2x8GB DDR5-6000",
+    "kind": "DDR5",
+    "eur": 229,
+    "min": true
    }
   ],
   "storage": [
