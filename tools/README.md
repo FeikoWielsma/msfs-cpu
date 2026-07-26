@@ -116,17 +116,75 @@ RTX 4090
 RTX 4080 = /RTX 4080(?! Super)/
 Arc B580
 Arc B570
-# Memory and storage — the distinguishing bits live in the spec columns
-32GB DDR5-6000 = /\b32 GB\b.*DDR5-6000/
-32GB DDR4-3200 = /\b32 GB\b.*DDR4-3200/
-1TB NVMe = /\b1 TB\b.*(NVME|M\.2)/
-2TB NVMe = /\b2 TB\b.*(NVME|M\.2)/
+# Memory and storage. Two lookaheads rather than one pattern, because the order
+# differs by page shape: a list row reads "32 GB (2 x 16 GB) DDR4-3200", a category
+# row puts capacity and speed in separate spec columns. The (?<!x ) is load-bearing —
+# without it "32 GB" also matches the "2 x 32 GB" of a 64 GB kit.
+32GB DDR5-6000 = /^(?=.*DDR5-6000)(?=.*(?<!x )\b32 GB\b)/
+32GB DDR4-3200 = /^(?=.*DDR4-3200)(?=.*(?<!x )\b32 GB\b)/
+1TB NVMe = /^(?=.*(NVME|M\.2))(?=.*(?<!x )\b1 TB\b)/
+2TB NVMe = /^(?=.*(NVME|M\.2))(?=.*(?<!x )\b2 TB\b)/
 ```
 
 The PSU, board, case and cooler rows in `build_prices.csv` are tier bundles
-(`psu_650`, `mb_am4`, …) rather than named products, so they are not watchable — price
-those from the category pages by eye.
+(`psu_650`, `mb_am4`, …) rather than named products. They are not watchable by name —
+see the next section, which is about exactly them.
 </details>
+
+## Tier bundles: the rows that are a filter, not a product
+
+Half of `build_prices.csv` is not a product at all. `psu_650` means *the cheapest decent
+650 W unit*, and `mb_am4` means *the cheapest decent AM4 board* — the answer changes every
+month, so no name pattern can track it. Two mechanisms cover this, and which you want
+depends on whether PCPP can express "decent" as a filter.
+
+### Cheapest row on a filtered page
+
+Set the filters until the page contains only units you would actually buy, then tick
+**"cheapest row on this page is the answer"** on that target and give it a label. The
+watchlist is skipped for that target — the page *is* the query.
+
+This is the answer for **PSUs**, and it sidesteps the parametric problem entirely: a
+parametric PSU inside a list sizes itself against every GPU in that list, so a list holding
+a dozen cards asks for 3600 W and comes back `No Prices`. A filtered category page has no
+such coupling. Five targets — 650 / 750 basic / 750 / 850 / 1000, each with its efficiency
+and form-factor filters set — give five tier prices per region.
+
+The same shape works for `case` and the cooler tiers.
+
+### Parametric part lists, mapped by slot
+
+Where "decent" is easier to say as a PCPP parametric than as a filter, put it in a list and
+map the row by the **slot** it occupies rather than by what it resolved to:
+
+```
+mb_lga1700_ddr4 = slot:Motherboard
+case            = slot:Case
+cooler_entry    = slot:CPU Cooler
+```
+
+A parametric row resolves to whichever board is cheapest this week, so its product name is
+worthless as a key while its Component column never moves. Target mappings apply **only on
+that target's pages** and take precedence over the global watchlist, so one list can yield
+both its own board (by slot) and every GPU on it (by name) in a single load — verified
+against a real "biglist": 21 rows in, 20 captured, no clashes.
+
+`slot:` needs the slot to hold exactly one row, which is true for Motherboard, Case, CPU
+Cooler and PSU. Memory, Storage and Video Card can repeat, so match those by spec pattern
+instead; if a `slot:` mapping is ambiguous the script says so rather than picking one.
+
+### So, the whole set
+
+| `build_prices.csv` rows | Where they come from |
+| --- | --- |
+| CPUs | one `/products/cpu/` target + the watchlist — all fifteen in one load |
+| GPUs | one `/products/video-card/` target, or a list holding them all |
+| Memory, storage | either; spec patterns work on both page shapes |
+| `mb_*` | one parametric list per platform, mapped `slot:Motherboard` |
+| `psu_*` | one filtered PSU page per tier, "cheapest row" |
+| `case`, `cooler_*` | either |
+
+CPUs need no list at all — a list holds one, and the category page holds a hundred.
 
 ## Being a good guest
 

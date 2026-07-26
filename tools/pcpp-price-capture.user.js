@@ -430,14 +430,26 @@
    * Lines starting with # are comments. An empty list means "capture every row", which
    * is what you want when reading a part list rather than a category page.
    */
-  function watchlist() {
-    return String(watchText || '').split('\n').map(line => {
+  function parseWatch(text) {
+    return String(text || '').split('\n').map(line => {
       const s = line.trim();
       if (!s || s.startsWith('#')) return null;
       const i = s.indexOf('=');
       const name = (i === -1 ? s : s.slice(0, i)).trim();
       const pat = (i === -1 ? s : s.slice(i + 1)).trim() || name;
       if (!name) return null;
+
+      // slot:Motherboard — match the part list's own Component column instead of the
+      // product. A parametric row resolves to whichever board is cheapest this week, so
+      // its name is worthless as a key while its slot never moves. This is what makes a
+      // "cheapest decent B760 DDR4" row trackable as mb_lga1700_ddr4.
+      const slotPat = pat.match(/^slot:\s*(.+)$/i);
+      if (slotPat) {
+        const want = slotPat[1].trim().toLowerCase();
+        return { name, pat, slot: want,
+                 test: r => String(r.slot || '').trim().toLowerCase() === want };
+      }
+
       let re;
       const m = pat.match(/^\/(.*)\/([a-z]*)$/);
       try {
@@ -447,8 +459,18 @@
                : new RegExp(pat.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
                                .replace(/\s+/g, '\\s+'), 'i');
       } catch (e) { return null; }
-      return { name, pat, re };
+      return { name, pat, re, test: r => re.test([r.name].concat(r.specs || []).join(' ')) };
     }).filter(Boolean);
+  }
+
+  const watchlist = () => parseWatch(watchText);
+
+  /** A target's own mappings win over the global list, then the global list fills in the
+   *  rest — so one page can yield both this list's Motherboard row and every GPU on it. */
+  function watchFor(target) {
+    const own = parseWatch(target && target.map);
+    const taken = new Set(own.map(w => w.name));
+    return own.concat(watchlist().filter(w => !taken.has(w.name)));
   }
 
   /**
@@ -466,7 +488,7 @@
     const hay = r => [r.name].concat(r.specs || []).join(' ');
     const claimed = new Map();
     for (const w of list) {
-      const hits = rows.filter(r => w.re.test(hay(r)));
+      const hits = rows.filter(w.test);
       if (!hits.length) continue;
       const live = hits.filter(r => r.stock !== false);
       const pool = live.length ? live : hits;
@@ -486,9 +508,12 @@
     for (const w of list) {
       for (const r of out) {
         if (r.w === w) continue;
-        if (!w.re.test(hay(r))) continue;
-        clash.push(`"${w.name}" also matches ${r.name}'s product ("${r.seen}") — ` +
-                   `tighten it, e.g. /${w.pat}(?! XT)/`);
+        if (!w.test(r)) continue;
+        clash.push(w.slot
+          ? `"${w.name}" and "${r.name}" both take the ${w.slot} row — a slot: mapping ` +
+            `only works where that slot holds one row`
+          : `"${w.name}" also matches ${r.name}'s product ("${r.seen}") — ` +
+            `tighten it, e.g. /${w.pat}(?! XT)/`);
       }
     }
     out.forEach(r => { delete r.w; });
@@ -507,25 +532,35 @@
     const cur = REGION_CUR[region] || 'UNKNOWN';
     let rows = scrapeRows();
 
-    // The watchlist, where you have one, decides both which rows are kept and what they
-    // are called — so a hundred-row category page yields only your parts, under your
-    // names, ready to paste. Without one, everything on the page is captured as-is.
-    const list = watchlist();
     let clash = [];
-    if (list.length) {
-      const picked = matchWatch(rows, list);
-      rows = picked.rows;
-      clash = picked.clash;
-    }
-
-    if (target && target.match) {
-      let re = null;
-      try { re = new RegExp(target.match, 'i'); } catch (e) { re = null; }
-      if (re) rows = rows.filter(r => re.test(r.name));
-    }
-    // A single-part target takes the cheapest match, not all twenty rows of a filter.
-    if (target && target.single && rows.length > 1) {
-      rows = [rows.reduce((a, b) => (b.amount < a.amount ? b : a))];
+    if (target && target.single) {
+      // The target IS the query: a filtered category page whose cheapest row is the
+      // answer, which is how a tier bundle gets priced — "cheapest 650 W Gold ATX" is
+      // psu_650, and no product name can express that. The watchlist is skipped here on
+      // purpose; it would filter the page down to named parts and find none.
+      if (target.match) {
+        let re = null;
+        try { re = new RegExp(target.match, 'i'); } catch (e) { re = null; }
+        if (re) rows = rows.filter(r => re.test([r.name].concat(r.specs || []).join(' ')));
+      }
+      const live = rows.filter(r => r.stock !== false);
+      const pool = live.length ? live : rows;
+      rows = pool.length ? [pool.reduce((a, b) => (b.amount < a.amount ? b : a))] : [];
+      if (rows.length && target.label) rows[0] = Object.assign({}, rows[0], { seen: rows[0].name });
+    } else {
+      // Otherwise the watchlist decides which rows are kept and what they are called, so
+      // a hundred-row category page yields only your parts, under your names. A target's
+      // own mappings are added first and win. With no list at all, everything is kept.
+      const list = watchFor(target);
+      if (list.length) {
+        const picked = matchWatch(rows, list);
+        rows = picked.rows;
+        clash = picked.clash;
+      } else if (target && target.match) {
+        let re = null;
+        try { re = new RegExp(target.match, 'i'); } catch (e) { re = null; }
+        if (re) rows = rows.filter(r => re.test(r.name));
+      }
     }
 
     const stamp = nowISO(), url = location.href;
@@ -979,8 +1014,20 @@
       regs.innerHTML = REGIONS.map(([r, c]) =>
         `<label><input type="checkbox" data-reg="${i}" value="${r}"
           ${(t.regions || []).includes(r) ? 'checked' : ''}>${r || 'us'} ${c}</label>`).join('');
+      const extra = document.createElement('div');
+      extra.innerHTML = `
+        <label class="gen-toggle" style="padding:4px 0 2px">
+          <input type="checkbox" data-single="${i}" ${t.single ? 'checked' : ''}>
+          cheapest row on this page is the answer
+          <input type="text" data-label="${i}" value="${escapeHtml(t.label || '')}"
+            placeholder="stored as…" style="flex:1;min-width:80px">
+        </label>
+        ${t.single ? '' : `<textarea rows="2" data-map="${i}"
+          placeholder="this target only — e.g.  mb_lga1700_ddr4 = slot:Motherboard"
+          >${escapeHtml(t.map || '')}</textarea>`}`;
       tl.appendChild(d);
       tl.appendChild(regs);
+      tl.appendChild(extra);
     });
 
     // captured
@@ -1058,6 +1105,18 @@
       else t.regions = t.regions.filter(x => x !== v);
       save(KEY.targets, targets); return;
     }
+    if (d.map !== undefined) {
+      targets[Number(d.map)].map = e.target.value;
+      save(KEY.targets, targets); return;      // no re-render: the cursor is in there
+    }
+    if (d.label !== undefined) {
+      targets[Number(d.label)].label = e.target.value;
+      save(KEY.targets, targets); return;
+    }
+    if (d.single !== undefined) {
+      targets[Number(d.single)].single = e.target.checked;
+      save(KEY.targets, targets); render(); return;
+    }
     if (e.target.id === 'watch') {
       watchText = e.target.value;
       save(KEY.watch, watchText);
@@ -1085,7 +1144,7 @@
   // wrong, `__pcppCapture.rows()` shows exactly what the scraper sees before Teach.
   window.__pcppCapture = {
     rows: scrapeRows, money: parseMoney, shape: pageShape, region: currentRegion,
-    prices: () => prices, watchlist, captureHere: () => capture(null),
+    prices: () => prices, watchlist, captureHere: () => capture(null), captureWith: t => capture(t),
   };
 
   function boot() {
