@@ -59,7 +59,7 @@ const CPU_PICKS: [string, string][] = [
   ["Core i5-14600K", "14600K"], ["Ryzen 7 7800X3D", "7800X3D"], ["Ryzen 7 9800X3D", "9800X3D"],
 ];
 const GPU_PICKS: [string, string][] = [
-  ["RX 7600", "7600"], ["RTX 5060", "5060"], ["RX 9060 XT 16GB", "9060 XT"], ["RX 9070", "9070"],
+  ["RTX 3050", "3050"], ["RTX 5060", "5060"], ["RX 9060 XT 16GB", "9060 XT"], ["RX 9070", "9070"],
   ["RX 9070 XT", "9070 XT"], ["RTX 5080", "5080"], ["RTX 5090", "5090"],
 ];
 const RESES: Res[] = ["1080p", "1440p", "4K"];
@@ -834,7 +834,8 @@ function wireTheme(): void {
 
 async function boot(): Promise<void> {
   wireTheme();
-  let doc: { catalogue: { cpus: Cat[]; gpus: Cat[] } };
+  // GPUs come from gpu_index, not the catalogue: the catalogue only holds priced parts.
+  let doc: { catalogue: { cpus: Cat[] }; gpu_index: Record<string, Record<string, number>> };
   try {
     doc = await (await fetch("/builds.json")).json();
   } catch {
@@ -842,7 +843,14 @@ async function boot(): Promise<void> {
     return;
   }
   CPUS = pick(doc.catalogue.cpus, CPU_PICKS).sort((a, b) => cpuIndex(a) - cpuIndex(b));
-  GPUS = pick(doc.catalogue.gpus, GPU_PICKS).sort((a, b) => gpuIndex(a, "1440p") - gpuIndex(b, "1440p"));
+  const gpuCat: Cat[] = GPU_PICKS.map(([part]) => ({
+    part,
+    idx: Object.fromEntries(RESES.flatMap((r) => {
+      const v = doc.gpu_index?.[r]?.[part];
+      return v == null ? [] : [[r, v]];
+    })),
+  })).filter((g) => Object.keys(g.idx).length === RESES.length);
+  GPUS = pick(gpuCat, GPU_PICKS).sort((a, b) => gpuIndex(a, "1440p") - gpuIndex(b, "1440p"));
   if (CPUS.length < 2 || GPUS.length < 2) {
     $("stage").innerHTML = `<p class="fail">The index data is missing the chips this page uses.</p>`;
     return;
@@ -922,7 +930,8 @@ async function boot(): Promise<void> {
     msGpu.textContent = `${avg.gpu.toFixed(1)} ms`;
     const wait = Math.abs(avg.cpu - avg.gpu);
     idleEl.innerHTML = wait < 1
-      ? `Both halves finish within a millisecond of each other — an upgrade to either one moves the frame rate.`
+      ? `Both halves finish within a millisecond of each other — upgrading just one buys almost nothing,
+         because the other becomes the limit straight away. Only upgrading both moves the frame rate.`
       : `${cpuLim ? '<b class="g">GPU</b>' : '<b class="c">MainThread</b>'} waits <b>${wait.toFixed(1)} ms</b>
          of every ${avg.frame.toFixed(1)} ms frame — a faster ${cpuLim ? "graphics card" : "CPU"} would just wait longer.`;
   };

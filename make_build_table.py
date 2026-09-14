@@ -508,7 +508,7 @@ def main():
             regs.setdefault(part, {}).setdefault('nl', eur)
     catalogue = build_catalogue(prices, cpu_idx, prices_by_res, cpu_cov, gpu_cov,
                                 regs, region_list)
-    write_json(builds, skipped, prices, price_src, priced_on, catalogue)
+    write_json(builds, skipped, prices, price_src, priced_on, catalogue, prices_by_res)
 
     print('wrote %d builds (+ %d CPUs / %d GPUs for the generator) into %s and %s'
           % (len(builds), len(catalogue['cpus']), len(catalogue['gpus']),
@@ -685,7 +685,7 @@ def build_catalogue(prices, cpu_idx, idx_by_res, cpu_cov, gpu_cov, regs, region_
     }
 
 
-def write_json(builds, skipped, prices, price_src, priced_on, catalogue):
+def write_json(builds, skipped, prices, price_src, priced_on, catalogue, idx_by_res):
     """The same picks as the card, for /specs to fetch at runtime.
 
     The site never inlines data — the SPA fetches data.json, and this page fetches
@@ -728,6 +728,10 @@ def write_json(builds, skipped, prices, price_src, priced_on, catalogue):
         'prices': [{'part': p, 'eur': prices[p], 'src': price_src.get(p, 'est')}
                    for p in sorted(prices)],
         'catalogue': catalogue,
+        # every fitted GPU per resolution, priced or not — /limited steps through cards
+        # the shop list never carried (an RTX 3050), and must not retype their indices
+        'gpu_index': {res: {p: rnd(v) for p, v in sorted(idx_by_res[res].items())}
+                      for res in RES},
     }
     os.makedirs(os.path.dirname(JSON_OUT), exist_ok=True)
     with open(JSON_OUT, 'w', encoding='utf-8') as f:
