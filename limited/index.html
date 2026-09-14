@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MSFS 2024 — What's limiting you?</title>
+<meta name="description" content="Drag a CPU and a GPU and watch which one sets the frame rate in Microsoft Flight Simulator 2024 — at a busy airport, in cruise, and low over the countryside.">
+<link rel="icon" type="image/jpeg" href="/favicon.jpg">
+<script>
+  (function() {
+    const theme = localStorage.getItem("msfs-theme") || "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<script defer src="https://stats.feikowielsma.nl/script.js" data-website-id="b0988ab4-7b6a-4775-83a1-ff89fb549345"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <nav class="nav">
+      <a class="back" href="/">← Benchmarks</a>
+      <a class="back" href="/specs">Build guide</a>
+    </nav>
+    <button id="themeToggleBtn" class="chip" title="Toggle Light/Dark Theme">Dark</button>
+  </div>
+
+  <header>
+    <div class="kicker">Microsoft Flight Simulator 2024</div>
+    <h1>What's limiting you?</h1>
+    <p class="lede">A frame is done when both halves are: the <b>MainThread</b> on the CPU
+      builds it, the <b>GPU</b> draws it. The slower one sets your frame rate; the other
+      one waits.</p>
+    <div class="disclaimer" role="note">
+      <b>These are not real frame rates.</b> Every FPS, millisecond and usage figure on this
+      page is invented to show how the CPU and GPU interact. None of it is measured, and none
+      of it tells you what you will actually get in the sim. For real numbers, see the
+      <a href="/">benchmarks</a>.
+    </div>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="scene">
+      <canvas id="scene"></canvas>
+      <div class="scene-tag"><b id="locName"></b><span id="locNote"></span></div>
+      <div class="hud">
+        <div class="hud-fps"><span id="fps">—</span><small>FPS</small></div>
+        <div class="hud-toy">Simulated · not real</div>
+        <div class="hud-lim" id="lim">&nbsp;</div>
+        <div class="hud-ms">
+          <span class="c">MainThread <b id="msCpu">—</b></span>
+          <span class="g">GPU <b id="msGpu">—</b></span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="controls">
+      <div class="field">
+        <span class="ctl-label">Location</span>
+        <div class="seg" id="locSeg"></div>
+      </div>
+      <div class="field">
+        <span class="ctl-label">Resolution</span>
+        <div class="seg" id="resSeg"></div>
+      </div>
+      <div class="field slider cpu" id="cpuField"></div>
+      <div class="field slider gpu" id="gpuField"></div>
+    </aside>
+
+    <div class="graph">
+      <div class="graph-head">
+        <h2>Frame time<span>last five seconds, one point per frame</span></h2>
+        <div class="legend">
+          <span class="c"><i></i>MainThread</span>
+          <span class="g"><i></i>GPU</span>
+          <span class="w"><i></i>Waiting</span>
+        </div>
+      </div>
+      <canvas id="graph"></canvas>
+      <p class="idle" id="idle"></p>
+    </div>
+
+    <details class="usage" id="usage">
+      <summary>What Task Manager would show<span>CPU and GPU usage, and why they mislead</span></summary>
+      <div class="usage-body">
+        <div class="meters">
+          <div class="meter c">
+            <span class="ctl-label">CPU usage</span><b id="uCpu">—</b>
+            <div class="bar"><i id="uCpuBar"></i></div>
+          </div>
+          <div class="meter g">
+            <span class="ctl-label">GPU usage</span><b id="uGpu">—</b>
+            <div class="bar"><i id="uGpuBar"></i></div>
+          </div>
+        </div>
+        <div class="cores-head">
+          <span class="ctl-label" id="uTopo"></span>
+          <span class="mt-key"><i></i>MainThread is here right now</span>
+        </div>
+        <canvas id="cores"></canvas>
+        <p class="u-now" id="uNow"></p>
+        <ul class="why">
+          <li><b>A low CPU number is not headroom.</b> The frame waits on one thread, the
+            MainThread. One thread flat out on a 16-thread chip adds only about 6% to the
+            total, so a CPU can be what limits you while it reads a quarter busy.</li>
+          <li><b>No core reads 100% either.</b> Windows keeps moving the MainThread between
+            cores (watch the outline jump), so its load is smeared over several graphs that
+            each look half idle. Switch to <b>Airport</b> to see it.</li>
+          <li><b>More threads help around the MainThread, not through it.</b> Photogrammetry
+            and scenery streaming do spread across many cores, so usage climbs in
+            <b>VFR</b>. The frame still only comes as fast as the MainThread.</li>
+          <li><b>The GPU number is the more honest one.</b> Near 99% means the GPU is the
+            limit; well below means it is waiting. Better still, the sim's own FPS display
+            in Developer Mode says "Limited by MainThread" outright.</li>
+        </ul>
+        <p class="u-toy">Simulated like everything else here, to show the pattern, not a
+          measurement.</p>
+      </div>
+    </details>
+  </div>
+
+  <footer>
+    <p><b>An illustration, not a prediction.</b> The only measured input is the order of
+      the chips: each step is this site's Performance Index, one ladder for CPUs and one per
+      resolution for GPUs. Everything that turns an index into milliseconds, frame rates or
+      usage is a rough, hand-picked anchor per location. <b>Do not quote these FPS figures
+      or buy hardware on them.</b></p>
+    <p>Not affiliated with or endorsed by Microsoft or Asobo. By <b>'Razortek'</b>, Flight
+      Crew in the official MSFS Discord
+      <a href="https://discord.com/invite/msfs" target="_blank" rel="noopener">#hardware</a>.</p>
+  </footer>
+</div>
+<script type="module" src="/src/limited.ts"></script>
+</body>
+</html>
