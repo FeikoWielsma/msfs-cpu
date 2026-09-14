@@ -59,23 +59,27 @@ const GPU_MS: Record<Res, number> = { "1080p": 7.2, "1440p": 8.9, "4K": 11.9 };
 /* VRAM. Each card's real memory and PCIe link come from gpu_data.json; how much the sim
  * wants is guessed — render targets per resolution, scenery per location (LOCS.vram), then
  * the two sliders. Sized so an 8 GB card runs out at 1440p High the moment you add an
- * airliner, and a 12 GB card goes at Ultra with a payware airport and GSX. */
-const VRAM_BASE: Record<Res, number> = { "1080p": 3.2, "1440p": 3.8, "4K": 5.3 };
+ * airliner, a 12 GB card goes at Ultra with a payware airport and GSX, and even a 16 GB
+ * card just spills over with everything maxed at an airport at 1440p or 4K — no amount of
+ * VRAM on this page makes "max it all" free. Away from the airport most addons unload. */
+const VRAM_BASE: Record<Res, number> = { "1080p": 3.2, "1440p": 3.8, "4K": 4.6 };
 const TEXTURES = [
   { part: "Low", short: "Low", gb: 0.6 },
   { part: "Medium", short: "Medium", gb: 1.6 },
   { part: "High", short: "High", gb: 2.8 },
-  { part: "Ultra", short: "Ultra", gb: 4.4 },
+  { part: "Ultra", short: "Ultra", gb: 4.8 },
 ];
 /* Addons cost memory and MainThread time. cpuMs is extra MainThread at index 100 at an
  * airport, scaled per location by LOCS.addonCpu — a payware airport and GSX do little at
  * FL350, a study-level airliner's systems still run. workers is extra helper-thread load. */
 const ADDONS = [
-  { part: "Stock sim", short: "Stock", gb: 0, cpuMs: 0, workers: 0 },
-  { part: "Study-level airliner", short: "Airliner", gb: 0.8, cpuMs: 1.2, workers: 0.03 },
-  { part: "+ Payware airport", short: "Airport", gb: 1.9, cpuMs: 2.8, workers: 0.05 },
-  { part: "+ GSX and AI traffic", short: "GSX", gb: 2.9, cpuMs: 5.2, workers: 0.08 },
-  { part: "Everything at once", short: "All", gb: 4.3, cpuMs: 8, workers: 0.12 },
+  // gb is at an airport; away is what stays loaded in cruise or VFR — the aircraft and a
+  // little global stuff, since airport scenery, GSX and its traffic unload once you leave.
+  { part: "Stock sim", short: "Stock", gb: 0, away: 0, cpuMs: 0, workers: 0 },
+  { part: "Study-level airliner", short: "Airliner", gb: 0.8, away: 0.8, cpuMs: 1.2, workers: 0.03 },
+  { part: "+ Payware airport", short: "Airport", gb: 1.9, away: 0.8, cpuMs: 2.8, workers: 0.05 },
+  { part: "+ GSX and AI traffic", short: "GSX", gb: 2.9, away: 0.9, cpuMs: 5.2, workers: 0.08 },
+  { part: "Everything at once", short: "All", gb: 6.5, away: 1.6, cpuMs: 8, workers: 0.12 },
 ];
 
 /* How much a narrow link makes paging hurt: bandwidth in PCIe 3.0 lanes, against a 5.0 x16
@@ -125,9 +129,11 @@ let GPUS: Stop[] = [];
 
 const cpuIndex = (s: Stop): number => Math.max(...Object.values(s.idx));
 const gpuIndex = (s: Stop, res: Res): number => s.idx[res] ?? 1;
+const addonGb = (i: number): number => (state.loc === "airport" ? ADDONS[i].gb : ADDONS[i].away);
+
 function vram(): { parts: number[]; used: number; cap: number; over: number; e: number; link: number } {
   const g = mem(state.gpu);
-  const parts = [VRAM_BASE[state.res], LOCS[state.loc].vram, TEXTURES[state.tex].gb, ADDONS[state.addon].gb];
+  const parts = [VRAM_BASE[state.res], LOCS[state.loc].vram, TEXTURES[state.tex].gb, addonGb(state.addon)];
   const used = parts.reduce((a, b) => a + b, 0), cap = g.vram ?? 16;
   const over = Math.max(0, used - cap);
   return { parts, used, cap, over, e: over / cap, link: linkFactor(g.pcie ?? "") };
@@ -961,12 +967,13 @@ async function boot(): Promise<void> {
     hudVram.classList.toggle("over", over);
   };
   const changed = (): void => { writeUrl(); showVram(); };
+  let renderAddon = (): void => {};                   // its badge depends on the location
 
   seg(
     $("locSeg"),
     (Object.keys(LOCS) as Loc[]).map((k) => [k, LOCS[k].label, LOCS[k].sub] as [Loc, string, string]),
     () => state.loc,
-    (v) => { state.loc = v; showLoc(); changed(); },
+    (v) => { state.loc = v; showLoc(); renderAddon(); changed(); },
   );
   let renderGpu = (): void => {};
   seg(
@@ -993,8 +1000,8 @@ async function boot(): Promise<void> {
   memSeg.hidden = !GPUS[state.gpu].alt;
   slider($("texField"), "Textures", TEXTURES, (i) => `+${TEXTURES[i].gb.toFixed(1)} GB`,
     () => state.tex, (i) => { state.tex = i; changed(); });
-  slider($("addonField"), "Addons", ADDONS,
-    (i) => (i ? `+${ADDONS[i].gb.toFixed(1)} GB · MainThread` : "nothing extra"),
+  renderAddon = slider($("addonField"), "Addons", ADDONS,
+    (i) => (i ? `+${addonGb(i).toFixed(1)} GB · MainThread` : "nothing extra"),
     () => state.addon, (i) => { state.addon = i; changed(); });
   showVram();
 
