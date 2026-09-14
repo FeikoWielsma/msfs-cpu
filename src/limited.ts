@@ -1040,6 +1040,7 @@ async function boot(): Promise<void> {
   let last = performance.now(), lastHud = 0, shownLoc: Loc | null = null;
   pending = makeFrame(last);
 
+  let balanced = false;
   const hud = (now: number): void => {
     let n = 0, cs = 0, gs = 0, fs = 0;
     for (let i = frames.length - 1; i >= 0 && frames[i].t > now - 700; i--) {
@@ -1055,13 +1056,14 @@ async function boot(): Promise<void> {
     msGpu.textContent = `${avg.gpu.toFixed(1)} ms`;
     const wait = Math.abs(avg.cpu - avg.gpu);
     const v = vram();
+    // Entering the balanced message needs a clearer tie than leaving it, so jitter and
+    // stutters do not flick the note back and forth.
+    balanced = balanced ? wait < 1.5 : wait < 0.8;
     idleEl.innerHTML = v.over > 0
-      ? `<b class="over">Out of VRAM.</b> ${v.over.toFixed(1)} GB does not fit on the ${v.cap} GB card, so it
-         spills into system RAM over a PCIe ${GPUS[state.gpu].pcie ?? ""} link. Frames wait for it to come back —
-         that is the stutter. Lower textures or addons, or pick a card with more memory.`
-      : wait < 1
-      ? `Both halves finish within a millisecond of each other — upgrading just one buys almost nothing,
-         because the other becomes the limit straight away. Only upgrading both moves the frame rate.`
+      ? `<b class="over">Out of VRAM.</b> ${v.over.toFixed(1)} GB spills off the ${v.cap} GB card into system
+         RAM, and every frame that waits for it stutters. Lower textures or addons.`
+      : balanced
+      ? `Both halves finish within a millisecond of each other — upgrade just one and the other limits you instead.`
       : `${cpuLim ? '<b class="g">GPU</b>' : '<b class="c">MainThread</b>'} waits <b>${wait.toFixed(1)} ms</b>
          of every ${avg.frame.toFixed(1)} ms frame — a faster ${cpuLim ? "graphics card" : "CPU"} would just wait longer.`;
   };
