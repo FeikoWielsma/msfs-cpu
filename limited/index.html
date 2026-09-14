@@ -53,6 +53,7 @@
           <span class="c">MainThread <b id="msCpu">—</b></span>
           <span class="g">GPU <b id="msGpu">—</b></span>
         </div>
+        <div class="hud-vram" id="hudVram"></div>
       </div>
     </div>
 
@@ -67,6 +68,23 @@
       </div>
       <div class="field slider cpu" id="cpuField"></div>
       <div class="field slider gpu" id="gpuField"></div>
+      <div class="field slider mem" id="texField"></div>
+      <div class="field slider mem" id="addonField"></div>
+      <div class="field vram" id="vramBox">
+        <div class="sl-head">
+          <span class="ctl-label">Graphics memory</span>
+          <span class="v-read" id="vramRead"></span>
+        </div>
+        <div class="vbar">
+          <i class="seg-base"></i><i class="seg-loc"></i><i class="seg-tex"></i><i class="seg-add"></i>
+          <i class="seg-over"></i>
+          <b class="vcap" id="vcap"><span></span></b>
+        </div>
+        <div class="vkey">
+          <span class="base">Resolution</span><span class="loc">Scenery</span>
+          <span class="tex">Textures</span><span class="add">Addons</span>
+        </div>
+      </div>
     </aside>
 
     <div class="graph">
@@ -125,7 +143,9 @@
     <p><b>An illustration, not a prediction.</b> The only measured input is the order of
       the chips: each step is this site's Performance Index, one ladder for CPUs and one per
       resolution for GPUs. Everything that turns an index into milliseconds, frame rates or
-      usage is a rough, hand-picked anchor per location. <b>Do not quote these FPS figures
+      usage is a rough, hand-picked anchor per location. Each card's VRAM is its real size;
+      how much the sim, textures and addons fill it, and how hard running out hurts, is
+      guessed. <b>Do not quote these FPS figures
       or buy hardware on them.</b></p>
     <p>Not affiliated with or endorsed by Microsoft or Asobo. By <b>'Razortek'</b>, Flight
       Crew in the official MSFS Discord

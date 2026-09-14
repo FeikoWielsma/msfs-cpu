@@ -16,7 +16,9 @@ type Res = "1080p" | "1440p" | "4K";
 type Ctx = CanvasRenderingContext2D;
 
 type Cat = { part: string; idx: Record<string, number> };
-type Stop = { part: string; short: string; slug: string; idx: Record<string, number> };
+type Stop = { part: string; short: string; slug: string; idx: Record<string, number>;
+              vram?: number; pcie?: string; alt?: { part: string; vram?: number; pcie?: string } };
+type Step = { part: string; short: string };
 type Frame = { t: number; cpu: number; gpu: number; frame: number };
 
 // ---------- the model ----------
@@ -32,20 +34,20 @@ type Frame = { t: number; cpu: number; gpu: number; frame: number };
 const LOCS: Record<Loc, {
   label: string; sub: string; name: string; note: string;
   cpuMs: number; gpuMul: number; jitter: number; spikes: number; spikeMs: number;
-  workers: { n: number; load: number; burst: number };
+  workers: { n: number; load: number; burst: number }; vram: number; addonCpu: number;
 }> = {
   airport: { label: "Airport", sub: "on the ground", name: "Busy airport",
     note: "Hundreds of AI aircraft and ground vehicles for the MainThread to move",
     cpuMs: 12.6, gpuMul: 0.85, jitter: 0.07, spikes: 0.6, spikeMs: 7,
-    workers: { n: 3, load: 0.3, burst: 0.15 } },
+    workers: { n: 3, load: 0.3, burst: 0.15 }, vram: 1.0, addonCpu: 1 },
   cruise: { label: "Cruise", sub: "FL350", name: "Cruise at FL350",
     note: "Next to nothing to simulate, a sky full of volumetric cloud to draw",
     cpuMs: 5.8, gpuMul: 1.25, jitter: 0.035, spikes: 0.05, spikeMs: 3,
-    workers: { n: 2, load: 0.14, burst: 0.05 } },
+    workers: { n: 2, load: 0.14, burst: 0.05 }, vram: 0.4, addonCpu: 0.35 },
   vfr: { label: "VFR", sub: "1,500 ft", name: "Low and slow VFR",
     note: "Photogrammetry and trees streaming in underneath — some of both",
     cpuMs: 8.7, gpuMul: 1.0, jitter: 0.05, spikes: 0.3, spikeMs: 5,
-    workers: { n: 10, load: 0.3, burst: 0.25 } },
+    workers: { n: 10, load: 0.3, burst: 0.25 }, vram: 1.2, addonCpu: 0.5 },
 };
 
 /* GPU milliseconds for a card at index 100 (the 5090) per resolution. Tom's Hardware has
@@ -54,13 +56,47 @@ const LOCS: Record<Loc, {
  * so that anchor is extrapolated from how the 1440p-to-4K step scales with pixel count. */
 const GPU_MS: Record<Res, number> = { "1080p": 7.2, "1440p": 8.9, "4K": 11.9 };
 
+/* VRAM. Each card's real memory and PCIe link come from gpu_data.json; how much the sim
+ * wants is guessed — render targets per resolution, scenery per location (LOCS.vram), then
+ * the two sliders. Sized so an 8 GB card runs out at 1440p High the moment you add an
+ * airliner, and a 12 GB card goes at Ultra with a payware airport and GSX. */
+const VRAM_BASE: Record<Res, number> = { "1080p": 3.2, "1440p": 3.8, "4K": 5.3 };
+const TEXTURES = [
+  { part: "Low", short: "Low", gb: 0.6 },
+  { part: "Medium", short: "Medium", gb: 1.6 },
+  { part: "High", short: "High", gb: 2.8 },
+  { part: "Ultra", short: "Ultra", gb: 4.4 },
+];
+/* Addons cost memory and MainThread time. cpuMs is extra MainThread at index 100 at an
+ * airport, scaled per location by LOCS.addonCpu — a payware airport and GSX do little at
+ * FL350, a study-level airliner's systems still run. workers is extra helper-thread load. */
+const ADDONS = [
+  { part: "Stock sim", short: "Stock", gb: 0, cpuMs: 0, workers: 0 },
+  { part: "Study-level airliner", short: "Airliner", gb: 0.8, cpuMs: 1.2, workers: 0.03 },
+  { part: "+ Payware airport", short: "Airport", gb: 1.9, cpuMs: 2.8, workers: 0.05 },
+  { part: "+ GSX and AI traffic", short: "GSX", gb: 2.9, cpuMs: 5.2, workers: 0.08 },
+  { part: "Everything at once", short: "All", gb: 4.3, cpuMs: 8, workers: 0.12 },
+];
+
+/* How much a narrow link makes paging hurt: bandwidth in PCIe 3.0 lanes, against a 5.0 x16
+ * slot. A 4.0 x8 card (3050) pays twice what a 5.0 x16 one does. */
+function linkFactor(pcie: string): number {
+  const m = /(\d)\.0×(\d+)/.exec(pcie);
+  if (!m) return 1;
+  return Math.sqrt(64 / (Number(m[2]) * 2 ** (Number(m[1]) - 3)));
+}
+
 const CPU_PICKS: [string, string][] = [
   ["Ryzen 5 5600", "5600"], ["Ryzen 5 7600X", "7600X"], ["Ryzen 7 5800X3D", "5800X3D"],
   ["Core i5-14600K", "14600K"], ["Ryzen 7 7800X3D", "7800X3D"], ["Ryzen 7 9800X3D", "9800X3D"],
 ];
-const GPU_PICKS: [string, string][] = [
-  ["RTX 3050", "3050"], ["RTX 5060", "5060"], ["RX 9060 XT 16GB", "9060 XT"], ["RX 9070", "9070"],
-  ["RX 9070 XT", "9070 XT"], ["RTX 5080", "5080"], ["RTX 5090", "5090"],
+/* A third field names a smaller-memory sibling the page can toggle to. The toggle keeps the
+ * bigger card's index: same silicon, and the measured gap between the two is memory running
+ * out — which this page models itself, so taking the smaller card's index would count it twice. */
+const GPU_PICKS: [string, string, string?][] = [
+  ["RTX 3050", "3050"], ["RTX 5060", "5060"], ["RX 9060 XT 16GB", "9060 XT", "RX 9060 XT 8GB"],
+  ["RTX 5070", "5070"], ["RTX 5070 Ti", "5070 Ti"], ["RX 9070", "9070"], ["RX 9070 XT", "9070 XT"],
+  ["RTX 5090", "5090"],
 ];
 const RESES: Res[] = ["1080p", "1440p", "4K"];
 
@@ -79,15 +115,32 @@ const TOPO: Record<string, { cores: number; threads: number; pThreads: number }>
 const WINDOW = 5000;      // graph span, ms
 const EASE = 0.3;         // seconds for the model to settle after a slider move
 
-const state = { loc: "airport" as Loc, res: "1440p" as Res, cpu: 0, gpu: 0 };
+const state = { loc: "airport" as Loc, res: "1440p" as Res, cpu: 0, gpu: 0, tex: 2, addon: 0, small: false };
+
+// The memory the selected card actually has: its smaller sibling when toggled to one.
+const mem = (i: number): { part: string; vram?: number; pcie?: string } =>
+  (state.small && GPUS[i].alt) || GPUS[i];
 let CPUS: Stop[] = [];
 let GPUS: Stop[] = [];
 
 const cpuIndex = (s: Stop): number => Math.max(...Object.values(s.idx));
 const gpuIndex = (s: Stop, res: Res): number => s.idx[res] ?? 1;
-const targetCpu = (): number => LOCS[state.loc].cpuMs * 100 / cpuIndex(CPUS[state.cpu]);
-const targetGpu = (): number =>
-  GPU_MS[state.res] * LOCS[state.loc].gpuMul * 100 / gpuIndex(GPUS[state.gpu], state.res);
+function vram(): { parts: number[]; used: number; cap: number; over: number; e: number; link: number } {
+  const g = mem(state.gpu);
+  const parts = [VRAM_BASE[state.res], LOCS[state.loc].vram, TEXTURES[state.tex].gb, ADDONS[state.addon].gb];
+  const used = parts.reduce((a, b) => a + b, 0), cap = g.vram ?? 16;
+  const over = Math.max(0, used - cap);
+  return { parts, used, cap, over, e: over / cap, link: linkFactor(g.pcie ?? "") };
+}
+
+const targetCpu = (): number =>
+  (LOCS[state.loc].cpuMs + ADDONS[state.addon].cpuMs * LOCS[state.loc].addonCpu) * 100 / cpuIndex(CPUS[state.cpu]);
+// Over VRAM, every frame that touches a paged-out texture waits on the bus.
+const targetGpu = (): number => {
+  const v = vram();
+  return GPU_MS[state.res] * LOCS[state.loc].gpuMul * 100 / gpuIndex(GPUS[state.gpu], state.res)
+    * (1 + 5 * v.e * v.link);
+};
 
 function gauss(): number {
   const u = 1 - Math.random(), v = Math.random();
@@ -103,9 +156,13 @@ let pending = { start: 0, cpu: 0, gpu: 0, frame: 16 };
 function makeFrame(start: number): typeof pending {
   const L = LOCS[state.loc];
   let cpu = cur.cpu * (1 + L.jitter * gauss());
-  if (Math.random() < L.spikes * Math.max(cur.cpu, cur.gpu) / 1000)
+  const len = Math.max(cur.cpu, cur.gpu) / 1000;
+  if (Math.random() < L.spikes * (1 + state.addon * 0.35) * len)
     cpu += L.spikeMs * (cur.cpu / L.cpuMs) * (0.5 + Math.random());
-  const gpu = cur.gpu * (1 + L.jitter * 0.5 * gauss());
+  let gpu = cur.gpu * (1 + L.jitter * 0.5 * gauss());
+  const v = vram();
+  if (v.over > 0 && Math.random() < Math.min(12, (3 + 40 * v.e) * v.link) * len)
+    gpu += (25 + Math.random() * 65) * Math.sqrt(v.link);             // a paging stall
   cpu = Math.max(1, cpu);
   const g = Math.max(1, gpu);
   return { start, cpu, gpu: g, frame: Math.max(cpu, g) };
@@ -682,7 +739,7 @@ function sampleUsage(): void {
   const n = Math.min(L.workers.n, T - 1);
   for (let k = 0; k < n; k++) {
     const i = Math.floor(((k + 0.5) / n) * T);
-    load[i] += L.workers.load * slow * (0.7 + Math.random() * 0.6)
+    load[i] += (L.workers.load + ADDONS[state.addon].workers) * slow * (0.7 + Math.random() * 0.6)
       + (Math.random() < 0.3 ? L.workers.burst * Math.random() * 2 : 0);
   }
 
@@ -766,14 +823,15 @@ function seg<T extends string>(el: HTMLElement, items: [T, string, string?][], g
   sync();
 }
 
-function slider(el: HTMLElement, label: string, stops: Stop[], score: (s: Stop) => number,
-                get: () => number, set: (i: number) => void): () => void {
+function slider(el: HTMLElement, label: string, stops: Step[], badge: (i: number) => string,
+                get: () => number, set: (i: number) => void,
+                title: (i: number) => string = (i) => stops[i].part): () => void {
   const n = stops.length;
   el.innerHTML = `
     <div class="sl-head"><span class="ctl-label">${label}</span><span class="sl-ix"></span></div>
     <div class="sl-name"></div>
     <input type="range" min="0" max="${n - 1}" step="1" aria-label="${label}">
-    <div class="ticks">${stops.map((s, i) =>
+    <div class="ticks${n > 6 ? " dense" : ""}">${stops.map((s, i) =>
       `<button type="button" data-i="${i}" style="--p:${i / (n - 1)}">${s.short}</button>`).join("")}</div>`;
   const input = el.querySelector("input")!;
   const name = el.querySelector<HTMLElement>(".sl-name")!;
@@ -782,8 +840,8 @@ function slider(el: HTMLElement, label: string, stops: Stop[], score: (s: Stop) 
   const render = (): void => {
     const i = get();
     input.value = String(i);
-    name.textContent = stops[i].part;
-    ix.textContent = `Index ${score(stops[i])}`;
+    name.textContent = title(i);
+    ix.textContent = badge(i);
     ticks.forEach((b) => b.classList.toggle("on", Number(b.dataset.i) === i));
   };
   input.addEventListener("input", () => { set(Number(input.value)); render(); });
@@ -792,7 +850,7 @@ function slider(el: HTMLElement, label: string, stops: Stop[], score: (s: Stop) 
   return render;
 }
 
-function pick(cat: Cat[], picks: [string, string][]): Stop[] {
+function pick(cat: Cat[], picks: [string, string, string?][]): Stop[] {
   const out: Stop[] = [];
   for (const [part, short] of picks) {
     const c = cat.find((x) => x.part === part);
@@ -810,10 +868,19 @@ function readUrl(): void {
   const gi = GPUS.findIndex((s) => s.slug === q.get("gpu"));
   if (ci >= 0) state.cpu = ci;
   if (gi >= 0) state.gpu = gi;
+  const ti = TEXTURES.findIndex((s) => s.short.toLowerCase() === q.get("tex"));
+  const ai = ADDONS.findIndex((s) => s.short.toLowerCase() === q.get("addons"));
+  if (ti >= 0) state.tex = ti;
+  if (ai >= 0) state.addon = ai;
+  state.small = q.get("mem") === "small";
 }
 
 function writeUrl(): void {
-  const q = new URLSearchParams({ at: state.loc, res: state.res, cpu: CPUS[state.cpu].slug, gpu: GPUS[state.gpu].slug });
+  const q = new URLSearchParams({
+    at: state.loc, res: state.res, cpu: CPUS[state.cpu].slug, gpu: GPUS[state.gpu].slug,
+    tex: TEXTURES[state.tex].short.toLowerCase(), addons: ADDONS[state.addon].short.toLowerCase(),
+  });
+  if (state.small && GPUS[state.gpu].alt) q.set("mem", "small");
   history.replaceState(null, "", `?${q}`);
 }
 
@@ -835,9 +902,13 @@ function wireTheme(): void {
 async function boot(): Promise<void> {
   wireTheme();
   // GPUs come from gpu_index, not the catalogue: the catalogue only holds priced parts.
+  // VRAM and PCIe link per card come from gpu_data.json's spec table.
   let doc: { catalogue: { cpus: Cat[] }; gpu_index: Record<string, Record<string, number>> };
+  let specs: Record<string, { vram: number; pcie: string }>;
   try {
-    doc = await (await fetch("/builds.json")).json();
+    const [b, g] = await Promise.all([fetch("/builds.json"), fetch("/gpu_data.json")]);
+    doc = await b.json();
+    specs = (await g.json()).specs ?? {};
   } catch {
     $("stage").innerHTML = `<p class="fail">Could not load the index data (builds.json).</p>`;
     return;
@@ -851,6 +922,11 @@ async function boot(): Promise<void> {
     })),
   })).filter((g) => Object.keys(g.idx).length === RESES.length);
   GPUS = pick(gpuCat, GPU_PICKS).sort((a, b) => gpuIndex(a, "1440p") - gpuIndex(b, "1440p"));
+  for (const g of GPUS) { g.vram = specs[g.part]?.vram; g.pcie = specs[g.part]?.pcie; }
+  for (const [part, , alt] of GPU_PICKS) {
+    const g = GPUS.find((x) => x.part === part);
+    if (g && alt && specs[alt]) g.alt = { part: alt, vram: specs[alt].vram, pcie: specs[alt].pcie };
+  }
   if (CPUS.length < 2 || GPUS.length < 2) {
     $("stage").innerHTML = `<p class="fail">The index data is missing the chips this page uses.</p>`;
     return;
@@ -863,22 +939,64 @@ async function boot(): Promise<void> {
   const showLoc = (): void => { locName.textContent = LOCS[state.loc].name; locNote.textContent = LOCS[state.loc].note; };
   showLoc();
 
+  const vramBox = $("vramBox"), vramRead = $("vramRead"), vcap = $("vcap"), hudVram = $("hudVram");
+  const segs = ["base", "loc", "tex", "add"].map((k) => vramBox.querySelector<HTMLElement>(`.seg-${k}`)!);
+  const segOver = vramBox.querySelector<HTMLElement>(".seg-over")!;
+  const showVram = (): void => {
+    const v = vram();
+    const scale = Math.max(v.cap * 1.25, v.used * 1.06);
+    const pct = (gb: number): string => `${(gb / scale) * 100}%`;
+    let at = 0;
+    v.parts.forEach((gb, i) => { segs[i].style.left = pct(at); segs[i].style.width = pct(gb); at += gb; });
+    segOver.style.left = pct(v.cap);
+    segOver.style.width = pct(v.over);
+    vcap.style.left = pct(v.cap);
+    vcap.firstElementChild!.textContent = `${v.cap} GB`;
+    const over = v.over > 0;
+    vramBox.classList.toggle("over", over);
+    vramRead.textContent = over
+      ? `${v.used.toFixed(1)} GB · ${v.over.toFixed(1)} GB over`
+      : `${v.used.toFixed(1)} of ${v.cap} GB`;
+    hudVram.textContent = `VRAM ${v.used.toFixed(1)} / ${v.cap} GB`;
+    hudVram.classList.toggle("over", over);
+  };
+  const changed = (): void => { writeUrl(); showVram(); };
+
   seg(
     $("locSeg"),
     (Object.keys(LOCS) as Loc[]).map((k) => [k, LOCS[k].label, LOCS[k].sub] as [Loc, string, string]),
     () => state.loc,
-    (v) => { state.loc = v; showLoc(); writeUrl(); },
+    (v) => { state.loc = v; showLoc(); changed(); },
   );
   let renderGpu = (): void => {};
   seg(
     $("resSeg"),
     RESES.map((r) => [r, r] as [Res, string]),
     () => state.res,
-    (v) => { state.res = v; renderGpu(); writeUrl(); },
+    (v) => { state.res = v; renderGpu(); changed(); },
   );
-  slider($("cpuField"), "CPU", CPUS, cpuIndex, () => state.cpu, (i) => { state.cpu = i; writeUrl(); });
-  renderGpu = slider($("gpuField"), "GPU", GPUS, (s) => gpuIndex(s, state.res), () => state.gpu,
-    (i) => { state.gpu = i; writeUrl(); });
+  slider($("cpuField"), "CPU", CPUS, (i) => `Index ${cpuIndex(CPUS[i])}`,
+    () => state.cpu, (i) => { state.cpu = i; changed(); });
+  const memSeg = document.createElement("div");
+  memSeg.className = "seg mem-seg";
+  renderGpu = slider($("gpuField"), "GPU", GPUS,
+    (i) => `Index ${gpuIndex(GPUS[i], state.res)} · ${mem(i).vram ?? "?"} GB`,
+    () => state.gpu, (i) => { state.gpu = i; memSeg.hidden = !GPUS[i].alt; changed(); },
+    (i) => mem(i).part);
+  const twin = GPUS.find((g) => g.alt);
+  if (twin?.alt) {
+    $("gpuField").append(memSeg);
+    seg(memSeg, [["big", `${twin.vram} GB`], ["small", `${twin.alt.vram} GB`]],
+      () => (state.small ? "small" : "big"),
+      (v) => { state.small = v === "small"; renderGpu(); changed(); });
+  }
+  memSeg.hidden = !GPUS[state.gpu].alt;
+  slider($("texField"), "Textures", TEXTURES, (i) => `+${TEXTURES[i].gb.toFixed(1)} GB`,
+    () => state.tex, (i) => { state.tex = i; changed(); });
+  slider($("addonField"), "Addons", ADDONS,
+    (i) => (i ? `+${ADDONS[i].gb.toFixed(1)} GB · MainThread` : "nothing extra"),
+    () => state.addon, (i) => { state.addon = i; changed(); });
+  showVram();
 
   readColors();
   new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
@@ -929,7 +1047,12 @@ async function boot(): Promise<void> {
     msCpu.textContent = `${avg.cpu.toFixed(1)} ms`;
     msGpu.textContent = `${avg.gpu.toFixed(1)} ms`;
     const wait = Math.abs(avg.cpu - avg.gpu);
-    idleEl.innerHTML = wait < 1
+    const v = vram();
+    idleEl.innerHTML = v.over > 0
+      ? `<b class="over">Out of VRAM.</b> ${v.over.toFixed(1)} GB does not fit on the ${v.cap} GB card, so it
+         spills into system RAM over a PCIe ${GPUS[state.gpu].pcie ?? ""} link. Frames wait for it to come back —
+         that is the stutter. Lower textures or addons, or pick a card with more memory.`
+      : wait < 1
       ? `Both halves finish within a millisecond of each other — upgrading just one buys almost nothing,
          because the other becomes the limit straight away. Only upgrading both moves the frame rate.`
       : `${cpuLim ? '<b class="g">GPU</b>' : '<b class="c">MainThread</b>'} waits <b>${wait.toFixed(1)} ms</b>

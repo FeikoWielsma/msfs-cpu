@@ -74,6 +74,9 @@ h1 { font-family:"Bebas Neue", sans-serif; font-size:clamp(34px, 9vw, 60px);
 .hud-ms .c::before { background:#00b4ff; }
 .hud-ms .g::before { background:#16b378; }
 
+.hud-vram { font-size:11px; color:rgba(255, 255, 255, .7); margin-top:2px; white-space:nowrap; }
+.hud-vram.over { color:#ff6b7a; font-weight:700; }
+
 .scene-tag { position:absolute; left:12px; right:12px; bottom:10px; pointer-events:none;
   color:#fff; text-shadow:0 1px 4px rgba(0, 0, 0, .7); }
 .scene-tag b { display:block; font-family:"Bebas Neue", sans-serif; font-size:22px;
@@ -103,6 +106,12 @@ h1 { font-family:"Bebas Neue", sans-serif; font-size:clamp(34px, 9vw, 60px);
 
 .slider.cpu { --k:var(--idx-cpu); --k-bg:var(--idx-cpu-bg); }
 .slider.gpu { --k:var(--idx-gpu); --k-bg:var(--idx-gpu-bg); }
+.slider.mem { --k:var(--gold); --k-bg:var(--gold-bg); }
+[hidden] { display:none !important; }
+/* 8 / 16 GB switch for a card sold in both; only shown while that card is selected. */
+.mem-seg { align-self:flex-start; margin-top:2px; }
+.mem-seg button { flex:none; font-size:14px; padding:4px 14px 3px; }
+.mem-seg button.on { padding-bottom:1px; }
 .sl-head { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
 .sl-ix { font-size:11.5px; font-weight:700; padding:1px 7px; border-radius:3px;
   color:var(--k); background:var(--k-bg); white-space:nowrap; }
@@ -128,8 +137,37 @@ h1 { font-family:"Bebas Neue", sans-serif; font-size:clamp(34px, 9vw, 60px);
   transform:translateX(-50%); appearance:none; border:0; background:none; cursor:pointer;
   padding:2px 1px; font-family:"Bebas Neue", sans-serif; font-size:13.5px; letter-spacing:.01em;
   color:var(--muted); white-space:nowrap; }
+/* More than six stops will not fit on one line in a 330px panel, so alternate labels
+   drop to a second row. */
+.ticks.dense { height:34px; }
+.ticks.dense button:nth-child(even) { top:15px; }
 .ticks button:hover { color:var(--ink); }
 .ticks button.on { color:var(--k); }
+
+/* ---------- VRAM bar ----------
+ * Stacked fill in the order memory is claimed; the card's capacity is a marker, and
+ * whatever lands past it is hatched red on top. The scale always leaves room past the
+ * marker so an overflow has somewhere visible to go. */
+.vram { gap:6px; }
+.v-read { font-size:12px; font-weight:700; color:var(--ink-2); white-space:nowrap; }
+.vram.over .v-read { color:var(--neg); }
+.vbar { position:relative; height:16px; margin:4px 0 16px; background:var(--track);
+  border:1px solid var(--line); border-radius:3px; }
+.vram.over .vbar { border-color:var(--neg); box-shadow:0 0 0 2px var(--neg-bg); }
+.vbar i { position:absolute; top:0; bottom:0; transition:left .25s, width .25s; }
+.vbar .seg-base, .vkey .base::before { background:var(--faint); }
+.vbar .seg-loc, .vkey .loc::before { background:var(--muted); }
+.vbar .seg-tex, .vkey .tex::before { background:var(--gold); }
+.vbar .seg-add, .vkey .add::before { background:color-mix(in srgb, var(--gold) 50%, var(--card)); }
+.vbar .seg-over { background:repeating-linear-gradient(135deg, var(--neg) 0 3px, var(--neg-bg) 3px 6px); }
+.vcap { position:absolute; top:-5px; bottom:-5px; width:2px; margin-left:-1px;
+  background:var(--ink); transition:left .25s; }
+.vcap span { position:absolute; top:100%; left:1px; transform:translateX(-50%); margin-top:1px;
+  font-size:10.5px; font-weight:700; color:var(--ink-2); white-space:nowrap; }
+.vkey { display:flex; flex-wrap:wrap; gap:3px 11px; font-size:11px; color:var(--muted); }
+.vkey span::before { content:""; display:inline-block; width:9px; height:9px; border-radius:2px;
+  margin-right:5px; vertical-align:-1px; }
+.idle b.over { color:var(--neg); }
 
 /* ---------- graph ---------- */
 .graph { grid-area:graph; background:var(--card); border:1px solid var(--line);
