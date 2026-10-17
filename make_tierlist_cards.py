@@ -85,8 +85,15 @@ def main():
     for out, html, query, width in CARDS:
         if only and only.lower() not in out.lower():
             continue
-        shoot(chrome, html, query, tmp, width, PROBE_H, 1)
-        height = content_height(tmp, width)
+        probe_height = PROBE_H
+        while True:
+            shoot(chrome, html, query, tmp, width, probe_height, 1)
+            height = content_height(tmp, width)
+            if height < probe_height - 1:
+                break
+            probe_height *= 2
+            if probe_height > 16000:
+                raise RuntimeError('Card exceeds the maximum probe height: ' + html)
         dest = os.path.join(OUT_DIR, out)
         shoot(chrome, html, query, dest, width, height, SCALE)
         kb = os.path.getsize(dest) // 1024

@@ -10,101 +10,101 @@
 #
 # PSU, motherboard, case and cooler are composed per build by make_build_table.py
 # from the rules in that file, rather than being one flat bundle figure.
-part,eur,src
-priced_on,2026-07-26,
+part,eur,src,observed_on
+priced_on,2026-07-26,,
 # --- CPUs
-Ryzen 7 9800X3D,399,pcpp
-Ryzen 7 7800X3D,299,pcpp
-Ryzen 7 5800X3D,358,pcpp
-Ryzen 5 9600X,183,pcpp
-Ryzen 5 7600X,153,pcpp
-Ryzen 5 7500X3D,219,pcpp
-Ryzen 5 7500F,133,pcpp
-Ryzen 5 5600,135,pcpp
-Ryzen 5 5600X,156,pcpp
-Ryzen 5 5600XT,159,pcpp
+Ryzen 7 9800X3D,455.9,pcpp,2026-10-17
+Ryzen 7 7800X3D,296.89,pcpp,2026-10-17
+Ryzen 7 5800X3D,359,megekko,2026-10-17
+Ryzen 5 9600X,214.85,pcpp,2026-10-17
+Ryzen 5 7600X,160.66,pcpp,2026-10-17
+Ryzen 5 7500X3D,219,pcpp,2026-07-26
+Ryzen 5 7500F,130.76,pcpp,2026-10-17
+Ryzen 5 5600,152.9,pcpp,2026-10-17
+Ryzen 5 5600X,179.54,pcpp,2026-10-17
+Ryzen 5 5600XT,150.74,pcpp,2026-10-17
 # AliExpress-only Chinese-market SKU. Priced for reference but not used in the matrix:
 # no benchmark set covers it, so it would carry no index chip.
-Ryzen 5 5500X3D,150,aliexpress
-Core Ultra 9 285K,551,pcpp
-Core Ultra 7 270K Plus,325,pcpp
-Core Ultra 5 250K Plus,227,pcpp
-Core i7-14700K,398,pcpp
-Core i5-14600K,236,pcpp
-Core i5-12400F,150,pcpp
+Ryzen 5 5500X3D,150,aliexpress,2026-07-26
+Core Ultra 9 285K,550.55,pcpp,2026-10-17
+Core Ultra 7 270K Plus,323.9,megekko,2026-10-17
+Core Ultra 5 250K Plus,227,pcpp,2026-07-26
+Core i7-14700K,424,pcpp,2026-10-17
+Core i5-14600K,273.41,pcpp,2026-10-17
+Core i5-12400F,161.9,pcpp,2026-10-17
 # Priced as the KF; identical silicon to the 12600K with the iGPU fused off, which is
 # how it resolves to an index. See CPU_ALIAS in make_build_table.py.
-Core i5-12600KF,185,pcpp
+Core i5-12600KF,192.9,pcpp,2026-10-17
 # Cheap end, captured 2026-07-26. These exist so the generator can reach a genuinely
 # low budget: a 14100F is both cheaper AND faster than the 5600 that used to be the
 # floor, and a 225F scores 75 for 149. Only CPUs with a measured index can appear --
 # a 12100F or a 5500 is on PCPP but was never benchmarked, so it cannot be placed.
-Core i3-14100F,107,pcpp
-Core i5-13400F,180,pcpp
-Core i5-14400F,175,pcpp
-Core i5-12600K,219,pcpp
-Core Ultra 5 225F,149,pcpp
-Core Ultra 5 245K,186,pcpp
-Ryzen 7 5700X,209,pcpp
-Ryzen 7 7700X,214,pcpp
-Ryzen 7 7700X3D,349,pcpp
+Core i3-14100F,110,pcpp,2026-10-17
+Core i5-13400F,225.39,pcpp,2026-10-17
+Core i5-14400F,164.59,pcpp,2026-10-17
+Core i5-12600K,213.98,pcpp,2026-10-17
+Core Ultra 5 225F,185,pcpp,2026-10-17
+Core Ultra 5 245K,229.9,pcpp,2026-10-17
+Ryzen 7 5700X,238,pcpp,2026-10-17
+Ryzen 7 7700X,221.33,pcpp,2026-10-17
+Ryzen 7 7700X3D,349,pcpp,2026-07-26
 # --- GPUs. Radeon is markedly better value at every tier at these prices; the 9070 XT
 # at 669 is both cheaper and faster than a 5070 Ti at 949.
-RX 9070 XT,699,pcpp
-RX 9070,599,pcpp
-RX 9060 XT 16GB,438,pcpp
-RX 9060 XT 8GB,348,pcpp
-RX 7600,283,tweakers
-RTX 5090,4249,pcpp
-RTX 5080,1259,pcpp
-RTX 5070 Ti,959,pcpp
-RTX 5070,639,pcpp
-RTX 5060 Ti 16GB,579,pcpp
-RTX 5060 Ti 8GB,352,pcpp
-RTX 5060,317,pcpp
-RTX 5050,285,pcpp
-Arc B580,289,tweakers
-Arc B570,267,tweakers
+RX 9070 XT,1031,pcpp,2026-10-17
+RX 9070,856.99,pcpp,2026-10-17
+RX 9060 XT 16GB,636.92,pcpp,2026-10-17
+RX 9060 XT 8GB,512.96,pcpp,2026-10-17
+RX 7600,405.1,pcpp,2026-10-17
+RTX 5090,7858,pcpp,2026-10-17
+RTX 5080,1699,pcpp,2026-10-17
+RTX 5070 Ti,1349,pcpp,2026-10-17
+RTX 5070,949,pcpp,2026-10-17
+RTX 5060 Ti 16GB,849,pcpp,2026-10-17
+RTX 5060 Ti 8GB,548,pcpp,2026-10-17
+RTX 5060,463,pcpp,2026-10-17
+RTX 5050,341,pcpp,2026-10-17
+Arc B580,423.64,pcpp,2026-10-17
+Arc B570,314.89,pcpp,2026-10-17
 # Priced but unusable in the matrix — no benchmark coverage (9070 GRE) or no longer
 # reasonably available / priced far above their index (the rest).
-RX 9070 GRE,559,pcpp
-RX 7600 XT,536,tweakers
-RX 7700 XT,500,tweakers
-RX 7800 XT,900,tweakers
-RX 7900 XT,736,tweakers
-RX 7900 XTX,1325,tweakers
-RTX 4090,3489,tweakers
-RTX 4080,1589,tweakers
+RX 9070 GRE,559,pcpp,2026-07-26
+RX 7600 XT,536,tweakers,2026-07-26
+RX 7700 XT,500,tweakers,2026-07-26
+RX 7800 XT,900,tweakers,2026-07-26
+RX 7900 XT,736,tweakers,2026-07-26
+RX 7900 XTX,1325,tweakers,2026-07-26
+RTX 4090,3489,tweakers,2026-07-26
+RTX 4080,1589,tweakers,2026-07-26
 # --- memory. The 2026 market: 32GB of DDR5 costs more than most CPUs above.
-32GB DDR5-6000,399,pcpp
-32GB DDR4-3200,229,pcpp
+32GB DDR5-6000,542,pcpp,2026-10-17
+32GB DDR4-3200,241.93,pcpp,2026-10-17
 # 1x16 / 2x8 are deliberate alternatives, not the same kit: a budget build really
 # does buy a single 16 GB stick. Priced but not yet used by any build_specs.csv row.
-1x16GB DDR5-6000,233,pcpp
-2x8GB DDR5-6000,229,pcpp
-2x8GB DDR4-3200,103,pcpp
+1x16GB DDR5-6000,289.45,pcpp,2026-10-17
+2x8GB DDR5-6000,319.9,pcpp,2026-10-17
+2x8GB DDR4-3200,138.5,pcpp,2026-10-17
 # --- storage
-1TB NVMe,140,pcpp
-2TB NVMe,220,pcpp
+1TB NVMe,129,pcpp,2026-10-17
+2TB NVMe,237.5,pcpp,2026-10-17
 # --- PSU, by the GPU it has to feed
-psu_650,59,pcpp
-psu_750b,88,pcpp
-psu_750a,80,tweakers
-psu_850,90,pcpp
-psu_1000,81,pcpp
+psu_650,44.99,pcpp,2026-10-17
+psu_750b,100.9,pcpp,2026-10-17
+psu_750a,100.9,pcpp,2026-10-17
+psu_850,125,pcpp,2026-10-17
+psu_1000,159,pcpp,2026-10-17
 # --- motherboard, by socket and memory type. "great" = a board worth pairing with a
 # K-series or flagship chip rather than the cheapest B-series.
-mb_am4,85,pcpp
-mb_am5,112,pcpp
-mb_am5_great,130,tweakers
-mb_lga1700_ddr4,89,pcpp
-mb_lga1700_ddr4_great,125,tweakers
-mb_lga1700_ddr5,107,pcpp
-mb_lga1700_ddr5_great,125,tweakers
-mb_lga1851,115,pcpp
+mb_am4,105,pcpp,2026-10-17
+mb_am5,129,pcpp,2026-10-17
+mb_am5_great,147,pcpp,2026-10-17
+mb_lga1700_ddr4,119.37,pcpp,2026-10-17
+mb_lga1700_ddr4_great,159,pcpp,2026-10-17
+mb_lga1700_ddr5,151.99,pcpp,2026-10-17
+mb_lga1700_ddr5_great,151.99,pcpp,2026-10-17
+mb_lga1851,142.3,pcpp,2026-10-17
 # --- case, flat
-case,60,pcpp
+case,104.85,pcpp,2026-10-17
 # --- CPU cooler: single 120mm tower, dual tower, or a 360mm AIO for the hot Intel parts
-cooler_entry,26,pcpp
-cooler_mid,34,pcpp
-cooler_aio,52,pcpp
+cooler_entry,27.9,pcpp,2026-10-17
+cooler_mid,39.59,pcpp,2026-10-17
+cooler_aio,81.9,pcpp,2026-10-17

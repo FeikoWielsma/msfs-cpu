@@ -1,0 +1,353 @@
+{
+  "schema": "msfs-pcpp-collection-config-v1",
+  "watch": "Ryzen 7 9800X3D = /\\bRyzen\\s+7\\s+9800X3D(?![A-Za-z0-9])/i\nRyzen 7 7800X3D = /\\bRyzen\\s+7\\s+7800X3D(?![A-Za-z0-9])/i\nRyzen 7 5800X3D = /\\bRyzen\\s+7\\s+5800X3D(?![A-Za-z0-9])/i\nRyzen 5 9600X = /\\bRyzen\\s+5\\s+9600X(?![A-Za-z0-9])/i\nRyzen 5 7600X = /\\bRyzen\\s+5\\s+7600X(?![A-Za-z0-9])/i\nRyzen 5 7500X3D = /\\bRyzen\\s+5\\s+7500X3D(?![A-Za-z0-9])/i\nRyzen 5 7500F = /\\bRyzen\\s+5\\s+7500F(?![A-Za-z0-9])/i\nRyzen 5 5600 = /\\bRyzen\\s+5\\s+5600(?![A-Za-z0-9])/i\nRyzen 5 5600X = /\\bRyzen\\s+5\\s+5600X(?![A-Za-z0-9])/i\nRyzen 5 5600XT = /\\bRyzen\\s+5\\s+5600XT(?![A-Za-z0-9])/i\nRyzen 5 5500X3D = /\\bRyzen\\s+5\\s+5500X3D(?![A-Za-z0-9])/i\nCore Ultra 9 285K = /\\bCore\\s+Ultra\\s+9\\s+285K(?![A-Za-z0-9])/i\nCore Ultra 7 270K Plus = /\\bCore\\s+Ultra\\s+7\\s+270K\\s+Plus(?![A-Za-z0-9])/i\nCore Ultra 5 250K Plus = /\\bCore\\s+Ultra\\s+5\\s+250K\\s+Plus(?![A-Za-z0-9])/i\nCore i7-14700K = /\\bCore\\s+i7\\-14700K(?![A-Za-z0-9])/i\nCore i5-14600K = /\\bCore\\s+i5\\-14600K(?![A-Za-z0-9])/i\nCore i5-12400F = /\\bCore\\s+i5\\-12400F(?![A-Za-z0-9])/i\nCore i5-12600KF = /\\bCore\\s+i5\\-12600KF(?![A-Za-z0-9])/i\nCore i3-14100F = /\\bCore\\s+i3\\-14100F(?![A-Za-z0-9])/i\nCore i5-13400F = /\\bCore\\s+i5\\-13400F(?![A-Za-z0-9])/i\nCore i5-14400F = /\\bCore\\s+i5\\-14400F(?![A-Za-z0-9])/i\nCore i5-12600K = /\\bCore\\s+i5\\-12600K(?![A-Za-z0-9])/i\nCore Ultra 5 225F = /\\bCore\\s+Ultra\\s+5\\s+225F(?![A-Za-z0-9])/i\nCore Ultra 5 245K = /\\bCore\\s+Ultra\\s+5\\s+245K(?![A-Za-z0-9])/i\nRyzen 7 5700X = /\\bRyzen\\s+7\\s+5700X(?![A-Za-z0-9])/i\nRyzen 7 7700X = /\\bRyzen\\s+7\\s+7700X(?![A-Za-z0-9])/i\nRyzen 7 7700X3D = /\\bRyzen\\s+7\\s+7700X3D(?![A-Za-z0-9])/i\nRX 9070 XT = /\\bRX\\s+9070\\s+XT(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRX 9070 = /\\bRX\\s+9070(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRX 9060 XT 16GB = /\\bRX\\s+9060\\s+XT(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b).*\\b16\\s*GB\\b/i\nRX 9060 XT 8GB = /\\bRX\\s+9060\\s+XT(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b).*\\b8\\s*GB\\b/i\nRX 7600 = /\\bRX\\s+7600(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRTX 5090 = /\\bRTX\\s+5090(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRTX 5080 = /\\bRTX\\s+5080(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRTX 5070 Ti = /\\bRTX\\s+5070\\s+Ti(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRTX 5070 = /\\bRTX\\s+5070(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRTX 5060 Ti 16GB = /\\bRTX\\s+5060\\s+Ti(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b).*\\b16\\s*GB\\b/i\nRTX 5060 Ti 8GB = /\\bRTX\\s+5060\\s+Ti(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b).*\\b8\\s*GB\\b/i\nRTX 5060 = /\\bRTX\\s+5060(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRTX 5050 = /\\bRTX\\s+5050(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nArc B580 = /\\bArc\\s+B580(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nArc B570 = /\\bArc\\s+B570(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRX 9070 GRE = /\\bRX\\s+9070\\s+GRE(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRX 7600 XT = /\\bRX\\s+7600\\s+XT(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRX 7700 XT = /\\bRX\\s+7700\\s+XT(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRX 7800 XT = /\\bRX\\s+7800\\s+XT(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRX 7900 XT = /\\bRX\\s+7900\\s+XT(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRX 7900 XTX = /\\bRX\\s+7900\\s+XTX(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRTX 4090 = /\\bRTX\\s+4090(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i\nRTX 4080 = /\\bRTX\\s+4080(?![A-Za-z0-9])(?!\\s+(?:Ti|SUPER|XT|XTX|GRE)\\b)/i",
+  "rules": "",
+  "targets": [
+    {
+      "label": "MSFS CPUs",
+      "path": "/products/cpu/",
+      "regions": [
+        "nl"
+      ]
+    },
+    {
+      "label": "MSFS Arc B570",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "Arc B570"
+    },
+    {
+      "label": "MSFS Arc B580",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "Arc B580"
+    },
+    {
+      "label": "MSFS RTX 5050",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RTX 5050"
+    },
+    {
+      "label": "MSFS RTX 5060",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RTX 5060"
+    },
+    {
+      "label": "MSFS RTX 5060 Ti",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RTX 5060 Ti"
+    },
+    {
+      "label": "MSFS RTX 5070",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RTX 5070"
+    },
+    {
+      "label": "MSFS RTX 5070 Ti",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RTX 5070 Ti"
+    },
+    {
+      "label": "MSFS RTX 5080",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RTX 5080"
+    },
+    {
+      "label": "MSFS RTX 5090",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RTX 5090"
+    },
+    {
+      "label": "MSFS RX 7600",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RX 7600"
+    },
+    {
+      "label": "MSFS RX 9060 XT",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RX 9060 XT"
+    },
+    {
+      "label": "MSFS RX 9070",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RX 9070"
+    },
+    {
+      "label": "MSFS RX 9070 XT",
+      "path": "/products/video-card/#sort=price",
+      "regions": [
+        "nl"
+      ],
+      "query": "RX 9070 XT"
+    },
+    {
+      "label": "case",
+      "path": "/products/case/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/qP2WGX/lian-li-lancool-216-atx-mid-tower-case-lancool-216x"
+    },
+    {
+      "label": "cooler_aio",
+      "path": "/products/cpu-cooler/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/Xh9nTW/arctic-liquid-freezer-iii-pro-a-rgb-360-77-cfm-liquid-cpu-cooler-acfre00184a"
+    },
+    {
+      "label": "cooler_entry",
+      "path": "/products/cpu-cooler/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/khJp99/thermalright-assassin-spirit-120-evo-dark-704-cfm-cpu-cooler-as120-evo-dark-d6-de"
+    },
+    {
+      "label": "cooler_mid",
+      "path": "/products/cpu-cooler/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/vZfV3C/thermalright-peerless-assassin-120-se-v3-7084-cfm-cpu-cooler-pa120se-v3"
+    },
+    {
+      "label": "1TB NVMe",
+      "path": "/products/internal-hard-drive/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/Xy3NnQ/patriot-p400-lite-1-tb-m2-2280-pcie-40-x4-nvme-solid-state-drive-p400lp1kgm28h"
+    },
+    {
+      "label": "2TB NVMe",
+      "path": "/products/internal-hard-drive/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/4rPv6h/sandisk-wd-blue-sn5100-2-tb-m2-2280-pcie-40-x4-nvme-solid-state-drive-wds200t5b0e-00cpe0"
+    },
+    {
+      "label": "1x16GB DDR5-6000",
+      "path": "/products/memory/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/nxFCmG/patriot-viper-venom-16-gb-1-x-16-gb-ddr5-6000-cl30-memory-pvv516g60c30"
+    },
+    {
+      "label": "2x8GB DDR4-3200",
+      "path": "/products/memory/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/mcH8TW/gskill-aegis-16-gb-2-x-8-gb-ddr4-3200-cl16-memory-f4-3200c16d-16gis"
+    },
+    {
+      "label": "2x8GB DDR5-6000",
+      "path": "/products/memory/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/vmsV3C/kingston-fury-beast-16-gb-2-x-8-gb-ddr5-6000-cl30-memory-kf560c30bbek2-16"
+    },
+    {
+      "label": "32GB DDR4-3200",
+      "path": "/products/memory/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/W6ndnQ/corsair-vengeance-lpx-32-gb-2-x-16-gb-ddr4-3200-memory-cmk32gx4m2e3200c16"
+    },
+    {
+      "label": "32GB DDR5-6000",
+      "path": "/products/memory/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/HHLp99/klevv-fit-v-32-gb-2-x-16-gb-ddr5-6000-cl28-memory-kd5agu880-60b280f"
+    },
+    {
+      "label": "mb_am4",
+      "path": "/products/motherboard/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/7gxbt6/msi-b550-a-pro-atx-am4-motherboard-b550-a-pro"
+    },
+    {
+      "label": "mb_am5",
+      "path": "/products/motherboard/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/9HTZxr/gigabyte-b650m-gaming-plus-wifi-micro-atx-am5-motherboard-b650m-gaming-plus-wf"
+    },
+    {
+      "label": "mb_am5_great",
+      "path": "/products/motherboard/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/cPNYcf/gigabyte-b650-gaming-x-ax-v2-atx-am5-motherboard-b650-gaming-x-ax-v2"
+    },
+    {
+      "label": "mb_lga1700_ddr4",
+      "path": "/products/motherboard/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/NMWJ7P/gigabyte-b760m-gaming-plus-wifi-ddr4-micro-atx-lga1700-motherboard-b760m-g-p-wifi-ddr4"
+    },
+    {
+      "label": "mb_lga1700_ddr4_great",
+      "path": "/products/motherboard/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/Zhhv6h/msi-b760-gaming-plus-wifi-ddr4-atx-lga1700-motherboard-b760-gaming-plus-wifi-ddr4"
+    },
+    {
+      "label": "mb_lga1700_ddr5",
+      "path": "/products/motherboard/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/TxcgXL/msi-b760-gaming-plus-wifi-atx-lga1700-motherboard-b760-gaming-plus-wifi"
+    },
+    {
+      "label": "mb_lga1700_ddr5_great",
+      "path": "/products/motherboard/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/TxcgXL/msi-b760-gaming-plus-wifi-atx-lga1700-motherboard-b760-gaming-plus-wifi"
+    },
+    {
+      "label": "mb_lga1851",
+      "path": "/products/motherboard/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/zfHp99/asrock-b860-pro-rs-atx-lga1851-motherboard-b860-pro-rs",
+      "query": "B860"
+    },
+    {
+      "label": "psu_1000",
+      "path": "/products/power-supply/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/B8YfrH/corsair-rm1000e-2025-1000-w-fully-modular-atx-power-supply-cp-9020297-na"
+    },
+    {
+      "label": "psu_650",
+      "path": "/products/power-supply/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/8LNxFT/msi-mag-a-bn-650-w-80-bronze-certified-atx-power-supply-mag-a650bn"
+    },
+    {
+      "label": "psu_750a",
+      "path": "/products/power-supply/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/dbCZxr/msi-mag-a750gl-pcie5-750-w-80-gold-certified-fully-modular-atx-power-supply-mag-a750gl-pcie5"
+    },
+    {
+      "label": "psu_750b",
+      "path": "/products/power-supply/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/dbCZxr/msi-mag-a750gl-pcie5-750-w-80-gold-certified-fully-modular-atx-power-supply-mag-a750gl-pcie5"
+    },
+    {
+      "label": "psu_850",
+      "path": "/products/power-supply/",
+      "regions": [
+        "nl"
+      ],
+      "single": true,
+      "product": "https://nl.pcpartpicker.com/product/zBbypg/corsair-rm850e-2025-850-w-fully-modular-atx-power-supply-cp-9020296-na"
+    }
+  ],
+  "manual_quotes": [
+    {
+      "part": "Core Ultra 7 270K Plus",
+      "url": "https://www.megekko.nl/product/15748/311161/Socket-1851-Processoren/Intel-Core-Ultra-7-270K-Plus",
+      "model": "Intel Core Ultra 7 270K Plus"
+    },
+    {
+      "part": "Ryzen 7 5800X3D",
+      "url": "https://www.megekko.nl/product/4278/10432/Socket-AM4-Processoren/AMD-Ryzen-7-5800X3D-10th-Anniversary-Edition-processor",
+      "model": "AMD Ryzen 7 5800X3D 10th Anniversary Edition processor"
+    }
+  ],
+  "notes": [
+    "One tab, at least60seconds between target steps. Replays native category queries and records exact approved group products.",
+    "Group prices track selected concrete models, not a claim of cheapest across every NL retailer. Review model suitability periodically.",
+    "Megekko policy limits automated monitoring to one request per hour: do not add manual quote pages to this runner.",
+    "Old unrefreshed reference keys remain dated and cannot be selected by NL budget generator."
+  ]
+}

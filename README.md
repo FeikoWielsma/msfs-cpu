@@ -156,10 +156,17 @@ with prices. Two CSVs drive it and they are the only files to edit:
   low resolution to isolate the chip and there is only one CPU ladder.
 - **`build_prices.csv`** — `part,eur,src` plus `priced_on` and per-tier PSU/case/mobo
   bundles. **EUR, Netherlands.** Refresh the figures and bump `priced_on`; the generator
-  warns past 60 days. `src` records where each figure came from: `pcpp` and `tweakers` are
+  warns past 60 days. `src` records where each figure came from: `pcpp`, `tweakers`,
+  `megekko` and `alternate` are
   retail lookups, anything else (`aliexpress`, `est`) marks every total containing it with
   a `~`. Most rows are now captured off PCPartPicker NL by
-  [`tools/pcpp-price-capture.user.js`](tools/README.md); the CPUs are still by hand.
+  [`tools/pcpp-price-capture.user.js`](tools/README.md), including CPUs via its category watchlist.
+
+For a guided local refresh, run `python tools/refresh_prices.py` (or `bun run prices`).
+It prepares a userscript watchlist/setup, imports the downloaded refresh JSON, reviews
+changes, updates both price CSVs with observation dates, and regenerates build totals.
+See [the local refresh instructions](tools/README.md#local-refresh-command). Browser
+capture remains user initiated; no background scraper or agent subscription is needed.
 
 `make_build_table.py` is deliberately noisy. A part with no price renders as a dash
 rather than a wrong total, an unrecognised part name is reported as a likely typo, and

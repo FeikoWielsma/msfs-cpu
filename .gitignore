@@ -16,6 +16,7 @@ new_images/
 # Python
 __pycache__/
 *.pyc
+.price-refresh/
 
 # Node / Vite
 node_modules/

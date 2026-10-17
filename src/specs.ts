@@ -49,7 +49,7 @@ type NotPicked = {
   vram: number | null;
 };
 
-type Price = { part: string; eur: number; src: string };
+type Price = { part: string; eur: number; src: string; observed_on?: string | null };
 
 type Named = { part: string; eur: number; by?: Record<string, number>;
                approx_in?: string[] };
@@ -93,6 +93,8 @@ type Catalogue = {
 
 type Doc = {
   priced_on: string | null;
+  builds_priced_on?: string | null;
+  latest_priced_on?: string | null;
   currency?: string;
   region?: string;
   source?: string;        // named by the generator from the sources actually present
@@ -140,7 +142,7 @@ const PROSE_PRICES: [string, string, boolean][] = [
   ["p-9060xt8", "RX 9060 XT 8GB", false],
   ["p-9060xt16", "RX 9060 XT 16GB", false],
   ["p-285k", "Core Ultra 9 285K", true],
-  ["p-250k", "Core Ultra 5 250K Plus", true],
+  ["p-270k", "Core Ultra 7 270K Plus", true],
   ["p-14600k", "Core i5-14600K", true],
 ];
 
@@ -209,8 +211,8 @@ function chip(v: number | null, kind: "c" | "g", derived: boolean, n: number): s
 
 /** Where a price came from, shown only when it is not an ordinary retail lookup — so a
  *  grey import or a leftover estimate is visible rather than sitting among real prices
- *  looking identical. The two retail sources are unremarkable and stay unmarked. */
-const RETAIL = ["tweakers", "pcpp"];
+ *  looking identical. Verified retail sources stay unmarked. */
+const RETAIL = ["tweakers", "pcpp", "megekko", "alternate"];
 function srcTag(src: string | null): string {
   if (!src || RETAIL.includes(src)) return "";
   return `<span class="src" title="${esc(src)} — not an ordinary retail price">` +
@@ -318,9 +320,9 @@ function renderPrices(): void {
   if (!table || !DOC) return;
   const rows = [...DOC.prices].sort((a, b) => b.eur - a.eur);
   table.innerHTML =
-    `<thead><tr><th>Part</th><th class="num">EUR</th></tr></thead><tbody>` +
+    `<thead><tr><th>Part</th><th class="num">EUR</th><th>Checked</th></tr></thead><tbody>` +
     rows.map(p => `<tr><td>${esc(p.part)}${srcTag(p.src)}</td>` +
-      `<td class="num">${eur(p.eur)}</td></tr>`).join("") +
+      `<td class="num">${eur(p.eur)}</td><td>${esc(p.observed_on || DOC?.priced_on || "undated")}</td></tr>`).join("") +
     `</tbody>`;
   const count = $("#priceCount");
   if (count) count.textContent = `${rows.length} parts`;
@@ -851,14 +853,17 @@ async function boot(): Promise<void> {
     ? "1440p" : doc.resolutions[0]);
 
   const stamp = $("#stamp");
+  const dateRange = doc.priced_on && doc.latest_priced_on && doc.priced_on !== doc.latest_priced_on
+    ? `${doc.priced_on} to ${doc.latest_priced_on}` : doc.priced_on;
   if (stamp) {
     stamp.innerHTML = doc.priced_on
-      ? `Prices: <b>${esc(doc.currency || "EUR")}, ${esc(doc.region || "Netherlands")}, ` +
-        `${esc(doc.source || "retail")}, ${esc(doc.priced_on)}</b> — check before buying.`
+      ? (doc.builds_priced_on ? `Build components checked: <b>${esc(doc.builds_priced_on)}</b>. ` : "") +
+        `Prices: <b>${esc(doc.currency || "EUR")}, ${esc(doc.region || "Netherlands")}, ` +
+        `${esc(doc.source || "retail")}, ${esc(dateRange || "undated")}</b> — check each part's date below; verify before buying.`
       : `Prices are hand-maintained and undated — check before buying.`;
   }
   const pon = $("#pon");
-  if (pon) pon.textContent = doc.priced_on || "an unrecorded date";
+  if (pon) pon.textContent = dateRange || "an unrecorded date";
 
   renderResSeg();
   renderBuilds();

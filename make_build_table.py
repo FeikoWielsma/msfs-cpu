@@ -207,7 +207,8 @@ GEN_STORAGE = ['1TB NVMe', '2TB NVMe']
 #   pcpp      nl.pcpartpicker.com, via tools/pcpp-price-capture.user.js
 # 'aliexpress' is deliberately NOT here: it is a real price with no NL retail channel, so
 # a build containing one should still read as approximate.
-LOOKED_UP = {'tweakers': 'Tweakers.net', 'pcpp': 'PCPartPicker NL'}
+LOOKED_UP = {'tweakers': 'Tweakers.net', 'pcpp': 'PCPartPicker NL',
+             'megekko': 'Megekko', 'alternate': 'Alternate NL'}
 # memory a socket can actually take
 SOCKET_MEM = {'AM4': 'DDR4', 'AM5': 'DDR5', 'LGA1851': 'DDR5',
               'LGA1700': None}   # None = either
@@ -223,6 +224,14 @@ def read_csv(path):
     with open(path, encoding='utf-8') as f:
         lines = [ln for ln in f if ln.strip() and not ln.lstrip().startswith('#')]
     return list(csv.DictReader(lines))
+
+
+def price_is_current(value):
+    try:
+        age = (datetime.date.today() - datetime.date.fromisoformat(value)).days
+        return 0 <= age <= STALE_DAYS
+    except (ValueError, TypeError):
+        return False
 
 
 def load_prices():
@@ -259,6 +268,8 @@ def main():
     cpu_idx, prices_by_res = cpu_index(), {r: gpu_index(r) for r in RES}
     cpu_cov, gpu_cov = coverage('cpu'), coverage('gpu')
     prices, price_src, priced_on = load_prices()
+    checked_on = {r['part']: r.get('observed_on') or priced_on
+                  for r in read_csv(PRICES_CSV) if r['part'] in prices}
 
     builds = {}
     for row in read_csv(SPECS_CSV):
@@ -330,6 +341,8 @@ def main():
                           'src': price_src.get(part)})
 
         builds[(res, tier, ven)] = {
+            'priced_on': min((checked_on.get(p) or priced_on for p in parts
+                             if checked_on.get(p) or priced_on), default=priced_on),
             'cpu': cpu, 'ci': ci, 'cd': cd, 'cn': cpu_cov.get(cpu_key, 0),
             'gpu': gpu, 'gi': gi, 'gd': gd, 'gn': gpu_cov.get(gpu, 0),
             'ram': ram, 'sto': sto, 'total': total, 'approx': approx,
@@ -366,7 +379,8 @@ def main():
                     continue
                 pair[scores.index(hi)][kind] = True
 
-    js = ['const PRICED_ON = %s;' % js_str(priced_on),
+    build_date = min((b['priced_on'] for b in builds.values() if b['priced_on']), default=priced_on)
+    js = ['const PRICED_ON = %s;' % js_str(build_date),
           'const BUILDS = {']
     for res in RES:
         js.append('"%s": {' % res)
@@ -403,6 +417,8 @@ def main():
 
     skipped = []
     for part, versus, reason in NOT_PICKED:
+        if not price_is_current(checked_on.get(part)) or (versus and not price_is_current(checked_on.get(versus))):
+            continue                    # old reference quotes cannot justify current advice
         idx, derived = idx_of(part)
         if idx is None:
             warn('NOT_PICKED entry %r has no 1440p index' % part)
@@ -462,8 +478,6 @@ def main():
         'ddr5': pr('32GB DDR5-6000'), 'ddr4': pr('32GB DDR4-3200'),
         'cheapest': (min(totals) // 50) * 50 if totals else None,
         'gpu_xt': pr('RX 9070 XT'), 'gpu_5070ti': pr('RTX 5070 Ti'),
-        'gre': pr('RX 9070 GRE'),
-        'gre_gap': (pr('RX 9070') - pr('RX 9070 GRE')) if pr('RX 9070') and pr('RX 9070 GRE') else None,
         'gpu_5060': pr('RTX 5060'),
         'saving_5060': (pr('RTX 5060 Ti 16GB') - pr('RTX 5060'))
                        if pr('RTX 5060 Ti 16GB') and pr('RTX 5060') else None,
@@ -471,13 +485,12 @@ def main():
         'xt_gap': (pr('RX 9060 XT 16GB') - pr('RX 9060 XT 8GB'))
                   if pr('RX 9060 XT 16GB') and pr('RX 9060 XT 8GB') else None,
         'cpu_14600k': pr('Core i5-14600K'), 'cpu_285k': pr('Core Ultra 9 285K'),
-        'cpu_250k': pr('Core Ultra 5 250K Plus'),
+        'cpu_270k': pr('Core Ultra 7 270K Plus'),
         'plat_ddr4': (pr('Core i5-14600K') + pr('32GB DDR4-3200'))
                      if pr('Core i5-14600K') and pr('32GB DDR4-3200') else None,
-        'plat_ddr5': (pr('Core Ultra 5 250K Plus') + pr('32GB DDR5-6000'))
-                     if pr('Core Ultra 5 250K Plus') and pr('32GB DDR5-6000') else None,
+        'plat_ddr5': (pr('Core Ultra 7 270K Plus') + pr('32GB DDR5-6000'))
+                     if pr('Core Ultra 7 270K Plus') and pr('32GB DDR5-6000') else None,
         'xt_pct': pct('RX 9060 XT 16GB', 'RX 9060 XT 8GB'),
-        'gre_pct': pct('RX 9070', 'RX 9070 GRE', '1440p'),
         'v8_1080_pct': vram_pct('1080p'), 'v8_1440_pct': vram_pct('1440p'),
     }
     missing = sorted(k for k, v in prose.items() if v is None)
@@ -506,6 +519,19 @@ def main():
     if any(r['key'] == 'nl' for r in region_list):
         for part, eur in prices.items():
             regs.setdefault(part, {}).setdefault('nl', eur)
+    # Keep old observations in the reference table, but don't offer their stale NL
+    # prices as something a buyer can currently pay. Other regions are independent.
+    stale_nl = []
+    for row in read_csv(PRICES_CSV):
+        part = row['part']
+        if part not in prices:
+            continue
+        if not price_is_current(row.get('observed_on') or priced_on):
+            regs.setdefault(part, {}).pop('nl', None)
+            stale_nl.append(part)
+    if stale_nl:
+        warn('%d stale NL reference prices omitted from the budget generator: %s'
+             % (len(stale_nl), ', '.join(sorted(stale_nl))))
     catalogue = build_catalogue(prices, cpu_idx, prices_by_res, cpu_cov, gpu_cov,
                                 regs, region_list)
     write_json(builds, skipped, prices, price_src, priced_on, catalogue, prices_by_res)
@@ -716,16 +742,24 @@ def write_json(builds, skipped, prices, price_src, priced_on, catalogue, idx_by_
     # of quiet wrongness the rest of this generator goes out of its way to avoid.
     used = sorted({price_src.get(p, 'est') for p in prices} & set(LOOKED_UP))
     source = ' and '.join(LOOKED_UP[s] for s in used) or 'estimates'
+    # Partial refreshes retain each untouched price's date. Show the actual range
+    # rather than making an old reference price look newly checked.
+    observed_on = {r['part']: r.get('observed_on') or priced_on
+                   for r in read_csv(PRICES_CSV) if r['part'] in prices}
+    latest = max((d for d in observed_on.values() if d), default=priced_on)
 
     doc = {
         'priced_on': priced_on,
+        'builds_priced_on': min((b['priced_on'] for b in builds.values() if b['priced_on']), default=priced_on),
+        'latest_priced_on': latest,
         'currency': 'EUR', 'region': 'Netherlands', 'source': source,
         'resolutions': RES, 'tiers': TIERS, 'vendors': VENDORS,
         'builds': rows,
         'not_picked': skipped,
         # every priced part, including the ones no build uses — the page lists them so
         # you can re-total a build you have changed
-        'prices': [{'part': p, 'eur': prices[p], 'src': price_src.get(p, 'est')}
+        'prices': [{'part': p, 'eur': prices[p], 'src': price_src.get(p, 'est'),
+                    'observed_on': observed_on.get(p)}
                    for p in sorted(prices)],
         'catalogue': catalogue,
         # every fitted GPU per resolution, priced or not — /limited steps through cards

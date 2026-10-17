@@ -1,5 +1,104 @@
 # PCPP price capture
 
+## Local refresh command
+
+From the repo root, run:
+
+```powershell
+python tools/refresh_prices.py
+# or: bun run prices
+```
+
+This needs Python 3.10+ and your existing browser with Violentmonkey/Tampermonkey.
+It makes no price-site requests itself. It prepares `.price-refresh/setup.json`,
+prints the browser steps, waits for a downloaded capture, shows the changes and asks
+whether to apply them. The first time, install/update the **local v1.1 userscript**
+`tools/pcpp-price-capture.user.js` in your userscript manager (open its editor, replace
+the old script with this file's contents, and save). Do not install the remote main
+branch version until these changes have been published there.
+
+In your browser:
+
+1. Open `https://nl.pcpartpicker.com`, click **€ → Import setup**, and select the
+   generated file. Repeat this import at the start of each refresh: it establishes
+   the session date without clearing past prices or your saved configuration.
+   The repo now includes `tools/price-collection.json`: tested model selections and
+   native GPU/category queries from the October refresh. A runnable local override
+   in `.price-refresh/collection-config.json` takes precedence. Named bundle targets
+   track the recorded product URL, including the shared 750W/DDR5-board selections.
+2. The import adds exact patterns for all 50 current named CPU/GPU keys and saved
+   category/model targets. Existing watch entries, targets, regions, list rules,
+   and approved sets remain intact. Review the targets before running; a category
+   page is only one page of results. Add filtered pages/pagination if needed.
+   Saved `query` fields submit PCPP's native search form after the page loads, then
+   wait for different result rows. GPU targets sort ascending before matching.
+3. Use your existing named parametric lists for boards, PSUs, coolers, case, memory
+   and storage, as described below. Their setup is reused on later refreshes. A new
+   browser profile will need those private lists/configured mappings once; the
+   generated watchlist cannot infer your quality/compatibility choices.
+4. Use **Capture this page** or the existing **Run** button. The missing list now
+   counts all 74 required keys against this session, including bundle keys, so an
+   old capture no longer makes a refresh look complete. This is a checklist, not
+   a requirement to refresh discontinued/grey-import parts on PCPP.
+5. Click **Download refresh**, then paste the downloaded JSON path into the terminal.
+   Review the accepted changes and unresolved keys, then answer `y` to apply.
+
+For separate/noninteractive steps:
+
+```powershell
+python tools/refresh_prices.py --prepare
+python tools/refresh_prices.py "$HOME/Downloads/msfs-prices-2026-10-17.json"
+python tools/refresh_prices.py "$HOME/Downloads/msfs-prices-2026-10-17.json" --apply
+```
+
+The second command only reviews. The third applies accepted observations, updates NL
+in both CSVs, records provenance in `build_price_observations.json`, and runs
+`make_build_table.py`. Exact pre-update files are backed up in `.price-refresh/backups/`;
+if regeneration fails they are restored. `.price-refresh/review.json` lists accepted,
+skipped and missing observations. Capture/setup/review files stay local and gitignored;
+the observation ledger should be committed with accepted CSV changes.
+
+Only known price keys, configured regions/currencies and in-stock, unambiguous captures
+from the current session are accepted. Sessions expire after seven days. Old observations,
+already imported records, flagged prices and changes beyond -50%/+50% are skipped.
+After checking a genuine large change, use `--allow-large-changes` to accept it; stock,
+identity, date and currency checks still apply. No missing price is replaced with zero.
+Partial refreshes are supported: untouched prices keep their dates, and the global
+`priced_on` remains the oldest NL observation. Per-part `observed_on` and the ledger
+show which prices actually changed. Other regions update independently.
+The build guide displays the NL observation date range and a Checked date beside
+each part, so a partial refresh remains visible on the site.
+NL observations older than 60 days stay in the reference table but are omitted
+from the budget generator's NL choices when data is regenerated.
+
+Verified direct NL retailer quotes can use the same observation structure with
+`schema: "msfs-price-refresh-v1"` and an explicit per-observation `source` of
+`megekko` or `alternate`. The importer requires the matching official HTTPS host,
+NL/EUR, actual observation timestamp, confirmed stock and an exact existing price
+key. Keep the chosen model in `seen` and its product URL in `product`. This accepts
+documented quotes collected during review; it does not crawl those retailers or
+turn a search-engine snippet into a current, verified price.
+
+The command regenerates build totals and JSON/card HTML, while curated picks in
+`build_specs.csv` still need judgement. Re-render the build PNG when ready:
+`python make_tierlist_cards.py build`. It does not commit, push or publish.
+
+An agent, including GPT-6 Luna, can assist with the same browser steps if it has access
+to the browser profile containing the extension and saved lists. The sequential runner
+already handles the repetitive navigation. Do not assume a fresh agent browser has
+your extension/private list setup. Source access restrictions still apply; neither
+human-paced navigation nor an agent grants permission. Stop on access challenges;
+see [source research](../docs/price-source-research.md).
+
+Offline verification:
+
+```powershell
+python -m unittest discover -s tools -p test_refresh_prices.py -v
+node tools/test_pcpp_refresh.cjs
+```
+
+## Existing capture options
+
 A [Violentmonkey](https://violentmonkey.github.io/) userscript that reads PCPartPicker
 prices off pages you are already looking at and hands them back as CSV — so
 `build_prices.csv` can be refreshed without transcribing forty numbers by hand, and in
@@ -251,7 +350,7 @@ CPUs are the only category that cannot come from a list, because a list holds on
 
 This is a reading aid, not a crawler — it scrapes what your browser already loaded, at a
 pace a person could type at. It walks **one tab, sequentially**, with a randomised delay
-(floor six seconds, twelve by default), and it **stops** on anything that looks like a bot
+(floor and default sixty seconds, plus jitter), and it **stops** on anything that looks like a bot
 check rather than trying to satisfy it. There is deliberately no user-agent fiddling, no
 proxy rotation and no parallel fetching. If you hit a challenge, solve it yourself and
 press Run again.

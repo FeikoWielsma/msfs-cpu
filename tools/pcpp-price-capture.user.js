@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PCPP price capture
 // @namespace    msfs.razortek.nl
-// @version      1.0.0
+// @version      1.1.0
 // @description  Capture PCPartPicker prices from your own saved lists and filters, across regions, at human pace — for keeping build_prices.csv current.
 // @author       Razortek
 // @match        *://pcpartpicker.com/*
@@ -48,7 +48,7 @@
  *   3. Tick the regions on each. Write the list rules and the watchlist once.
  *   4. Hit Run, then Export → paste into your CSV.
  *
- * It walks one tab, sequentially, with a randomised delay of several seconds between
+ * It walks one tab, sequentially, with a randomised delay of at least a minute between
  * loads, and it STOPS on anything that looks like a bot check rather than trying to get
  * around one. If you hit a challenge, solve it yourself and press Run again. There is no
  * user-agent fiddling, no proxy rotation and no parallel fetching here, deliberately —
@@ -105,8 +105,8 @@
   ];
 
   // Politeness. The floor is not configurable downward on purpose.
-  const MIN_DELAY_MS = 6000;
-  const DEFAULT_DELAY_MS = 12000;
+  const MIN_DELAY_MS = 60000;
+  const DEFAULT_DELAY_MS = 60000;
   const JITTER_MS = 5000;
   const MAX_MISSES = 3;          // consecutive empty pages before the walk gives up
 
@@ -121,6 +121,8 @@
     taught: 'pcpp_taught',
     watch: 'pcpp_watch',
     rules: 'pcpp_rules',
+    session: 'pcpp_refresh_session',
+    required: 'pcpp_required_parts',
   };
 
   // ---------------------------------------------------------------- storage
@@ -627,7 +629,7 @@
    * specs in the haystack, half of a real watchlist could not be written at all.
    */
   function matchWatch(rows, list) {
-    const out = [], clash = [];
+    const out = [], clash = [], ambiguous = new Set();
     const idOf = r => r.product || r.name;
     const hitSets = new Map();
     for (const w of list) {
@@ -637,7 +639,8 @@
       const live = hits.filter(r => r.stock !== false);
       const pool = live.length ? live : hits;
       const best = pool.reduce((a, b) => (b.amount < a.amount ? b : a));
-      out.push(Object.assign({}, best, { name: w.name, seen: best.name }));
+      out.push(Object.assign({}, best, { name: w.name, seen: best.name,
+        ambiguous: !!(w.slot && hits.length > 1) }));
     }
 
     // Overlap check, on the full match sets rather than on the winners.
@@ -654,6 +657,7 @@
         const a = ents[i], b = ents[j];
         const shared = [...hitSets.get(a)].filter(x => hitSets.get(b).has(x));
         if (!shared.length) continue;
+        ambiguous.add(a.name); ambiguous.add(b.name);
         // name the listing readably, and name the entry that is too broad — the one
         // claiming more rows — since that is the one to go and fix
         const row = rows.find(r => idOf(r) === shared[0]);
@@ -669,7 +673,8 @@
             `broader; give it a lookahead so it stops reaching the other`);
       }
     }
-    return { rows: out, clash: [...new Set(clash)] };
+    return { rows: out.map(r => ({ ...r, ambiguous: r.ambiguous || ambiguous.has(r.name) })),
+      clash: [...new Set(clash)] };
   }
 
   // ---------------------------------------------------------------- capture
@@ -686,6 +691,7 @@
 
     let clash = [];
     if (target && target.single) {
+      if (target.product) rows = rows.filter(r => r.product === target.product);
       // The target IS the query: a filtered category page whose cheapest row is the
       // answer, which is how a tier bundle gets priced — "cheapest 650 W Gold ATX" is
       // psu_650, and no product name can express that. The watchlist is skipped here on
@@ -742,8 +748,9 @@
         if (ratio > 3 || ratio < 1 / 3) suspect = prev.amount;
       }
       prices[key][rk] = {
-        amount, cur: cc, region, at: stamp, url, seen: r.seen || r.name,
+        amount, cur: cc, region, at: stamp, capturedAt: new Date().toISOString(), url, seen: r.seen || r.name,
         stock: r.stock !== false, slot: r.slot || null,
+        ambiguous: !!r.ambiguous,
         suspect: suspect,      // the previous figure, when this one jumped hard
         product: r.product || null,
       };
@@ -761,7 +768,8 @@
       if (t.off) continue;
       const regions = (t.regions && t.regions.length) ? t.regions : [currentRegion()];
       for (const r of regions) {
-        q.push({ region: r, path: t.path, label: t.label, match: t.match, single: !!t.single });
+        q.push({ region: r, path: t.path, label: t.label, match: t.match, map: t.map,
+          query: t.query || '', product: t.product || null, single: !!t.single });
       }
     }
     return q;
@@ -847,10 +855,25 @@
       w.sameDoc = false;
       save(KEY.walk, w);
       if (!changed) {
-        toast('That list did not load — its rows never changed. Skipping.', 8000);
+        stopWalk('saved list did not load');
+        toast('That list did not load — stopped without capturing old rows.', 8000);
+        return;
       }
     } else {
       await waitForRows(8000);
+    }
+    // Some category searches are not reflected in the URL. Replay the site's own
+    // form, then verify changed rows before applying this target's mapping.
+    const input = $('#part_category_search');
+    if (input && input.value !== (step.query || '')) {
+      const sig = rowSig();
+      input.value = step.query || '';
+      input.closest('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      if (!await waitForChange(sig, 12000)) {
+        stopWalk('category search did not load');
+        toast('Category search did not change the results. Stopped without capturing.', 10000);
+        return;
+      }
     }
     const res = capture(step);
 
@@ -878,6 +901,15 @@
     }
 
     w.i += 1;
+    const next = w.queue[w.i];
+    // Several fixed-price keys can share the already loaded category. Reading it
+    // again makes no request, so don't make the user wait a minute per alias.
+    if (next && next.region === step.region && next.path === step.path
+        && (next.query || '') === (step.query || '')) {
+      save(KEY.walk, w);
+      setTimeout(() => hop(w.i), 0);
+      return;
+    }
     const wait = Math.round(Math.max(MIN_DELAY_MS, opts.delay) + Math.random() * JITTER_MS);
     w.nextAt = Date.now() + wait;
     save(KEY.walk, w);
@@ -965,6 +997,81 @@
 
   // ---------------------------------------------------------------- export
 
+  function fresh(row) {
+    const session = load(KEY.session, null);
+    return !!(row && session && row.capturedAt && row.capturedAt >= session.started);
+  }
+
+  function exportRefresh() {
+    const session = load(KEY.session, null);
+    if (!session) throw new Error('Import setup.json from refresh_prices.py before capturing this refresh.');
+    return {
+      schema: 'msfs-pcpp-refresh-v1', session, exportedAt: new Date().toISOString(),
+      observations: Object.entries(prices).flatMap(([part, byRegion]) =>
+        Object.entries(byRegion).map(([region, row]) => ({ ...row, part, region }))),
+    };
+  }
+
+  function downloadJson(value, filename) {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2) + '\n'], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function importSetup(data) {
+    if (load(KEY.walk, null)?.running) throw new Error('Stop the current run before importing setup.');
+    if (data.schema !== 'msfs-pcpp-setup-v1' || typeof data.watch !== 'string'
+        || !Array.isArray(data.targets) || !Array.isArray(data.required)
+        || !data.required.every(p => typeof p === 'string')
+        || typeof data.session?.id !== 'string' || !Number.isFinite(Date.parse(data.session?.started))) {
+      throw new Error('Not a refresh_prices.py setup file.');
+    }
+    const incoming = data.targets.map(t => {
+      if (typeof t.path !== 'string' || !/^\/(products|list|user)\//.test(t.path)
+          || !Array.isArray(t.regions) || !t.regions.every(r => REGION_CUR[r] !== undefined)) {
+        throw new Error('Invalid target path or region.');
+      }
+      return { ...t, single: !!t.single, match: t.match || '', map: t.map || '' };
+    });
+    const existingNames = new Set(watchlist().map(w => w.name));
+    // Keep custom approved sets and mappings. Add only missing price keys.
+    const additions = data.watch.split('\n').filter(line => {
+      const entry = parseWatchLines(line)[0];
+      return entry && !existingNames.has(entry.name);
+    });
+    watchText = [watchText, ...additions].filter(Boolean).join('\n');
+    const ruleNames = new Set(parseRules(rulesText).map(r => r.name));
+    const newRules = String(data.rules || '').split('\n').filter(line => {
+      const rule = parseRules(line)[0];
+      return rule && !ruleNames.has(rule.name);
+    });
+    rulesText = [rulesText, ...newRules].filter(Boolean).join('\n');
+    for (const t of incoming) {
+      if (!targets.some(prev => prev.path === t.path && (prev.query || '') === (t.query || '')
+          && (!t.single || prev.label === t.label))) targets.push(t);
+    }
+    save(KEY.watch, watchText); save(KEY.targets, targets);
+    save(KEY.rules, rulesText);
+    save(KEY.session, { id: data.session.id, started: new Date(data.session.started).toISOString() });
+    save(KEY.required, data.required);
+    render();
+    return { added: additions.length, targets: targets.length };
+  }
+
+  function chooseSetup() {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json,application/json';
+    input.addEventListener('change', async () => {
+      try {
+        if (!input.files[0]) return;
+        const result = importSetup(JSON.parse(await input.files[0].text()));
+        toast(`Setup imported: ${result.added} watch entries added; existing lists and rules kept.`, 8000);
+      } catch (error) { toast(`Setup failed: ${error.message}`, 10000); }
+    });
+    input.click();
+  }
+
   /** Regions captured so far, in the order REGIONS lists them so a picker reads sanely. */
   function regionsSeen() {
     const set = new Set();
@@ -989,6 +1096,7 @@
   // outlier. Neither lands in an export silently — each is left out and named in the
   // header, or (with the box ticked) exported with the row marked.
   const doubt = row => !row ? 'missing'
+    : row.ambiguous ? 'ambiguous mapping'
     : row.stock === false ? 'out of stock'
     : row.suspect ? `was ${row.suspect}` : null;
   const usable = row => row && (!doubt(row) || opts.includeOOS);
@@ -1002,10 +1110,10 @@
       if (!row) return;
       const why = doubt(row);
       if (why && !opts.includeOOS) { skipped.push(`${part} (${why})`); return; }
-      const tag = row.stock === false ? ':oos' : row.suspect ? ':check' : '';
+      const tag = row.ambiguous ? ':ambiguous' : row.stock === false ? ':oos' : row.suspect ? ':check' : '';
       rows.push([csvCell(part), row.amount, `pcpp:${rk}${tag}`].join(','));
     });
-    const head = [`# PCPartPicker ${rk} (${cur}), captured ${nowISO()} — check before trusting.`];
+    const head = [`# PCPartPicker ${rk} (${cur}), exported ${nowISO()} — may include older captures; use Download refresh for dated imports.`];
     if (skipped.length) {
       head.push(`# ${skipped.length} left out: ${skipped.join('; ')}`);
     }
@@ -1143,9 +1251,9 @@
     const seen = scrapeRows();
     // what the watchlist still has no price for, in this region — the thing you need to
     // know before deciding a run is finished
-    const wmiss = watchlist()
-      .filter(w => !(prices[w.name] && prices[w.name][regionKey()]))
-      .map(w => w.name);
+    const required = load(KEY.required, watchlist().map(w => w.name));
+    const wmiss = required.filter(name => !fresh(prices[name]?.[regionKey()])
+      || doubt(prices[name]?.[regionKey()]));
     // which list rules this page satisfies, judged against the target it belongs to
     const here = targets.find(t => pathOf(regionUrl(currentRegion(), t.path)) === pathOf());
     const fired = rulesFor(here || { label: '' });
@@ -1198,12 +1306,13 @@
 
       <div class="sec">
         <h3>Watchlist — ${watchlist().length} parts${wmiss.length
-          ? `, <span style="color:#f2c14e">${wmiss.length} not seen in ${regionKey()}</span>` : ''}</h3>
+          ? `, <span style="color:#f2c14e">${wmiss.length} not refreshed in ${regionKey()}</span>` : ''}</h3>
         <div class="note" style="margin:0 0 6px">One per line. <b>CSV name = pattern</b>,
           or just the name if PCPP spells it the same. <b>/regex/</b> works. Empty means
           capture every row, which is what you want on a part list.</div>
         <textarea id="watch" rows="4" placeholder="Ryzen 7 9800X3D&#10;RX 9070 XT = Radeon RX 9070 XT&#10;RTX 5060 = /RTX 5060(?! Ti)/">${escapeHtml(watchText)}</textarea>
-        ${wmiss.length ? `<div class="note">Not yet in ${regionKey()} (${cur}): ${escapeHtml(wmiss.slice(0, 12).join(', '))}${wmiss.length > 12 ? ` +${wmiss.length - 12}` : ''}</div>` : ''}
+        ${wmiss.length ? `<div class="note">Not refreshed in this session (${regionKey()} ${cur}): ${escapeHtml(wmiss.join(', '))}</div>` : ''}
+        <div class="row"><button class="b" data-a="setup">Import setup</button></div>
       </div>
 
       <div class="sec">
@@ -1215,6 +1324,7 @@
             `<option value="${r}">${regionLabel(r)}</option>`).join('')}</select>
           <button class="b" data-a="exp1">Copy CSV</button>
           <button class="b" data-a="expw">Copy all currencies</button>
+          <button class="b go" data-a="refresh">Download refresh</button>
           <button class="b" data-a="clear">Clear</button>
         </div>
         <div class="row"><label style="font-size:11.5px;color:#7d8494">
@@ -1342,6 +1452,11 @@
       if (c) copy(exportOne(c), `${regionLabel(c)} CSV`);
     }
     if (a === 'expw') copy(exportWide(), 'All-currency CSV');
+    if (a === 'setup') chooseSetup();
+    if (a === 'refresh') {
+      try { downloadJson(exportRefresh(), `msfs-prices-${nowISO()}.json`); }
+      catch (error) { toast(error.message, 10000); }
+    }
     if (a === 'clear') {
       if (confirm('Throw away every captured price?')) {
         prices = {}; save(KEY.prices, prices); render();
@@ -1413,6 +1528,7 @@
   pageWindow.__pcppCapture = {
     rows: scrapeRows, money: parseMoney, shape: pageShape, region: currentRegion,
     prices: () => prices, watchlist, captureHere: () => capture(null), captureWith: t => capture(t), rulesFor, saved: savedLists,
+    importSetup, exportRefresh,
   };
 
   function boot() {

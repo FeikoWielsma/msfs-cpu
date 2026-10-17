@@ -1,0 +1,1041 @@
+{
+  "Ryzen 7 9800X3D": {
+    "nl": {
+      "amount": 455.9,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 7 9800X3D",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/fPyH99/amd-ryzen-7-9800x3d-47-ghz-8-core-processor-100-1000001084wof",
+      "part": "Ryzen 7 9800X3D"
+    }
+  },
+  "Ryzen 7 7800X3D": {
+    "nl": {
+      "amount": 296.89,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "8 AMD Ryzen 7 7800X3D 4.2 GHz 5 GHz Zen 4 [CzZWGX]",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/CzZWGX/amd-ryzen-7-7800x3d-42-ghz-8-core-oemtray-processor-100-000000910",
+      "part": "Ryzen 7 7800X3D"
+    }
+  },
+  "Ryzen 5 9600X": {
+    "nl": {
+      "amount": 214.85,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 5 9600X",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/4r4Zxr/amd-ryzen-5-9600x-39-ghz-6-core-processor-100-100001405wof",
+      "part": "Ryzen 5 9600X"
+    }
+  },
+  "Ryzen 5 7600X": {
+    "nl": {
+      "amount": 160.66,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 5 7600X",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/66C48d/amd-ryzen-5-7600x-47-ghz-6-core-processor-100-100000593wof",
+      "part": "Ryzen 5 7600X"
+    }
+  },
+  "Ryzen 5 7500F": {
+    "nl": {
+      "amount": 130.76,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 5 7500F",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/ms4Zxr/amd-ryzen-5-7500f-37-ghz-6-core-oemtray-processor-100-000000597",
+      "part": "Ryzen 5 7500F"
+    }
+  },
+  "Ryzen 5 5600": {
+    "nl": {
+      "amount": 152.9,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 5 5600",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/PgcG3C/amd-ryzen-5-5600-36-ghz-6-core-processor-100-100000927box",
+      "part": "Ryzen 5 5600"
+    }
+  },
+  "Ryzen 5 5600X": {
+    "nl": {
+      "amount": 179.54,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 5 5600X",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/g94BD3/amd-ryzen-5-5600x-37-ghz-6-core-processor-100-100000065box",
+      "part": "Ryzen 5 5600X"
+    }
+  },
+  "Ryzen 5 5600XT": {
+    "nl": {
+      "amount": 150.74,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 5 5600XT",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/GY6NnQ/amd-ryzen-5-5600xt-37-ghz-6-core-processor-100-100001585box",
+      "part": "Ryzen 5 5600XT"
+    }
+  },
+  "Core Ultra 9 285K": {
+    "nl": {
+      "amount": 550.55,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core Ultra 9 285K",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/VHYRsY/intel-core-ultra-9-285k-37-ghz-24-core-processor-bx80768285k",
+      "part": "Core Ultra 9 285K"
+    }
+  },
+  "Core i7-14700K": {
+    "nl": {
+      "amount": 424,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core i7-14700K",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/BmWJ7P/intel-core-i7-14700k-34-ghz-20-core-processor-bx8071514700k",
+      "part": "Core i7-14700K"
+    }
+  },
+  "Core i5-14600K": {
+    "nl": {
+      "amount": 273.41,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core i5-14600K",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/jXFmP6/intel-core-i5-14600k-35-ghz-14-core-processor-bx8071514600k",
+      "part": "Core i5-14600K"
+    }
+  },
+  "Core i5-12400F": {
+    "nl": {
+      "amount": 161.9,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core i5-12400F",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/pQNxFT/intel-core-i5-12400f-25-ghz-6-core-processor-bx8071512400f",
+      "part": "Core i5-12400F"
+    }
+  },
+  "Core i5-12600KF": {
+    "nl": {
+      "amount": 192.9,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core i5-12600KF",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/Tk8bt6/intel-core-i5-12600kf-37-ghz-6-core-processor-bx8071512600kf",
+      "part": "Core i5-12600KF"
+    }
+  },
+  "Core i3-14100F": {
+    "nl": {
+      "amount": 110,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core i3-14100F",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/R7qrxr/intel-core-i3-14100f-35-ghz-quad-core-processor-bx8071514100f",
+      "part": "Core i3-14100F"
+    }
+  },
+  "Core i5-13400F": {
+    "nl": {
+      "amount": 225.39,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core i5-13400F",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/VNkWGX/intel-core-i5-13400f-25-ghz-10-core-processor-bx8071513400f",
+      "part": "Core i5-13400F"
+    }
+  },
+  "Core i5-14400F": {
+    "nl": {
+      "amount": 164.59,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core i5-14400F",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/QkP8TW/intel-core-i5-14400f-25-ghz-10-core-processor-bx8071514400f",
+      "part": "Core i5-14400F"
+    }
+  },
+  "Core i5-12600K": {
+    "nl": {
+      "amount": 213.98,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core i5-12600K",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/BB4Ycf/intel-core-i5-12600k-37-ghz-6-core-processor-bx8071512600k",
+      "part": "Core i5-12600K"
+    }
+  },
+  "Core Ultra 5 225F": {
+    "nl": {
+      "amount": 185,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core Ultra 5 225F",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/pkdMnQ/intel-core-ultra-5-225f-33-ghz-10-core-processor-bx80768225f",
+      "part": "Core Ultra 5 225F"
+    }
+  },
+  "Core Ultra 5 245K": {
+    "nl": {
+      "amount": 229.9,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "Intel Core Ultra 5 245K",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/xNXV3C/intel-core-ultra-5-245k-42-ghz-14-core-processor-bx80768245k",
+      "part": "Core Ultra 5 245K"
+    }
+  },
+  "Ryzen 7 5700X": {
+    "nl": {
+      "amount": 238,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 7 5700X",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/JmhFf7/amd-ryzen-7-5700x-34-ghz-8-core-processor-100-100000926wof",
+      "part": "Ryzen 7 5700X"
+    }
+  },
+  "Ryzen 7 7700X": {
+    "nl": {
+      "amount": 221.33,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:05:17.790Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu/",
+      "seen": "AMD Ryzen 7 7700X",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/WfqPxr/amd-ryzen-7-7700x-45-ghz-8-core-processor-100-100000591wof",
+      "part": "Ryzen 7 7700X"
+    }
+  },
+  "RX 9070 XT": {
+    "nl": {
+      "amount": 1031,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:06:19.085Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/",
+      "seen": "Radeon RX 9070 XT PowerColor Reaper",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/8ZJBD3/powercolor-reaper-radeon-rx-9070-xt-16-gb-video-card-rx9070xt-16g-a",
+      "part": "RX 9070 XT"
+    }
+  },
+  "RX 9070": {
+    "nl": {
+      "amount": 856.99,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:06:19.085Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/",
+      "seen": "Radeon RX 9070 Asus PRIME OC",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/2xHp99/asus-prime-oc-radeon-rx-9070-16-gb-video-card-prime-rx9070-o16g",
+      "part": "RX 9070"
+    }
+  },
+  "RX 9060 XT 16GB": {
+    "nl": {
+      "amount": 636.92,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:06:19.085Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/",
+      "seen": "Radeon RX 9060 XT Asus DUAL 16 GB 2220 MHz 3250 MHz [fdcBD3]",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/fdcBD3/asus-dual-radeon-rx-9060-xt-16-gb-video-card-dual-rx9060xt-16g-white",
+      "part": "RX 9060 XT 16GB"
+    }
+  },
+  "RX 7600": {
+    "nl": {
+      "amount": 405.1,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:11:23.318Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&page=1",
+      "seen": "Radeon RX 7600 ASRock Challenger OC",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/BYdG3C/asrock-challenger-oc-radeon-rx-7600-xt-8-gb-video-card-rx7600-cl-8go",
+      "part": "RX 7600"
+    }
+  },
+  "RTX 5070": {
+    "nl": {
+      "amount": 949,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:06:19.085Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/",
+      "seen": "Gigabyte EAGLE OC SFF",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/ypG2FT/gigabyte-eagle-oc-sff-geforce-rtx-5070-12-gb-video-card-gv-n5070eagleoc-ice-12gd",
+      "part": "RTX 5070"
+    }
+  },
+  "Arc B570": {
+    "nl": {
+      "amount": 314.89,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:11:23.318Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&page=1",
+      "seen": "Arc B570 ASRock Challenger OC",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/2D4Pxr/asrock-challenger-oc-arc-b570-10-gb-video-card-b570-cl-10go",
+      "part": "Arc B570"
+    }
+  },
+  "32GB DDR5-6000": {
+    "nl": {
+      "amount": 542,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:07:46.803Z",
+      "url": "https://nl.pcpartpicker.com/products/memory/",
+      "seen": "DDR5-6000 Klevv FIT V 32 GB 2 x 16GB White",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/HHLp99/klevv-fit-v-32-gb-2-x-16-gb-ddr5-6000-cl28-memory-kd5agu880-60b280f",
+      "part": "32GB DDR5-6000"
+    }
+  },
+  "32GB DDR4-3200": {
+    "nl": {
+      "amount": 241.93,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:07:46.803Z",
+      "url": "https://nl.pcpartpicker.com/products/memory/",
+      "seen": "Corsair Vengeance LPX 32 GB",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/W6ndnQ/corsair-vengeance-lpx-32-gb-2-x-16-gb-ddr4-3200-memory-cmk32gx4m2e3200c16",
+      "part": "32GB DDR4-3200"
+    }
+  },
+  "1x16GB DDR5-6000": {
+    "nl": {
+      "amount": 289.45,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:07:46.803Z",
+      "url": "https://nl.pcpartpicker.com/products/memory/",
+      "seen": "Patriot Viper Venom 16 GB",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/nxFCmG/patriot-viper-venom-16-gb-1-x-16-gb-ddr5-6000-cl30-memory-pvv516g60c30",
+      "part": "1x16GB DDR5-6000"
+    }
+  },
+  "2x8GB DDR5-6000": {
+    "nl": {
+      "amount": 319.9,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:07:46.803Z",
+      "url": "https://nl.pcpartpicker.com/products/memory/",
+      "seen": "DDR5-6000 Kingston FURY Beast 16 GB",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/vmsV3C/kingston-fury-beast-16-gb-2-x-8-gb-ddr5-6000-cl30-memory-kf560c30bbek2-16",
+      "part": "2x8GB DDR5-6000"
+    }
+  },
+  "2x8GB DDR4-3200": {
+    "nl": {
+      "amount": 138.5,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:07:46.803Z",
+      "url": "https://nl.pcpartpicker.com/products/memory/",
+      "seen": "G.Skill Aegis 16 GB",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/mcH8TW/gskill-aegis-16-gb-2-x-8-gb-ddr4-3200-cl16-memory-f4-3200c16d-16gis",
+      "part": "2x8GB DDR4-3200"
+    }
+  },
+  "1TB NVMe": {
+    "nl": {
+      "amount": 129,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:08:49.434Z",
+      "url": "https://nl.pcpartpicker.com/products/internal-hard-drive/",
+      "seen": "Patriot P400 Lite",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/Xy3NnQ/patriot-p400-lite-1-tb-m2-2280-pcie-40-x4-nvme-solid-state-drive-p400lp1kgm28h",
+      "part": "1TB NVMe"
+    }
+  },
+  "2TB NVMe": {
+    "nl": {
+      "amount": 237.5,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:08:49.434Z",
+      "url": "https://nl.pcpartpicker.com/products/internal-hard-drive/",
+      "seen": "2 TB SanDisk WD Blue SN5100",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/4rPv6h/sandisk-wd-blue-sn5100-2-tb-m2-2280-pcie-40-x4-nvme-solid-state-drive-wds200t5b0e-00cpe0",
+      "part": "2TB NVMe"
+    }
+  },
+  "RX 9060 XT 8GB": {
+    "nl": {
+      "amount": 512.96,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:11:23.318Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&page=1",
+      "seen": "Radeon RX 9060 XT Sapphire PULSE",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/DgFCmG/sapphire-pulse-radeon-rx-9060-xt-8-gb-video-card-11350-04-20g",
+      "part": "RX 9060 XT 8GB"
+    }
+  },
+  "RTX 5080": {
+    "nl": {
+      "amount": 1699,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:17:45.299Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&c=593,589,588,587",
+      "seen": "Gigabyte AERO OC SFF",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/VnHp99/gigabyte-aero-oc-sff-geforce-rtx-5080-16-gb-video-card-gv-n5080aero-oc-16gd",
+      "part": "RTX 5080"
+    }
+  },
+  "RTX 5060": {
+    "nl": {
+      "amount": 463,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:11:23.318Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&page=1",
+      "seen": "PNY VCG50608DFXPB1",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/msnXsY/pny-vcg50608dfxpb1-geforce-rtx-5060-8-gb-video-card-vcg50608dfxpb1",
+      "part": "RTX 5060"
+    }
+  },
+  "RTX 5050": {
+    "nl": {
+      "amount": 341,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:11:23.318Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&page=1",
+      "seen": "GeForce RTX 5050 MSI VENTUS 2X OC",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/J2jv6h/msi-ventus-2x-oc-geforce-rtx-5050-8-gb-video-card-rtx-5050-8g-ventus-2x-oc",
+      "part": "RTX 5050"
+    }
+  },
+  "Arc B580": {
+    "nl": {
+      "amount": 423.64,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:11:23.318Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&page=1",
+      "seen": "Sparkle GUARDIAN",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/d2nXsY/sparkle-guardian-arc-b580-12-gb-video-card-sb580g-12g",
+      "part": "Arc B580"
+    }
+  },
+  "RTX 5070 Ti": {
+    "nl": {
+      "amount": 1349,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:17:45.299Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&c=593,589,588,587",
+      "seen": "Gigabyte EAGLE OC SFF",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/p9JBD3/gigabyte-eagle-oc-sff-geforce-rtx-5070-ti-16-gb-video-card-gv-n507teagle-oc-16gd",
+      "part": "RTX 5070 Ti"
+    }
+  },
+  "RTX 5060 Ti 16GB": {
+    "nl": {
+      "amount": 849,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:17:45.299Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&c=593,589,588,587",
+      "seen": "GeForce RTX 5060 Ti Gigabyte EAGLE OC 16 GB 2410 MHz 2617 MHz [2Z2j4D]",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/2Z2j4D/gigabyte-eagle-oc-geforce-rtx-5060-ti-16-gb-pcie-x8-video-card-gv-n506teagle-oc-16gd",
+      "part": "RTX 5060 Ti 16GB"
+    }
+  },
+  "psu_650": {
+    "nl": {
+      "part": "psu_650",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 44.99,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:54:05.264Z",
+      "url": "https://nl.pcpartpicker.com/products/power-supply/",
+      "seen": "MSI MAG A650BN",
+      "product": "https://nl.pcpartpicker.com/product/8LNxFT/msi-mag-a-bn-650-w-80-bronze-certified-atx-power-supply-mag-a650bn",
+      "source": "pcpp",
+      "selection_basis": "README approved budget 650W MSI A650BN"
+    }
+  },
+  "psu_750a": {
+    "nl": {
+      "part": "psu_750a",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 100.9,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:54:05.264Z",
+      "url": "https://nl.pcpartpicker.com/products/power-supply/",
+      "seen": "MSI MAG A750GL PCIE5",
+      "product": "https://nl.pcpartpicker.com/product/dbCZxr/msi-mag-a750gl-pcie5-750-w-80-gold-certified-fully-modular-atx-power-supply-mag-a750gl-pcie5",
+      "source": "pcpp",
+      "selection_basis": "750W fully modular Gold MSI A750GL PCIE5"
+    }
+  },
+  "psu_750b": {
+    "nl": {
+      "part": "psu_750b",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 100.9,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:54:05.264Z",
+      "url": "https://nl.pcpartpicker.com/products/power-supply/",
+      "seen": "MSI MAG A750GL PCIE5",
+      "product": "https://nl.pcpartpicker.com/product/dbCZxr/msi-mag-a750gl-pcie5-750-w-80-gold-certified-fully-modular-atx-power-supply-mag-a750gl-pcie5",
+      "source": "pcpp",
+      "selection_basis": "Same approved 750W unit; both keys specify 750W"
+    }
+  },
+  "psu_850": {
+    "nl": {
+      "part": "psu_850",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 125,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:54:05.264Z",
+      "url": "https://nl.pcpartpicker.com/products/power-supply/",
+      "seen": "ATX Corsair RM850e (2025) 850 W Full Black",
+      "product": "https://nl.pcpartpicker.com/product/zBbypg/corsair-rm850e-2025-850-w-fully-modular-atx-power-supply-cp-9020296-na",
+      "source": "pcpp",
+      "selection_basis": "Corsair RM850e 2025 modular ATX series"
+    }
+  },
+  "psu_1000": {
+    "nl": {
+      "part": "psu_1000",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 159,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:54:05.264Z",
+      "url": "https://nl.pcpartpicker.com/products/power-supply/",
+      "seen": "ATX Corsair RM1000e (2025) 1000 W Full Black",
+      "product": "https://nl.pcpartpicker.com/product/B8YfrH/corsair-rm1000e-2025-1000-w-fully-modular-atx-power-supply-cp-9020297-na",
+      "source": "pcpp",
+      "selection_basis": "Corsair RM1000e 2025 modular ATX series"
+    }
+  },
+  "cooler_entry": {
+    "nl": {
+      "part": "cooler_entry",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 27.9,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:55:23.022Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu-cooler/",
+      "seen": "Thermalright Assassin Spirit 120 EVO DARK",
+      "product": "https://nl.pcpartpicker.com/product/khJp99/thermalright-assassin-spirit-120-evo-dark-704-cfm-cpu-cooler-as120-evo-dark-d6-de",
+      "source": "pcpp",
+      "selection_basis": "120mm single tower Thermalright Assassin Spirit120EVO"
+    }
+  },
+  "cooler_mid": {
+    "nl": {
+      "part": "cooler_mid",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 39.59,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:55:23.022Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu-cooler/",
+      "seen": "Thermalright Peerless Assassin 120 SE V3",
+      "product": "https://nl.pcpartpicker.com/product/vZfV3C/thermalright-peerless-assassin-120-se-v3-7084-cfm-cpu-cooler-pa120se-v3",
+      "source": "pcpp",
+      "selection_basis": "120mm dual tower PeerlessAssassin120SEV3"
+    }
+  },
+  "cooler_aio": {
+    "nl": {
+      "part": "cooler_aio",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 81.9,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:55:23.022Z",
+      "url": "https://nl.pcpartpicker.com/products/cpu-cooler/",
+      "seen": "600 - 3000 RPM ARCTIC Liquid Freezer III Pro A-RGB 360 Black",
+      "product": "https://nl.pcpartpicker.com/product/Xh9nTW/arctic-liquid-freezer-iii-pro-a-rgb-360-77-cfm-liquid-cpu-cooler-acfre00184a",
+      "source": "pcpp",
+      "selection_basis": "Arctic LiquidFreezerIIIPro360 verified360mm radiator"
+    }
+  },
+  "mb_am4": {
+    "nl": {
+      "part": "mb_am4",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 105,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:56:44.464Z",
+      "url": "https://nl.pcpartpicker.com/products/motherboard/",
+      "seen": "MSI B550-A PRO",
+      "product": "https://nl.pcpartpicker.com/product/7gxbt6/msi-b550-a-pro-atx-am4-motherboard-b550-a-pro",
+      "source": "pcpp",
+      "selection_basis": "MSIB550APro AM4 board, four DIMMs"
+    }
+  },
+  "mb_am5": {
+    "nl": {
+      "part": "mb_am5",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 129,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:56:44.464Z",
+      "url": "https://nl.pcpartpicker.com/products/motherboard/",
+      "seen": "Gigabyte B650M GAMING PLUS WIFI",
+      "product": "https://nl.pcpartpicker.com/product/9HTZxr/gigabyte-b650m-gaming-plus-wifi-micro-atx-am5-motherboard-b650m-gaming-plus-wf",
+      "source": "pcpp",
+      "selection_basis": "GigabyteB650MGamingPlusWiFi AM5 DDR5"
+    }
+  },
+  "mb_am5_great": {
+    "nl": {
+      "part": "mb_am5_great",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 147,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:56:44.464Z",
+      "url": "https://nl.pcpartpicker.com/products/motherboard/",
+      "seen": "Gigabyte B650 GAMING X AX V2",
+      "product": "https://nl.pcpartpicker.com/product/cPNYcf/gigabyte-b650-gaming-x-ax-v2-atx-am5-motherboard-b650-gaming-x-ax-v2",
+      "source": "pcpp",
+      "selection_basis": "GigabyteB650GamingXAXV2 ATX upper AM5"
+    }
+  },
+  "mb_lga1700_ddr4": {
+    "nl": {
+      "part": "mb_lga1700_ddr4",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 119.37,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:56:44.464Z",
+      "url": "https://nl.pcpartpicker.com/products/motherboard/",
+      "seen": "Gigabyte B760M GAMING PLUS WIFI DDR4",
+      "product": "https://nl.pcpartpicker.com/product/NMWJ7P/gigabyte-b760m-gaming-plus-wifi-ddr4-micro-atx-lga1700-motherboard-b760m-g-p-wifi-ddr4",
+      "source": "pcpp",
+      "selection_basis": "GigabyteB760MGamingPlusWiFiDDR4"
+    }
+  },
+  "mb_lga1700_ddr4_great": {
+    "nl": {
+      "part": "mb_lga1700_ddr4_great",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 159,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:56:44.464Z",
+      "url": "https://nl.pcpartpicker.com/products/motherboard/",
+      "seen": "MSI B760 GAMING PLUS WIFI DDR4",
+      "product": "https://nl.pcpartpicker.com/product/Zhhv6h/msi-b760-gaming-plus-wifi-ddr4-atx-lga1700-motherboard-b760-gaming-plus-wifi-ddr4",
+      "source": "pcpp",
+      "selection_basis": "MSIB760GamingPlusWiFiDDR4 upper VRM"
+    }
+  },
+  "mb_lga1700_ddr5": {
+    "nl": {
+      "part": "mb_lga1700_ddr5",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 151.99,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:56:44.464Z",
+      "url": "https://nl.pcpartpicker.com/products/motherboard/",
+      "seen": "MSI B760 GAMING PLUS WIFI",
+      "product": "https://nl.pcpartpicker.com/product/TxcgXL/msi-b760-gaming-plus-wifi-atx-lga1700-motherboard-b760-gaming-plus-wifi",
+      "source": "pcpp",
+      "selection_basis": "MSIB760GamingPlusWiFi DDR5"
+    }
+  },
+  "mb_lga1700_ddr5_great": {
+    "nl": {
+      "part": "mb_lga1700_ddr5_great",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 151.99,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:56:44.464Z",
+      "url": "https://nl.pcpartpicker.com/products/motherboard/",
+      "seen": "MSI B760 GAMING PLUS WIFI",
+      "product": "https://nl.pcpartpicker.com/product/TxcgXL/msi-b760-gaming-plus-wifi-atx-lga1700-motherboard-b760-gaming-plus-wifi",
+      "source": "pcpp",
+      "selection_basis": "Same MSI B760GamingPlusWiFi has adequate upper-tier VRM; stock clocks"
+    }
+  },
+  "mb_lga1851": {
+    "nl": {
+      "part": "mb_lga1851",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 142.3,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:58:04.987Z",
+      "url": "https://nl.pcpartpicker.com/products/motherboard/",
+      "seen": "ASRock B860 Pro RS",
+      "product": "https://nl.pcpartpicker.com/product/zfHp99/asrock-b860-pro-rs-atx-lga1851-motherboard-b860-pro-rs",
+      "source": "pcpp",
+      "selection_basis": "ATX B860ProRS LGA1851 DDR5, native B860 category search; confirm current BIOS for 200SPlus"
+    }
+  },
+  "case": {
+    "nl": {
+      "part": "case",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 104.85,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T17:59:29.663Z",
+      "url": "https://nl.pcpartpicker.com/products/case/",
+      "seen": "Lian Li LANCOOL 216",
+      "product": "https://nl.pcpartpicker.com/product/qP2WGX/lian-li-lancool-216-atx-mid-tower-case-lancool-216x",
+      "source": "pcpp",
+      "selection_basis": "LANCOOL216 with included fans: ATX, GPU392mm, 360mm top cooling with63mm clearance in water-cooling mode; chosen AIO38mm radiator+25mm fans. Sources https://lian-li.com/product/lancool-216/ and https://support.arctic.de/products/liquid-freezer-iii-pro-360-argb/techdocs/LF3%20Pro%20360%20ARGB%202D%20Drawing.pdf"
+    }
+  },
+  "Core Ultra 7 270K Plus": {
+    "nl": {
+      "part": "Core Ultra 7 270K Plus",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 323.9,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T18:00:25.484Z",
+      "url": "https://www.megekko.nl/product/15748/311161/Socket-1851-Processoren/Intel-Core-Ultra-7-270K-Plus",
+      "seen": "Intel Core Ultra 7 270K Plus",
+      "product": "https://www.megekko.nl/product/15748/311161/Socket-1851-Processoren/Intel-Core-Ultra-7-270K-Plus",
+      "source": "megekko",
+      "selection_basis": "Exact retail SKU; visible323,90 and own-stock Monday delivery; metadata agrees"
+    }
+  },
+  "Ryzen 7 5800X3D": {
+    "nl": {
+      "part": "Ryzen 7 5800X3D",
+      "region": "nl",
+      "cur": "EUR",
+      "amount": 359,
+      "stock": true,
+      "ambiguous": false,
+      "capturedAt": "2026-10-17T18:01:37.967Z",
+      "url": "https://www.megekko.nl/product/4278/10432/Socket-AM4-Processoren/AMD-Ryzen-7-5800X3D-10th-Anniversary-Edition-processor",
+      "seen": "AMD Ryzen 7 5800X3D 10th Anniversary Edition processor",
+      "product": "https://www.megekko.nl/product/4278/10432/Socket-AM4-Processoren/AMD-Ryzen-7-5800X3D-10th-Anniversary-Edition-processor",
+      "source": "megekko",
+      "selection_basis": "5800X3D anniversary packaging, same AM4 8-core 3.4/4.5GHz SKU family; visible359 and own stock"
+    }
+  },
+  "RTX 5090": {
+    "nl": {
+      "amount": 7858,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:17:45.299Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&c=593,589,588,587",
+      "seen": "GeForce RTX 5090 Asus ROG Astral OC 32 GB 2010 MHz 2610 MHz [FVG2FT]",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/FVG2FT/asus-rog-astral-oc-geforce-rtx-5090-32-gb-video-card-rog-astral-rtx5090-o32g-white",
+      "part": "RTX 5090",
+      "source": "pcpp",
+      "selection_basis": "Luna verified filtered price-sorted in-stock minimum7858, raw€7858.00Add. Independent Megekko official5090 category has own-stock ASUS8799/8899 on2026-10-17; genuine current large increase."
+    }
+  },
+  "RTX 5060 Ti 8GB": {
+    "nl": {
+      "amount": 548,
+      "cur": "EUR",
+      "region": "nl",
+      "at": "2026-10-17",
+      "capturedAt": "2026-10-17T17:17:45.299Z",
+      "url": "https://nl.pcpartpicker.com/products/video-card/#sort=price&c=593,589,588,587",
+      "seen": "Gainward Ghost",
+      "stock": true,
+      "slot": null,
+      "ambiguous": false,
+      "suspect": null,
+      "product": "https://nl.pcpartpicker.com/product/CPzp99/gainward-ghost-geforce-rtx-5060-ti-8-gb-video-card-ne7506t019p1-gb2062b",
+      "part": "RTX 5060 Ti 8GB",
+      "source": "pcpp",
+      "selection_basis": "Luna verified filtered price-sorted GainwardGhost8GB minimum548, correct VRAM; accepted reviewed55.7% increase."
+    }
+  }
+}

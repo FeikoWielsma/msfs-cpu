@@ -1,8 +1,10 @@
 {
  "priced_on": "2026-07-26",
+ "builds_priced_on": "2026-10-17",
+ "latest_priced_on": "2026-10-17",
  "currency": "EUR",
  "region": "Netherlands",
- "source": "PCPartPicker NL and Tweakers.net",
+ "source": "Megekko and PCPartPicker NL and Tweakers.net",
  "resolutions": [
   "1080p",
   "1440p",
@@ -36,55 +38,55 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1172,
+   "eur": 1444,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 5 5600",
-     "eur": 135,
+     "eur": 153,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RX 9060 XT 16GB",
-     "eur": 438,
+     "eur": 637,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM4 motherboard",
-     "eur": 85,
+     "eur": 105,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -107,55 +109,55 @@
    "vram": 8,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1070,
+   "eur": 1293,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-12400F",
-     "eur": 150,
+     "eur": 162,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RTX 5060",
-     "eur": 317,
+     "eur": 463,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4",
-     "eur": 89,
+     "eur": 119,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -178,55 +180,55 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1723,
+   "eur": 2200,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 7800X3D",
-     "eur": 299,
+     "eur": 297,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RX 9070",
-     "eur": 599,
+     "eur": 857,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard",
-     "eur": 112,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "750 W power supply",
-     "eur": 80,
-     "src": "tweakers"
+     "eur": 101,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -249,55 +251,55 @@
    "vram": 12,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1456,
+   "eur": 1878,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-12600KF",
-     "eur": 185,
+     "eur": 193,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RTX 5070",
-     "eur": 639,
+     "eur": 949,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4",
-     "eur": 89,
+     "eur": 119,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "750 W power supply",
-     "eur": 80,
-     "src": "tweakers"
+     "eur": 101,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -320,55 +322,55 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 1921,
+   "eur": 2486,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 9800X3D",
-     "eur": 399,
+     "eur": 456,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RX 9070",
-     "eur": 599,
+     "eur": 857,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 220,
+     "eur": 238,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard, upper tier",
-     "eur": 130,
-     "src": "tweakers"
+     "eur": 147,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "750 W power supply",
-     "eur": 80,
-     "src": "tweakers"
+     "eur": 101,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -391,55 +393,55 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2220,
+   "eur": 2907,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core Ultra 7 270K Plus",
-     "eur": 325,
-     "src": "pcpp"
+     "eur": 324,
+     "src": "megekko"
     },
     {
      "slot": "GPU",
      "part": "RTX 5070 Ti",
-     "eur": 959,
+     "eur": 1349,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 220,
+     "eur": 238,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1851 motherboard",
-     "eur": 115,
+     "eur": 142,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "360 mm AIO",
-     "eur": 52,
+     "eur": 82,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -462,55 +464,55 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1172,
+   "eur": 1444,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 5 5600",
-     "eur": 135,
+     "eur": 153,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RX 9060 XT 16GB",
-     "eur": 438,
+     "eur": 637,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM4 motherboard",
-     "eur": 85,
+     "eur": 105,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -533,55 +535,55 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1361,
+   "eur": 1735,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-12400F",
-     "eur": 150,
+     "eur": 162,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RTX 5060 Ti 16GB",
-     "eur": 579,
+     "eur": 849,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4",
-     "eur": 89,
+     "eur": 119,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "750 W power supply",
-     "eur": 88,
+     "eur": 101,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -604,55 +606,55 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1723,
+   "eur": 2200,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 7800X3D",
-     "eur": 299,
+     "eur": 297,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RX 9070",
-     "eur": 599,
+     "eur": 857,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard",
-     "eur": 112,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "750 W power supply",
-     "eur": 80,
-     "src": "tweakers"
+     "eur": 101,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -675,55 +677,55 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1873,
+   "eur": 2422,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-14600K",
-     "eur": 236,
+     "eur": 273,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RTX 5070 Ti",
-     "eur": 959,
+     "eur": 1349,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4, upper tier",
-     "eur": 125,
-     "src": "tweakers"
+     "eur": 159,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -746,55 +748,55 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2031,
+   "eur": 2684,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 9800X3D",
-     "eur": 399,
+     "eur": 456,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RX 9070 XT",
-     "eur": 699,
+     "eur": 1031,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 220,
+     "eur": 238,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard, upper tier",
-     "eur": 130,
-     "src": "tweakers"
+     "eur": 147,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -817,55 +819,55 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2520,
+   "eur": 3257,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core Ultra 7 270K Plus",
-     "eur": 325,
-     "src": "pcpp"
+     "eur": 324,
+     "src": "megekko"
     },
     {
      "slot": "GPU",
      "part": "RTX 5080",
-     "eur": 1259,
+     "eur": 1699,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 220,
+     "eur": 238,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1851 motherboard",
-     "eur": 115,
+     "eur": 142,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "360 mm AIO",
-     "eur": 52,
+     "eur": 82,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -888,55 +890,55 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1585,
+   "eur": 1938,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 5800X3D",
-     "eur": 358,
-     "src": "pcpp"
+     "eur": 359,
+     "src": "megekko"
     },
     {
      "slot": "GPU",
      "part": "RX 9070",
-     "eur": 599,
+     "eur": 857,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM4 motherboard",
-     "eur": 85,
+     "eur": 105,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "750 W power supply",
-     "eur": 80,
-     "src": "tweakers"
+     "eur": 101,
+     "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -959,55 +961,55 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 1786,
+   "eur": 2302,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-12600KF",
-     "eur": 185,
+     "eur": 193,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RTX 5070 Ti",
-     "eur": 959,
+     "eur": 1349,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4",
-     "eur": 89,
+     "eur": 119,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -1030,55 +1032,55 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "1TB NVMe",
-   "eur": 1833,
+   "eur": 2398,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 7800X3D",
-     "eur": 299,
+     "eur": 297,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RX 9070 XT",
-     "eur": 699,
+     "eur": 1031,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard",
-     "eur": 112,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -1101,55 +1103,55 @@
    "vram": 16,
    "ram": "32GB DDR4-3200",
    "sto": "1TB NVMe",
-   "eur": 2173,
+   "eur": 2772,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core i5-14600K",
-     "eur": 236,
+     "eur": 273,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RTX 5080",
-     "eur": 1259,
+     "eur": 1699,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR4-3200",
-     "eur": 229,
+     "eur": 242,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "1TB NVMe",
-     "eur": 140,
+     "eur": 129,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1700 motherboard, DDR4, upper tier",
-     "eur": 125,
-     "src": "tweakers"
+     "eur": 159,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -1172,55 +1174,55 @@
    "vram": 16,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 2031,
+   "eur": 2684,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Ryzen 7 9800X3D",
-     "eur": 399,
+     "eur": 456,
      "src": "pcpp"
     },
     {
      "slot": "GPU",
      "part": "RX 9070 XT",
-     "eur": 699,
+     "eur": 1031,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 220,
+     "eur": 238,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "AM5 motherboard, upper tier",
-     "eur": 130,
-     "src": "tweakers"
+     "eur": 147,
+     "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -1243,55 +1245,55 @@
    "vram": 32,
    "ram": "32GB DDR5-6000",
    "sto": "2TB NVMe",
-   "eur": 5501,
+   "eur": 9450,
    "approx": false,
    "items": [
     {
      "slot": "CPU",
      "part": "Core Ultra 7 270K Plus",
-     "eur": 325,
-     "src": "pcpp"
+     "eur": 324,
+     "src": "megekko"
     },
     {
      "slot": "GPU",
      "part": "RTX 5090",
-     "eur": 4249,
+     "eur": 7858,
      "src": "pcpp"
     },
     {
      "slot": "Memory",
      "part": "32GB DDR5-6000",
-     "eur": 399,
+     "eur": 542,
      "src": "pcpp"
     },
     {
      "slot": "Storage",
      "part": "2TB NVMe",
-     "eur": 220,
+     "eur": 238,
      "src": "pcpp"
     },
     {
      "slot": "Motherboard",
      "part": "LGA1851 motherboard",
-     "eur": 115,
+     "eur": 142,
      "src": "pcpp"
     },
     {
      "slot": "Power supply",
      "part": "1000 W power supply",
-     "eur": 81,
+     "eur": 159,
      "src": "pcpp"
     },
     {
      "slot": "CPU cooler",
      "part": "360 mm AIO",
-     "eur": 52,
+     "eur": 82,
      "src": "pcpp"
     },
     {
      "slot": "Case",
      "part": "Case",
-     "eur": 60,
+     "eur": 105,
      "src": "pcpp"
     }
    ]
@@ -1299,40 +1301,24 @@
  ],
  "not_picked": [
   {
-   "part": "RX 9070 GRE",
-   "eur": 559,
-   "gi": 60,
-   "gd": true,
-   "why": "an RX 9070 is +20% for €40 more",
-   "vram": 12
-  },
-  {
-   "part": "RX 7900 XT",
-   "eur": 736,
-   "gi": 73,
-   "gd": false,
-   "why": "a 9070 XT beats it for €37 less",
-   "vram": 20
-  },
-  {
    "part": "RX 9060 XT 8GB",
-   "eur": 348,
+   "eur": 513,
    "gi": 25,
    "gd": false,
-   "why": "the 16GB is +114% for €90",
+   "why": "the 16GB is +114% for €124",
    "vram": 8
   },
   {
    "part": "RTX 5060 Ti 8GB",
-   "eur": 352,
+   "eur": 548,
    "gi": 40,
    "gd": false,
-   "why": "the 16GB twin is +23% for €227",
+   "why": "the 16GB twin is +23% for €301",
    "vram": 8
   },
   {
    "part": "Arc B580",
-   "eur": 289,
+   "eur": 424,
    "gi": 33,
    "gd": false,
    "why": "fine at 1080p, out of its depth above",
@@ -1342,373 +1328,447 @@
  "prices": [
   {
    "part": "1TB NVMe",
-   "eur": 140,
-   "src": "pcpp"
+   "eur": 129,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "1x16GB DDR5-6000",
-   "eur": 233,
-   "src": "pcpp"
+   "eur": 289,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "2TB NVMe",
-   "eur": 220,
-   "src": "pcpp"
+   "eur": 238,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "2x8GB DDR4-3200",
-   "eur": 103,
-   "src": "pcpp"
+   "eur": 138,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "2x8GB DDR5-6000",
-   "eur": 229,
-   "src": "pcpp"
+   "eur": 320,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "32GB DDR4-3200",
-   "eur": 229,
-   "src": "pcpp"
+   "eur": 242,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "32GB DDR5-6000",
-   "eur": 399,
-   "src": "pcpp"
+   "eur": 542,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Arc B570",
-   "eur": 267,
-   "src": "tweakers"
+   "eur": 315,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Arc B580",
-   "eur": 289,
-   "src": "tweakers"
+   "eur": 424,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core Ultra 5 225F",
-   "eur": 149,
-   "src": "pcpp"
+   "eur": 185,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core Ultra 5 245K",
-   "eur": 186,
-   "src": "pcpp"
+   "eur": 230,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core Ultra 5 250K Plus",
    "eur": 227,
-   "src": "pcpp"
+   "src": "pcpp",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "Core Ultra 7 270K Plus",
-   "eur": 325,
-   "src": "pcpp"
+   "eur": 324,
+   "src": "megekko",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core Ultra 9 285K",
    "eur": 551,
-   "src": "pcpp"
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core i3-14100F",
-   "eur": 107,
-   "src": "pcpp"
+   "eur": 110,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core i5-12400F",
-   "eur": 150,
-   "src": "pcpp"
+   "eur": 162,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core i5-12600K",
-   "eur": 219,
-   "src": "pcpp"
+   "eur": 214,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core i5-12600KF",
-   "eur": 185,
-   "src": "pcpp"
+   "eur": 193,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core i5-13400F",
-   "eur": 180,
-   "src": "pcpp"
+   "eur": 225,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core i5-14400F",
-   "eur": 175,
-   "src": "pcpp"
+   "eur": 165,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core i5-14600K",
-   "eur": 236,
-   "src": "pcpp"
+   "eur": 273,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Core i7-14700K",
-   "eur": 398,
-   "src": "pcpp"
+   "eur": 424,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RTX 4080",
    "eur": 1589,
-   "src": "tweakers"
+   "src": "tweakers",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "RTX 4090",
    "eur": 3489,
-   "src": "tweakers"
+   "src": "tweakers",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "RTX 5050",
-   "eur": 285,
-   "src": "pcpp"
+   "eur": 341,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RTX 5060",
-   "eur": 317,
-   "src": "pcpp"
+   "eur": 463,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RTX 5060 Ti 16GB",
-   "eur": 579,
-   "src": "pcpp"
+   "eur": 849,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RTX 5060 Ti 8GB",
-   "eur": 352,
-   "src": "pcpp"
+   "eur": 548,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RTX 5070",
-   "eur": 639,
-   "src": "pcpp"
+   "eur": 949,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RTX 5070 Ti",
-   "eur": 959,
-   "src": "pcpp"
+   "eur": 1349,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RTX 5080",
-   "eur": 1259,
-   "src": "pcpp"
+   "eur": 1699,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RTX 5090",
-   "eur": 4249,
-   "src": "pcpp"
+   "eur": 7858,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RX 7600",
-   "eur": 283,
-   "src": "tweakers"
+   "eur": 405,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RX 7600 XT",
    "eur": 536,
-   "src": "tweakers"
+   "src": "tweakers",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "RX 7700 XT",
    "eur": 500,
-   "src": "tweakers"
+   "src": "tweakers",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "RX 7800 XT",
    "eur": 900,
-   "src": "tweakers"
+   "src": "tweakers",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "RX 7900 XT",
    "eur": 736,
-   "src": "tweakers"
+   "src": "tweakers",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "RX 7900 XTX",
    "eur": 1325,
-   "src": "tweakers"
+   "src": "tweakers",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "RX 9060 XT 16GB",
-   "eur": 438,
-   "src": "pcpp"
+   "eur": 637,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RX 9060 XT 8GB",
-   "eur": 348,
-   "src": "pcpp"
+   "eur": 513,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RX 9070",
-   "eur": 599,
-   "src": "pcpp"
+   "eur": 857,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "RX 9070 GRE",
    "eur": 559,
-   "src": "pcpp"
+   "src": "pcpp",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "RX 9070 XT",
-   "eur": 699,
-   "src": "pcpp"
+   "eur": 1031,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 5 5500X3D",
    "eur": 150,
-   "src": "aliexpress"
+   "src": "aliexpress",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "Ryzen 5 5600",
-   "eur": 135,
-   "src": "pcpp"
+   "eur": 153,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 5 5600X",
-   "eur": 156,
-   "src": "pcpp"
+   "eur": 180,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 5 5600XT",
-   "eur": 159,
-   "src": "pcpp"
+   "eur": 151,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 5 7500F",
-   "eur": 133,
-   "src": "pcpp"
+   "eur": 131,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 5 7500X3D",
    "eur": 219,
-   "src": "pcpp"
+   "src": "pcpp",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "Ryzen 5 7600X",
-   "eur": 153,
-   "src": "pcpp"
+   "eur": 161,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 5 9600X",
-   "eur": 183,
-   "src": "pcpp"
+   "eur": 215,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 7 5700X",
-   "eur": 209,
-   "src": "pcpp"
+   "eur": 238,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 7 5800X3D",
-   "eur": 358,
-   "src": "pcpp"
+   "eur": 359,
+   "src": "megekko",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 7 7700X",
-   "eur": 214,
-   "src": "pcpp"
+   "eur": 221,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 7 7700X3D",
    "eur": 349,
-   "src": "pcpp"
+   "src": "pcpp",
+   "observed_on": "2026-07-26"
   },
   {
    "part": "Ryzen 7 7800X3D",
-   "eur": 299,
-   "src": "pcpp"
+   "eur": 297,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "Ryzen 7 9800X3D",
-   "eur": 399,
-   "src": "pcpp"
+   "eur": 456,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "case",
-   "eur": 60,
-   "src": "pcpp"
+   "eur": 105,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "cooler_aio",
-   "eur": 52,
-   "src": "pcpp"
+   "eur": 82,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "cooler_entry",
-   "eur": 26,
-   "src": "pcpp"
+   "eur": 28,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "cooler_mid",
-   "eur": 34,
-   "src": "pcpp"
+   "eur": 40,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "mb_am4",
-   "eur": 85,
-   "src": "pcpp"
+   "eur": 105,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "mb_am5",
-   "eur": 112,
-   "src": "pcpp"
+   "eur": 129,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "mb_am5_great",
-   "eur": 130,
-   "src": "tweakers"
+   "eur": 147,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "mb_lga1700_ddr4",
-   "eur": 89,
-   "src": "pcpp"
+   "eur": 119,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "mb_lga1700_ddr4_great",
-   "eur": 125,
-   "src": "tweakers"
+   "eur": 159,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "mb_lga1700_ddr5",
-   "eur": 107,
-   "src": "pcpp"
+   "eur": 152,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "mb_lga1700_ddr5_great",
-   "eur": 125,
-   "src": "tweakers"
+   "eur": 152,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "mb_lga1851",
-   "eur": 115,
-   "src": "pcpp"
+   "eur": 142,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "psu_1000",
-   "eur": 81,
-   "src": "pcpp"
+   "eur": 159,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "psu_650",
-   "eur": 59,
-   "src": "pcpp"
+   "eur": 45,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "psu_750a",
-   "eur": 80,
-   "src": "tweakers"
+   "eur": 101,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "psu_750b",
-   "eur": 88,
-   "src": "pcpp"
+   "eur": 101,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   },
   {
    "part": "psu_850",
-   "eur": 90,
-   "src": "pcpp"
+   "eur": 125,
+   "src": "pcpp",
+   "observed_on": "2026-10-17"
   }
  ],
  "catalogue": {
@@ -1717,9 +1777,9 @@
     "part": "Core Ultra 5 225F",
     "vendor": "Intel",
     "socket": "LGA1851",
-    "eur": 149,
+    "eur": 185,
     "by": {
-     "nl": 149,
+     "nl": 185,
      "de": 141,
      "fr": 148,
      "uk": 134,
@@ -1736,10 +1796,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -1751,10 +1811,10 @@
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115,
+      "eur": 142,
       "key": "mb_lga1851",
       "by": {
-       "nl": 115,
+       "nl": 142,
        "de": 107,
        "fr": 116,
        "uk": 110,
@@ -1769,9 +1829,9 @@
     "part": "Core Ultra 5 245K",
     "vendor": "Intel",
     "socket": "LGA1851",
-    "eur": 186,
+    "eur": 230,
     "by": {
-     "nl": 186,
+     "nl": 230,
      "de": 178,
      "fr": 200,
      "uk": 170,
@@ -1788,10 +1848,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -1803,10 +1863,10 @@
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115,
+      "eur": 142,
       "key": "mb_lga1851",
       "by": {
-       "nl": 115,
+       "nl": 142,
        "de": 107,
        "fr": 116,
        "uk": 110,
@@ -1823,7 +1883,6 @@
     "socket": "LGA1851",
     "eur": 227,
     "by": {
-     "nl": 227,
      "de": 217,
      "fr": 239,
      "uk": 206,
@@ -1840,10 +1899,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -1855,10 +1914,10 @@
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115,
+      "eur": 142,
       "key": "mb_lga1851",
       "by": {
-       "nl": 115,
+       "nl": 142,
        "de": 107,
        "fr": 116,
        "uk": 110,
@@ -1873,9 +1932,9 @@
     "part": "Core Ultra 7 270K Plus",
     "vendor": "Intel",
     "socket": "LGA1851",
-    "eur": 325,
+    "eur": 324,
     "by": {
-     "nl": 325,
+     "nl": 324,
      "de": 316,
      "fr": 360,
      "uk": 295,
@@ -1892,10 +1951,10 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 52,
+     "eur": 82,
      "key": "cooler_aio",
      "by": {
-      "nl": 52,
+      "nl": 82,
       "de": 48,
       "fr": 49,
       "uk": 30,
@@ -1907,10 +1966,10 @@
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115,
+      "eur": 142,
       "key": "mb_lga1851",
       "by": {
-       "nl": 115,
+       "nl": 142,
        "de": 107,
        "fr": 116,
        "uk": 110,
@@ -1944,10 +2003,10 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 52,
+     "eur": 82,
      "key": "cooler_aio",
      "by": {
-      "nl": 52,
+      "nl": 82,
       "de": 48,
       "fr": 49,
       "uk": 30,
@@ -1959,10 +2018,10 @@
     "mobo": {
      "DDR5": {
       "part": "LGA1851 motherboard",
-      "eur": 115,
+      "eur": 142,
       "key": "mb_lga1851",
       "by": {
-       "nl": 115,
+       "nl": 142,
        "de": 107,
        "fr": 116,
        "uk": 110,
@@ -1977,9 +2036,9 @@
     "part": "Core i3-14100F",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 107,
+    "eur": 110,
     "by": {
-     "nl": 107,
+     "nl": 110,
      "de": 107,
      "fr": 108,
      "uk": 95,
@@ -1998,10 +2057,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2013,10 +2072,10 @@
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89,
+      "eur": 119,
       "key": "mb_lga1700_ddr4",
       "by": {
-       "nl": 89,
+       "nl": 119,
        "de": 86,
        "fr": 90,
        "uk": 83,
@@ -2027,10 +2086,10 @@
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107,
+      "eur": 152,
       "key": "mb_lga1700_ddr5",
       "by": {
-       "nl": 107,
+       "nl": 152,
        "de": 78,
        "fr": 107,
        "uk": 95,
@@ -2045,9 +2104,9 @@
     "part": "Core i5-12400F",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 150,
+    "eur": 162,
     "by": {
-     "nl": 150,
+     "nl": 162,
      "de": 143,
      "fr": 155,
      "uk": 140,
@@ -2066,10 +2125,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2081,10 +2140,10 @@
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89,
+      "eur": 119,
       "key": "mb_lga1700_ddr4",
       "by": {
-       "nl": 89,
+       "nl": 119,
        "de": 86,
        "fr": 90,
        "uk": 83,
@@ -2095,10 +2154,10 @@
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107,
+      "eur": 152,
       "key": "mb_lga1700_ddr5",
       "by": {
-       "nl": 107,
+       "nl": 152,
        "de": 78,
        "fr": 107,
        "uk": 95,
@@ -2113,9 +2172,9 @@
     "part": "Core i5-12600K",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 219,
+    "eur": 214,
     "by": {
-     "nl": 219,
+     "nl": 214,
      "de": 192,
      "fr": 220,
      "uk": 202,
@@ -2134,10 +2193,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2149,10 +2208,10 @@
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89,
+      "eur": 119,
       "key": "mb_lga1700_ddr4",
       "by": {
-       "nl": 89,
+       "nl": 119,
        "de": 86,
        "fr": 90,
        "uk": 83,
@@ -2163,10 +2222,10 @@
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107,
+      "eur": 152,
       "key": "mb_lga1700_ddr5",
       "by": {
-       "nl": 107,
+       "nl": 152,
        "de": 78,
        "fr": 107,
        "uk": 95,
@@ -2181,9 +2240,9 @@
     "part": "Core i5-12600KF",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 185,
+    "eur": 193,
     "by": {
-     "nl": 185,
+     "nl": 193,
      "de": 174,
      "fr": 181,
      "uk": 164,
@@ -2202,10 +2261,10 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "key": "cooler_mid",
      "by": {
-      "nl": 34,
+      "nl": 40,
       "de": 33,
       "fr": 30,
       "uk": 25,
@@ -2217,10 +2276,10 @@
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89,
+      "eur": 119,
       "key": "mb_lga1700_ddr4",
       "by": {
-       "nl": 89,
+       "nl": 119,
        "de": 86,
        "fr": 90,
        "uk": 83,
@@ -2231,10 +2290,10 @@
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107,
+      "eur": 152,
       "key": "mb_lga1700_ddr5",
       "by": {
-       "nl": 107,
+       "nl": 152,
        "de": 78,
        "fr": 107,
        "uk": 95,
@@ -2249,9 +2308,9 @@
     "part": "Core i5-13400F",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 180,
+    "eur": 225,
     "by": {
-     "nl": 180,
+     "nl": 225,
      "de": 190,
      "fr": 222,
      "uk": 175,
@@ -2270,10 +2329,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2285,10 +2344,10 @@
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89,
+      "eur": 119,
       "key": "mb_lga1700_ddr4",
       "by": {
-       "nl": 89,
+       "nl": 119,
        "de": 86,
        "fr": 90,
        "uk": 83,
@@ -2299,10 +2358,10 @@
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107,
+      "eur": 152,
       "key": "mb_lga1700_ddr5",
       "by": {
-       "nl": 107,
+       "nl": 152,
        "de": 78,
        "fr": 107,
        "uk": 95,
@@ -2317,9 +2376,9 @@
     "part": "Core i5-14400F",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 175,
+    "eur": 165,
     "by": {
-     "nl": 175,
+     "nl": 165,
      "de": 165,
      "fr": 186,
      "uk": 168,
@@ -2338,10 +2397,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2353,10 +2412,10 @@
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89,
+      "eur": 119,
       "key": "mb_lga1700_ddr4",
       "by": {
-       "nl": 89,
+       "nl": 119,
        "de": 86,
        "fr": 90,
        "uk": 83,
@@ -2367,10 +2426,10 @@
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107,
+      "eur": 152,
       "key": "mb_lga1700_ddr5",
       "by": {
-       "nl": 107,
+       "nl": 152,
        "de": 78,
        "fr": 107,
        "uk": 95,
@@ -2385,9 +2444,9 @@
     "part": "Core i5-14600K",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 236,
+    "eur": 273,
     "by": {
-     "nl": 236,
+     "nl": 273,
      "de": 226,
      "fr": 269,
      "uk": 233,
@@ -2406,10 +2465,10 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "key": "cooler_mid",
      "by": {
-      "nl": 34,
+      "nl": 40,
       "de": 33,
       "fr": 30,
       "uk": 25,
@@ -2421,10 +2480,10 @@
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4, upper tier",
-      "eur": 125,
+      "eur": 159,
       "key": "mb_lga1700_ddr4_great",
       "by": {
-       "nl": 125,
+       "nl": 159,
        "de": 86,
        "fr": 90,
        "uk": 83,
@@ -2443,10 +2502,10 @@
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5, upper tier",
-      "eur": 125,
+      "eur": 152,
       "key": "mb_lga1700_ddr5_great",
       "by": {
-       "nl": 125,
+       "nl": 152,
        "de": 78,
        "fr": 107,
        "uk": 95,
@@ -2469,9 +2528,9 @@
     "part": "Core i7-14700K",
     "vendor": "Intel",
     "socket": "LGA1700",
-    "eur": 398,
+    "eur": 424,
     "by": {
-     "nl": 398,
+     "nl": 424,
      "de": 380,
      "fr": 410,
      "uk": 344,
@@ -2490,10 +2549,10 @@
     },
     "cooler": {
      "part": "360 mm AIO",
-     "eur": 52,
+     "eur": 82,
      "key": "cooler_aio",
      "by": {
-      "nl": 52,
+      "nl": 82,
       "de": 48,
       "fr": 49,
       "uk": 30,
@@ -2505,10 +2564,10 @@
     "mobo": {
      "DDR4": {
       "part": "LGA1700 motherboard, DDR4",
-      "eur": 89,
+      "eur": 119,
       "key": "mb_lga1700_ddr4",
       "by": {
-       "nl": 89,
+       "nl": 119,
        "de": 86,
        "fr": 90,
        "uk": 83,
@@ -2519,10 +2578,10 @@
      },
      "DDR5": {
       "part": "LGA1700 motherboard, DDR5",
-      "eur": 107,
+      "eur": 152,
       "key": "mb_lga1700_ddr5",
       "by": {
-       "nl": 107,
+       "nl": 152,
        "de": 78,
        "fr": 107,
        "uk": 95,
@@ -2537,9 +2596,9 @@
     "part": "Ryzen 5 5600",
     "vendor": "AMD",
     "socket": "AM4",
-    "eur": 135,
+    "eur": 153,
     "by": {
-     "nl": 135,
+     "nl": 153,
      "de": 127,
      "fr": 149,
      "uk": 122,
@@ -2556,10 +2615,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2571,10 +2630,10 @@
     "mobo": {
      "DDR4": {
       "part": "AM4 motherboard",
-      "eur": 85,
+      "eur": 105,
       "key": "mb_am4",
       "by": {
-       "nl": 85,
+       "nl": 105,
        "de": 83,
        "fr": 85,
        "uk": 76,
@@ -2589,9 +2648,9 @@
     "part": "Ryzen 5 7500F",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 133,
+    "eur": 131,
     "by": {
-     "nl": 133,
+     "nl": 131,
      "de": 129,
      "fr": 138,
      "uk": 124,
@@ -2608,10 +2667,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2623,10 +2682,10 @@
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112,
+      "eur": 129,
       "key": "mb_am5",
       "by": {
-       "nl": 112,
+       "nl": 129,
        "de": 105,
        "fr": 124,
        "uk": 110,
@@ -2643,7 +2702,6 @@
     "socket": "AM5",
     "eur": 219,
     "by": {
-     "nl": 219,
      "de": 210,
      "fr": 224,
      "uk": 200,
@@ -2660,10 +2718,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2675,10 +2733,10 @@
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112,
+      "eur": 129,
       "key": "mb_am5",
       "by": {
-       "nl": 112,
+       "nl": 129,
        "de": 105,
        "fr": 124,
        "uk": 110,
@@ -2693,9 +2751,9 @@
     "part": "Ryzen 5 7600X",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 153,
+    "eur": 161,
     "by": {
-     "nl": 153,
+     "nl": 161,
      "de": 149,
      "fr": 154,
      "uk": 136,
@@ -2712,10 +2770,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2727,10 +2785,10 @@
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112,
+      "eur": 129,
       "key": "mb_am5",
       "by": {
-       "nl": 112,
+       "nl": 129,
        "de": 105,
        "fr": 124,
        "uk": 110,
@@ -2745,9 +2803,9 @@
     "part": "Ryzen 5 9600X",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 183,
+    "eur": 215,
     "by": {
-     "nl": 183,
+     "nl": 215,
      "de": 179,
      "fr": 183,
      "uk": 165,
@@ -2764,10 +2822,10 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "key": "cooler_mid",
      "by": {
-      "nl": 34,
+      "nl": 40,
       "de": 33,
       "fr": 30,
       "uk": 25,
@@ -2779,10 +2837,10 @@
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112,
+      "eur": 129,
       "key": "mb_am5",
       "by": {
-       "nl": 112,
+       "nl": 129,
        "de": 105,
        "fr": 124,
        "uk": 110,
@@ -2797,9 +2855,9 @@
     "part": "Ryzen 7 5700X",
     "vendor": "AMD",
     "socket": "AM4",
-    "eur": 209,
+    "eur": 238,
     "by": {
-     "nl": 209,
+     "nl": 238,
      "de": 194,
      "fr": 194,
      "uk": 190,
@@ -2816,10 +2874,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2831,10 +2889,10 @@
     "mobo": {
      "DDR4": {
       "part": "AM4 motherboard",
-      "eur": 85,
+      "eur": 105,
       "key": "mb_am4",
       "by": {
-       "nl": 85,
+       "nl": 105,
        "de": 83,
        "fr": 85,
        "uk": 76,
@@ -2849,9 +2907,9 @@
     "part": "Ryzen 7 5800X3D",
     "vendor": "AMD",
     "socket": "AM4",
-    "eur": 358,
+    "eur": 359,
     "by": {
-     "nl": 358,
+     "nl": 359,
      "de": 352,
      "fr": 359,
      "uk": 300,
@@ -2868,10 +2926,10 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "key": "cooler_mid",
      "by": {
-      "nl": 34,
+      "nl": 40,
       "de": 33,
       "fr": 30,
       "uk": 25,
@@ -2883,10 +2941,10 @@
     "mobo": {
      "DDR4": {
       "part": "AM4 motherboard",
-      "eur": 85,
+      "eur": 105,
       "key": "mb_am4",
       "by": {
-       "nl": 85,
+       "nl": 105,
        "de": 83,
        "fr": 85,
        "uk": 76,
@@ -2901,9 +2959,9 @@
     "part": "Ryzen 7 7700X",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 214,
+    "eur": 221,
     "by": {
-     "nl": 214,
+     "nl": 221,
      "de": 203,
      "fr": 218,
      "uk": 200,
@@ -2920,10 +2978,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2935,10 +2993,10 @@
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112,
+      "eur": 129,
       "key": "mb_am5",
       "by": {
-       "nl": 112,
+       "nl": 129,
        "de": 105,
        "fr": 124,
        "uk": 110,
@@ -2955,7 +3013,6 @@
     "socket": "AM5",
     "eur": 349,
     "by": {
-     "nl": 349,
      "de": 345,
      "fr": 354,
      "uk": 290,
@@ -2972,10 +3029,10 @@
     },
     "cooler": {
      "part": "120 mm tower cooler",
-     "eur": 26,
+     "eur": 28,
      "key": "cooler_entry",
      "by": {
-      "nl": 26,
+      "nl": 28,
       "de": 17,
       "fr": 16,
       "uk": 20,
@@ -2987,10 +3044,10 @@
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112,
+      "eur": 129,
       "key": "mb_am5",
       "by": {
-       "nl": 112,
+       "nl": 129,
        "de": 105,
        "fr": 124,
        "uk": 110,
@@ -3005,9 +3062,9 @@
     "part": "Ryzen 7 7800X3D",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 299,
+    "eur": 297,
     "by": {
-     "nl": 299,
+     "nl": 297,
      "de": 286,
      "fr": 320,
      "uk": 272,
@@ -3024,10 +3081,10 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "key": "cooler_mid",
      "by": {
-      "nl": 34,
+      "nl": 40,
       "de": 33,
       "fr": 30,
       "uk": 25,
@@ -3039,10 +3096,10 @@
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard",
-      "eur": 112,
+      "eur": 129,
       "key": "mb_am5",
       "by": {
-       "nl": 112,
+       "nl": 129,
        "de": 105,
        "fr": 124,
        "uk": 110,
@@ -3057,9 +3114,9 @@
     "part": "Ryzen 7 9800X3D",
     "vendor": "AMD",
     "socket": "AM5",
-    "eur": 399,
+    "eur": 456,
     "by": {
-     "nl": 399,
+     "nl": 456,
      "de": 378,
      "fr": 409,
      "uk": 350,
@@ -3076,10 +3133,10 @@
     },
     "cooler": {
      "part": "Dual-tower air cooler",
-     "eur": 34,
+     "eur": 40,
      "key": "cooler_mid",
      "by": {
-      "nl": 34,
+      "nl": 40,
       "de": 33,
       "fr": 30,
       "uk": 25,
@@ -3091,10 +3148,10 @@
     "mobo": {
      "DDR5": {
       "part": "AM5 motherboard, upper tier",
-      "eur": 130,
+      "eur": 147,
       "key": "mb_am5_great",
       "by": {
-       "nl": 130,
+       "nl": 147,
        "de": 105,
        "fr": 124,
        "uk": 110,
@@ -3118,9 +3175,9 @@
    {
     "part": "Arc B570",
     "vendor": "Intel",
-    "eur": 267,
+    "eur": 315,
     "by": {
-     "nl": 267
+     "nl": 315
     },
     "cov": 6,
     "idx": {
@@ -3132,10 +3189,10 @@
     "vram": 10,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "key": "psu_650",
      "by": {
-      "nl": 59,
+      "nl": 45,
       "de": 55,
       "fr": 45,
       "uk": 40,
@@ -3148,9 +3205,9 @@
    {
     "part": "Arc B580",
     "vendor": "Intel",
-    "eur": 289,
+    "eur": 424,
     "by": {
-     "nl": 289
+     "nl": 424
     },
     "cov": 6,
     "idx": {
@@ -3162,10 +3219,10 @@
     "vram": 12,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "key": "psu_650",
      "by": {
-      "nl": 59,
+      "nl": 45,
       "de": 55,
       "fr": 45,
       "uk": 40,
@@ -3178,9 +3235,9 @@
    {
     "part": "RTX 5050",
     "vendor": "Nvidia",
-    "eur": 285,
+    "eur": 341,
     "by": {
-     "nl": 285,
+     "nl": 341,
      "de": 263,
      "fr": 287,
      "uk": 214,
@@ -3198,10 +3255,10 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "key": "psu_650",
      "by": {
-      "nl": 59,
+      "nl": 45,
       "de": 55,
       "fr": 45,
       "uk": 40,
@@ -3214,9 +3271,9 @@
    {
     "part": "RTX 5060",
     "vendor": "Nvidia",
-    "eur": 317,
+    "eur": 463,
     "by": {
-     "nl": 317,
+     "nl": 463,
      "de": 299,
      "fr": 321,
      "uk": 275,
@@ -3234,10 +3291,10 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "key": "psu_650",
      "by": {
-      "nl": 59,
+      "nl": 45,
       "de": 55,
       "fr": 45,
       "uk": 40,
@@ -3250,9 +3307,9 @@
    {
     "part": "RTX 5060 Ti 16GB",
     "vendor": "Nvidia",
-    "eur": 579,
+    "eur": 849,
     "by": {
-     "nl": 579,
+     "nl": 849,
      "de": 539,
      "fr": 555,
      "uk": 500,
@@ -3270,10 +3327,10 @@
     "vram": 16,
     "psu": {
      "part": "750 W power supply",
-     "eur": 88,
+     "eur": 101,
      "key": "psu_750b",
      "by": {
-      "nl": 88,
+      "nl": 101,
       "de": 78,
       "fr": 91,
       "uk": 80,
@@ -3286,9 +3343,9 @@
    {
     "part": "RTX 5060 Ti 8GB",
     "vendor": "Nvidia",
-    "eur": 352,
+    "eur": 548,
     "by": {
-     "nl": 352,
+     "nl": 548,
      "de": 342,
      "fr": 356,
      "uk": 320,
@@ -3306,10 +3363,10 @@
     "vram": 8,
     "psu": {
      "part": "750 W power supply",
-     "eur": 88,
+     "eur": 101,
      "key": "psu_750b",
      "by": {
-      "nl": 88,
+      "nl": 101,
       "de": 78,
       "fr": 91,
       "uk": 80,
@@ -3322,9 +3379,9 @@
    {
     "part": "RTX 5070",
     "vendor": "Nvidia",
-    "eur": 639,
+    "eur": 949,
     "by": {
-     "nl": 639,
+     "nl": 949,
      "de": 579,
      "fr": 629,
      "uk": 533,
@@ -3342,19 +3399,19 @@
     "vram": 12,
     "psu": {
      "part": "750 W power supply",
-     "eur": 80,
+     "eur": 101,
      "key": "psu_750a",
      "by": {
-      "nl": 80
+      "nl": 101
      }
     }
    },
    {
     "part": "RTX 5070 Ti",
     "vendor": "Nvidia",
-    "eur": 959,
+    "eur": 1349,
     "by": {
-     "nl": 959,
+     "nl": 1349,
      "de": 899,
      "fr": 949,
      "uk": 830,
@@ -3372,10 +3429,10 @@
     "vram": 16,
     "psu": {
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "key": "psu_850",
      "by": {
-      "nl": 90,
+      "nl": 125,
       "de": 89,
       "fr": 92,
       "uk": 90,
@@ -3388,9 +3445,9 @@
    {
     "part": "RTX 5080",
     "vendor": "Nvidia",
-    "eur": 1259,
+    "eur": 1699,
     "by": {
-     "nl": 1259,
+     "nl": 1699,
      "de": 1187,
      "fr": 1189,
      "uk": 1100,
@@ -3408,10 +3465,10 @@
     "vram": 16,
     "psu": {
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "key": "psu_850",
      "by": {
-      "nl": 90,
+      "nl": 125,
       "de": 89,
       "fr": 92,
       "uk": 90,
@@ -3424,9 +3481,9 @@
    {
     "part": "RTX 5090",
     "vendor": "Nvidia",
-    "eur": 4249,
+    "eur": 7858,
     "by": {
-     "nl": 4249,
+     "nl": 7858,
      "de": 3929,
      "fr": 4099,
      "uk": 3260,
@@ -3444,10 +3501,10 @@
     "vram": 32,
     "psu": {
      "part": "1000 W power supply",
-     "eur": 81,
+     "eur": 159,
      "key": "psu_1000",
      "by": {
-      "nl": 81,
+      "nl": 159,
       "de": 78,
       "fr": 72,
       "uk": 86,
@@ -3460,9 +3517,9 @@
    {
     "part": "RX 7600",
     "vendor": "AMD",
-    "eur": 283,
+    "eur": 405,
     "by": {
-     "nl": 283
+     "nl": 405
     },
     "cov": 6,
     "idx": {
@@ -3474,10 +3531,10 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "key": "psu_650",
      "by": {
-      "nl": 59,
+      "nl": 45,
       "de": 55,
       "fr": 45,
       "uk": 40,
@@ -3490,9 +3547,9 @@
    {
     "part": "RX 9060 XT 16GB",
     "vendor": "AMD",
-    "eur": 438,
+    "eur": 637,
     "by": {
-     "nl": 438,
+     "nl": 637,
      "de": 405,
      "fr": 439,
      "uk": 399,
@@ -3510,10 +3567,10 @@
     "vram": 16,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "key": "psu_650",
      "by": {
-      "nl": 59,
+      "nl": 45,
       "de": 55,
       "fr": 45,
       "uk": 40,
@@ -3526,9 +3583,9 @@
    {
     "part": "RX 9060 XT 8GB",
     "vendor": "AMD",
-    "eur": 348,
+    "eur": 513,
     "by": {
-     "nl": 348,
+     "nl": 513,
      "de": 334,
      "fr": 366,
      "uk": 320,
@@ -3546,10 +3603,10 @@
     "vram": 8,
     "psu": {
      "part": "650 W power supply",
-     "eur": 59,
+     "eur": 45,
      "key": "psu_650",
      "by": {
-      "nl": 59,
+      "nl": 45,
       "de": 55,
       "fr": 45,
       "uk": 40,
@@ -3562,9 +3619,9 @@
    {
     "part": "RX 9070",
     "vendor": "AMD",
-    "eur": 599,
+    "eur": 857,
     "by": {
-     "nl": 599,
+     "nl": 857,
      "de": 580,
      "fr": 629,
      "uk": 549,
@@ -3582,10 +3639,10 @@
     "vram": 16,
     "psu": {
      "part": "750 W power supply",
-     "eur": 80,
+     "eur": 101,
      "key": "psu_750a",
      "by": {
-      "nl": 80
+      "nl": 101
      }
     }
    },
@@ -3594,7 +3651,6 @@
     "vendor": null,
     "eur": 559,
     "by": {
-     "nl": 559,
      "de": 545,
      "fr": 564,
      "uk": 490,
@@ -3611,10 +3667,10 @@
     "vram": 12,
     "psu": {
      "part": "750 W power supply",
-     "eur": 88,
+     "eur": 101,
      "key": "psu_750b",
      "by": {
-      "nl": 88,
+      "nl": 101,
       "de": 78,
       "fr": 91,
       "uk": 80,
@@ -3627,9 +3683,9 @@
    {
     "part": "RX 9070 XT",
     "vendor": "AMD",
-    "eur": 699,
+    "eur": 1031,
     "by": {
-     "nl": 699,
+     "nl": 1031,
      "de": 649,
      "fr": 686,
      "uk": 600,
@@ -3647,10 +3703,10 @@
     "vram": 16,
     "psu": {
      "part": "850 W power supply",
-     "eur": 90,
+     "eur": 125,
      "key": "psu_850",
      "by": {
-      "nl": 90,
+      "nl": 125,
       "de": 89,
       "fr": 92,
       "uk": 90,
@@ -3665,10 +3721,10 @@
    {
     "part": "32GB DDR4-3200",
     "kind": "DDR4",
-    "eur": 229,
+    "eur": 242,
     "min": false,
     "by": {
-     "nl": 229,
+     "nl": 242,
      "de": 206,
      "fr": 200,
      "au": 319,
@@ -3678,10 +3734,10 @@
    {
     "part": "32GB DDR5-6000",
     "kind": "DDR5",
-    "eur": 399,
+    "eur": 542,
     "min": false,
     "by": {
-     "nl": 399,
+     "nl": 542,
      "de": 361,
      "uk": 330,
      "ca": 550,
@@ -3691,10 +3747,10 @@
    {
     "part": "2x8GB DDR4-3200",
     "kind": "DDR4",
-    "eur": 103,
+    "eur": 138,
     "min": true,
     "by": {
-     "nl": 103,
+     "nl": 138,
      "de": 110,
      "fr": 58,
      "uk": 113,
@@ -3705,10 +3761,10 @@
    {
     "part": "2x8GB DDR5-6000",
     "kind": "DDR5",
-    "eur": 229,
+    "eur": 320,
     "min": true,
     "by": {
-     "nl": 229,
+     "nl": 320,
      "de": 269,
      "fr": 260,
      "uk": 221,
@@ -3721,9 +3777,9 @@
   "storage": [
    {
     "part": "1TB NVMe",
-    "eur": 140,
+    "eur": 129,
     "by": {
-     "nl": 140,
+     "nl": 129,
      "de": 139,
      "fr": 146,
      "uk": 122,
@@ -3734,9 +3790,9 @@
    },
    {
     "part": "2TB NVMe",
-    "eur": 220,
+    "eur": 238,
     "by": {
-     "nl": 220,
+     "nl": 238,
      "de": 228,
      "fr": 211,
      "uk": 217,
@@ -3748,10 +3804,10 @@
   ],
   "case": {
    "part": "Case",
-   "eur": 60,
+   "eur": 105,
    "key": "case",
    "by": {
-    "nl": 60,
+    "nl": 105,
     "de": 60,
     "fr": 67,
     "uk": 50,
