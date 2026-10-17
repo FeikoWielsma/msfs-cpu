@@ -2,37 +2,23 @@
 #     python make_build_table.py && python make_tierlist_cards.py build
 #
 # res    1080p | 1440p | 4K       (the GPU index is looked up per resolution)
-# tier   entry | mid | high
+# tier   budget | entry | mid | high
 # vendor amd | nv                 (nv column pairs an Intel CPU with a GeForce/Arc card)
 #
-# Picks respond to 2026 pricing, which is unusual in several ways:
-#
-# 1. 32GB of DDR5 is 400 EUR against 240 for DDR4, so entry stays on DDR4 platforms —
-#    AM4 for AMD, LGA1700 for Intel. Nothing takes 64GB: that kit costs more than a
-#    9800X3D.
-# 2. Radeon is better value at every tier. A 9070 XT (669) is cheaper AND faster than a
-#    5070 Ti (949), so it is the AMD pick from mid upward. AMD has only two viable cards
-#    at these prices — 9060 XT 16GB and 9070 XT — so mid and high share the 9070 XT and
-#    differ by CPU. The 9070 GRE at 555 would slot between them but has no benchmark
-#    coverage, so it cannot be indexed and is left out.
-# 3. Sub-16GB only makes sense at 1080p, and only on the Nvidia side. A 5060 8GB at 319
-#    is a real saving over a 5060 Ti 16GB at 562. On AMD it is a trap: the 8GB 9060 XT
-#    costs 341 against 414 for the 16GB, and 73 EUR buys +66% at 1080p — so AMD's floor
-#    stays at 16GB.
-# 4. Intel's CPU ladder is flat for this game (250K Plus is within 2 points of a 285K
-#    for 330 EUR less), so the Intel column tops out at a 270K Plus.
-#
-# 1080p tops out DELIBERATELY LOW. The GPU field compresses to a 5.5x spread there and
-# the CPU becomes the limit, so 1080p high runs the best CPU with an RX 9070 / 5070 Ti
-# rather than a 9070 XT or 5080 — a flagship card at 1080p is money that does nothing.
-# 1440p and 4K climb properly, because there the GPU decides it.
-#
-# GPU picks are measured. CPU picks are JUDGEMENT — the CPU index is single-resolution,
-# so pairing a chip to a resolution is inference, not measurement.
-# Storage: 1TB at entry and mid, 2TB at high. At 240 EUR for 2TB against 140 for 1TB
-# it is not where a mid budget belongs.
-# RAM must match the CPU socket (AM4 = DDR4, AM5 = DDR5, LGA1700 = either).
+# Prices refreshed 2026-10-17. Budget adds a lower starting point using measured
+# CPUs/GPUs and 16GB DDR4. RAM capacity is not scored by the benchmark index:
+# 16GB is the official minimum, 32GB recommended. Budget 1080p accepts 8GB VRAM;
+# above 1080p we retain 16GB VRAM. Tight budgets should target 1080p and lower settings.
+# Entry and above retain 32GB RAM. CPU/resolution pairing remains judgement, not FPS.
+# Storage: 1TB for Budget/Entry/Mid, 2TB at High. Composed board/PSU/case/cooler
+# are included in each complete tower total; OS, peripherals and simulator are not.
 res,tier,vendor,cpu,gpu,ram,storage
+1080p,budget,amd,Ryzen 5 5600,RX 7600,2x8GB DDR4-3200,1TB NVMe
+1080p,budget,nv,Core i3-14100F,RTX 5050,2x8GB DDR4-3200,1TB NVMe
+1440p,budget,amd,Ryzen 5 5600,RX 9060 XT 16GB,2x8GB DDR4-3200,1TB NVMe
+1440p,budget,nv,Core i3-14100F,RTX 5060 Ti 16GB,2x8GB DDR4-3200,1TB NVMe
+4K,budget,amd,Ryzen 5 5600,RX 9060 XT 16GB,2x8GB DDR4-3200,1TB NVMe
+4K,budget,nv,Core i3-14100F,RTX 5060 Ti 16GB,2x8GB DDR4-3200,1TB NVMe
 1080p,entry,amd,Ryzen 5 5600,RX 9060 XT 16GB,32GB DDR4-3200,1TB NVMe
 1080p,entry,nv,Core i5-12400F,RTX 5060,32GB DDR4-3200,1TB NVMe
 1080p,mid,amd,Ryzen 7 7800X3D,RX 9070,32GB DDR5-6000,1TB NVMe

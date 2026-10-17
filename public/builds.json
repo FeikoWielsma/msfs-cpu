@@ -11,6 +11,7 @@
   "4K"
  ],
  "tiers": [
+  "budget",
   "entry",
   "mid",
   "high"
@@ -20,6 +21,148 @@
   "nv"
  ],
  "builds": [
+  {
+   "res": "1080p",
+   "tier": "budget",
+   "vendor": "amd",
+   "cpu": "Ryzen 5 5600",
+   "ci": 51,
+   "cd": false,
+   "cbest": false,
+   "cn": 2,
+   "socket": "AM4",
+   "gpu": "RX 7600",
+   "gi": 20,
+   "gd": false,
+   "gbest": false,
+   "gn": 6,
+   "vram": 8,
+   "ram": "2x8GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1108,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 5 5600",
+     "eur": 153,
+     "src": "pcpp"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 7600",
+     "eur": 405,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Memory",
+     "part": "2x8GB DDR4-3200",
+     "eur": 138,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 129,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM4 motherboard",
+     "eur": 105,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Power supply",
+     "part": "650 W power supply",
+     "eur": 45,
+     "src": "pcpp"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 28,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 105,
+     "src": "pcpp"
+    }
+   ]
+  },
+  {
+   "res": "1080p",
+   "tier": "budget",
+   "vendor": "nv",
+   "cpu": "Core i3-14100F",
+   "ci": 52,
+   "cd": true,
+   "cbest": true,
+   "cn": 1,
+   "socket": "LGA1700",
+   "gpu": "RTX 5050",
+   "gi": 38,
+   "gd": false,
+   "gbest": true,
+   "gn": 3,
+   "vram": 8,
+   "ram": "2x8GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1015,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i3-14100F",
+     "eur": 110,
+     "src": "pcpp"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5050",
+     "eur": 341,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Memory",
+     "part": "2x8GB DDR4-3200",
+     "eur": 138,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 129,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4",
+     "eur": 119,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Power supply",
+     "part": "650 W power supply",
+     "eur": 45,
+     "src": "pcpp"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 28,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 105,
+     "src": "pcpp"
+    }
+   ]
+  },
   {
    "res": "1080p",
    "tier": "entry",
@@ -448,6 +591,148 @@
   },
   {
    "res": "1440p",
+   "tier": "budget",
+   "vendor": "amd",
+   "cpu": "Ryzen 5 5600",
+   "ci": 51,
+   "cd": false,
+   "cbest": false,
+   "cn": 2,
+   "socket": "AM4",
+   "gpu": "RX 9060 XT 16GB",
+   "gi": 54,
+   "gd": false,
+   "gbest": true,
+   "gn": 6,
+   "vram": 16,
+   "ram": "2x8GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1340,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 5 5600",
+     "eur": 153,
+     "src": "pcpp"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9060 XT 16GB",
+     "eur": 637,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Memory",
+     "part": "2x8GB DDR4-3200",
+     "eur": 138,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 129,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM4 motherboard",
+     "eur": 105,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Power supply",
+     "part": "650 W power supply",
+     "eur": 45,
+     "src": "pcpp"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 28,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 105,
+     "src": "pcpp"
+    }
+   ]
+  },
+  {
+   "res": "1440p",
+   "tier": "budget",
+   "vendor": "nv",
+   "cpu": "Core i3-14100F",
+   "ci": 52,
+   "cd": true,
+   "cbest": true,
+   "cn": 1,
+   "socket": "LGA1700",
+   "gpu": "RTX 5060 Ti 16GB",
+   "gi": 49,
+   "gd": false,
+   "gbest": false,
+   "gn": 6,
+   "vram": 16,
+   "ram": "2x8GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1579,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i3-14100F",
+     "eur": 110,
+     "src": "pcpp"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5060 Ti 16GB",
+     "eur": 849,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Memory",
+     "part": "2x8GB DDR4-3200",
+     "eur": 138,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 129,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4",
+     "eur": 119,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Power supply",
+     "part": "750 W power supply",
+     "eur": 101,
+     "src": "pcpp"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 28,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 105,
+     "src": "pcpp"
+    }
+   ]
+  },
+  {
+   "res": "1440p",
    "tier": "entry",
    "vendor": "amd",
    "cpu": "Ryzen 5 5600",
@@ -862,6 +1147,148 @@
      "slot": "CPU cooler",
      "part": "360 mm AIO",
      "eur": 82,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 105,
+     "src": "pcpp"
+    }
+   ]
+  },
+  {
+   "res": "4K",
+   "tier": "budget",
+   "vendor": "amd",
+   "cpu": "Ryzen 5 5600",
+   "ci": 51,
+   "cd": false,
+   "cbest": false,
+   "cn": 2,
+   "socket": "AM4",
+   "gpu": "RX 9060 XT 16GB",
+   "gi": 41,
+   "gd": false,
+   "gbest": true,
+   "gn": 6,
+   "vram": 16,
+   "ram": "2x8GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1340,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Ryzen 5 5600",
+     "eur": 153,
+     "src": "pcpp"
+    },
+    {
+     "slot": "GPU",
+     "part": "RX 9060 XT 16GB",
+     "eur": 637,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Memory",
+     "part": "2x8GB DDR4-3200",
+     "eur": 138,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 129,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "AM4 motherboard",
+     "eur": 105,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Power supply",
+     "part": "650 W power supply",
+     "eur": 45,
+     "src": "pcpp"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 28,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Case",
+     "part": "Case",
+     "eur": 105,
+     "src": "pcpp"
+    }
+   ]
+  },
+  {
+   "res": "4K",
+   "tier": "budget",
+   "vendor": "nv",
+   "cpu": "Core i3-14100F",
+   "ci": 52,
+   "cd": true,
+   "cbest": true,
+   "cn": 1,
+   "socket": "LGA1700",
+   "gpu": "RTX 5060 Ti 16GB",
+   "gi": 39,
+   "gd": false,
+   "gbest": false,
+   "gn": 6,
+   "vram": 16,
+   "ram": "2x8GB DDR4-3200",
+   "sto": "1TB NVMe",
+   "eur": 1579,
+   "approx": false,
+   "items": [
+    {
+     "slot": "CPU",
+     "part": "Core i3-14100F",
+     "eur": 110,
+     "src": "pcpp"
+    },
+    {
+     "slot": "GPU",
+     "part": "RTX 5060 Ti 16GB",
+     "eur": 849,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Memory",
+     "part": "2x8GB DDR4-3200",
+     "eur": 138,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Storage",
+     "part": "1TB NVMe",
+     "eur": 129,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Motherboard",
+     "part": "LGA1700 motherboard, DDR4",
+     "eur": 119,
+     "src": "pcpp"
+    },
+    {
+     "slot": "Power supply",
+     "part": "750 W power supply",
+     "eur": 101,
+     "src": "pcpp"
+    },
+    {
+     "slot": "CPU cooler",
+     "part": "120 mm tower cooler",
+     "eur": 28,
      "src": "pcpp"
     },
     {

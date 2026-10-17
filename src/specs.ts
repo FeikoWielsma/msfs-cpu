@@ -122,9 +122,10 @@ const RES_NOTE: Record<string, string> = {
     "block that reaches a 5090.",
 };
 
-const TIER_LABEL: Record<string, string> = { entry: "Entry", mid: "Mid", high: "High End" };
+const TIER_LABEL: Record<string, string> = { budget: "Budget", entry: "Entry", mid: "Mid", high: "High End" };
 const TIER_NOTE: Record<string, string> = {
-  entry: "The cheapest build still worth putting money into",
+  budget: "16 GB RAM to lower the cost of entry — 1080p is the better target on a tight budget",
+  entry: "32 GB RAM, with more room for demanding scenery and add-ons",
   mid: "Where the money starts buying frames again",
   high: "The measured ceiling, not the most expensive parts on sale",
 };
@@ -401,10 +402,10 @@ type Cand = {
 
 const gen: GenState = {
   region: "nl",
-  budget: 1500,
+  budget: 1000,
   cpu: new Set(CPU_VENDORS),
   gpu: new Set(GPU_VENDORS),
-  allow8: false,
+  allow8: true,
 };
 
 /** VRAM policy, matching the hand-picked builds: 16 GB is the floor above 1080p, where
@@ -501,7 +502,10 @@ function generate(doc: Doc, atRes: string, st: GenState): GenResult {
     return { ok: false, reason: loose.length ? "vram" : "vendors" };
   }
 
-  const best = pick(cands, st.budget);
+  // Keep 32 GB whenever a complete build with it fits. Only fall back to 16 GB
+  // when the budget cannot reach that floor; capacity is absent from our score.
+  const fullMemory = cands.filter(c => !c.mem.min);
+  const best = pick(fullMemory, st.budget) || pick(cands, st.budget);
   if (!best) {
     return { ok: false, reason: "budget",
              floor: Math.min(...cands.map(c => c.eur)) };
@@ -538,8 +542,9 @@ function generate(doc: Doc, atRes: string, st: GenState): GenResult {
 
   // The next real step up, re-picked at its own price so the step is itself balanced
   // rather than the cheapest chip that happens to clear the threshold.
-  const upto = cands.filter(c => c.score >= best.score + STEP).map(c => c.eur);
-  const next = upto.length ? pick(cands, Math.min(...upto)) : null;
+  const upgradeCands = best.mem.min ? cands : fullMemory;
+  const upto = upgradeCands.filter(c => c.score >= best.score + STEP).map(c => c.eur);
+  const next = upto.length ? pick(upgradeCands, Math.min(...upto)) : null;
 
   // A build can be the best its budget reaches and still be lopsided — most visibly at
   // 4K, where the GPU carries 80% of the score and a huge card outruns a cheap chip.
@@ -618,6 +623,12 @@ function genCard(r: Extract<GenResult, { ok: true }>): string {
       <td class="num">${i.eur === null ? "—" : m(i.eur)}</td></tr>`).join("");
 
   const notes: string[] = [];
+  if (r.mem.part.startsWith("2x8GB")) {
+    notes.push("<b>16 GB RAM is a minimum-spec compromise.</b> Allow for a 32 GB upgrade; dense scenery and add-ons can need more memory. The index does not measure this capacity penalty.");
+  }
+  if ((b.gpu.vram ?? 16) < 16) {
+    notes.push("<b>Lower VRAM at 1080p.</b> Expect to reduce texture quality and other settings; these benchmark indices are not a promise of smooth performance in every scene.");
+  }
   if (r.headroom >= 40) {
     notes.push(r.next
       ? `<b>${m(r.headroom)} left over.</b> Nothing between here and
@@ -688,7 +699,7 @@ function syncGenUrl(): void {
   p.set("budget", String(gen.budget));
   if (gen.cpu.size !== CPU_VENDORS.length) p.set("cpu", [...gen.cpu].join(","));
   if (gen.gpu.size !== GPU_VENDORS.length) p.set("gpu", [...gen.gpu].join(","));
-  if (gen.allow8) p.set("vram8", "1");
+  p.set("vram8", gen.allow8 ? "1" : "0");
   history.replaceState(null, "", `?${p}${location.hash}`);
 }
 
@@ -707,7 +718,7 @@ function readGenUrl(): void {
     const hit = all.filter(v => want.includes(v.toLowerCase()));
     if (hit.length) { set.clear(); hit.forEach(v => set.add(v)); }
   }
-  gen.allow8 = p.get("vram8") === "1";
+  gen.allow8 = p.get("vram8") !== "0";
 }
 
 function wireGenerator(): void {
@@ -849,8 +860,8 @@ async function boot(): Promise<void> {
   }
   DOC = doc;
 
-  res = resFromHash(doc.resolutions) || (doc.resolutions.includes("1440p")
-    ? "1440p" : doc.resolutions[0]);
+  res = resFromHash(doc.resolutions) || (doc.resolutions.includes("1080p")
+    ? "1080p" : doc.resolutions[0]);
 
   const stamp = $("#stamp");
   const dateRange = doc.priced_on && doc.latest_priced_on && doc.priced_on !== doc.latest_priced_on

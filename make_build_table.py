@@ -151,7 +151,7 @@ NOT_PICKED = [
     ('RTX 5060 Ti 8GB', 'RTX 5060 Ti 16GB', 'the 16GB twin is +{p}% for €{d}'),
     ('Arc B580', None, 'fine at 1080p, out of its depth above'),
 ]
-TIERS = ['entry', 'mid', 'high']
+TIERS = ['budget', 'entry', 'mid', 'high']
 VENDORS = ['amd', 'nv']
 STALE_DAYS = 60
 
@@ -192,7 +192,7 @@ GEN_EXCLUDE = {
 # matched, so a new kit in the CSV cannot silently become an option: 32 GB is what every
 # build on this page runs, and 64 GB currently costs more than a 9800X3D.
 # (part, memory kind, minimum-spec only). 32 GB is what every build on this page runs and
-# what the generator picks by default. The 16 GB kits are marked `min` because capacity is
+# what the generator prefers whenever a complete 32 GB build fits. The 16 GB kits are marked `min` because capacity is
 # not scored — nothing in the index knows how much memory a build has — so if they were
 # ordinary options the generator would put 16 GB in a €5,000 machine purely because it is
 # cheaper. They are offered only when you ask for a minimum-spec build.

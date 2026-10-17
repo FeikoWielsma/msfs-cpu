@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MSFS 2024 — Build Specs</title>
-<meta name="description" content="Complete PC builds for Microsoft Flight Simulator 2024 at 1080p, 1440p and 4K, three budgets each, with the measured Performance Index on every chip and current EUR prices.">
+<meta name="description" content="Complete PC builds for Microsoft Flight Simulator 2024 from Budget to High End at 1080p, 1440p and 4K, with Performance Indices and current EUR prices.">
 <link rel="icon" type="image/jpeg" href="/favicon.jpg">
 <script>
   (function() {
@@ -27,7 +27,8 @@
   <header>
     <div class="kicker">Microsoft Flight Simulator 2024</div>
     <h1>What to buy</h1>
-    <p class="lede">Complete builds at three budgets for each resolution, with the
+    <p class="lede">Complete builds at four budgets for each resolution, starting with
+      a lower-cost <b>Budget</b> tier, with the
       <b>measured Performance Index</b> on every chip so you can see what the extra money
       actually buys. GPU picks are matched to the resolution they sit under; every part is
       priced, so the totals are whole machines rather than a chip and a card.
@@ -48,10 +49,10 @@
         <span class="ctl-label" id="genBudgetLabel">Budget</span>
         <div class="budget-row">
           <span class="cur">€</span>
-          <input type="number" id="genBudget" min="0" step="50" value="1500"
+          <input type="number" id="genBudget" min="0" step="50" value="1000"
                  inputmode="numeric" aria-labelledby="genBudgetLabel">
         </div>
-        <input type="range" id="genRange" min="1000" max="6000" step="50" value="1500"
+        <input type="range" id="genRange" min="900" max="6000" step="50" value="1000"
                aria-labelledby="genBudgetLabel">
       </div>
       <div class="gen-field">
@@ -67,9 +68,9 @@
         <div class="chips" id="genGpu"></div>
       </div>
       <label class="gen-toggle">
-        <input type="checkbox" id="genAllow8"> Minimum spec
-        <small>Lets it use 16 GB of RAM, and 8 GB cards at 1080p — how cheap the
-          measured parts go. Off, it builds to 32 GB and 16 GB of VRAM.</small>
+        <input type="checkbox" id="genAllow8" checked> Allow budget compromises
+        <small>Allows 16 GB RAM when no 32 GB build fits, and 8 GB cards at 1080p.
+          Off requires 32 GB RAM; cards above 1080p always need 16 GB VRAM.</small>
       </label>
     </div>
     <div id="genResult"></div>
@@ -92,7 +93,14 @@
   </section>
 
   <section class="picks">
-    <h2>Hand-picked builds<span>The curated matrix — three budgets, both vendors</span></h2>
+    <h2>Hand-picked builds<span>Budget, Entry, Mid and High End — both vendors</span></h2>
+    <p class="note"><b>Budget means compromises.</b> These builds use 16 GB RAM,
+      the <a href="https://www.flightsimulator.com/microsoft-flight-simulator-2024-faq/">official minimum</a>;
+      32 GB is recommended and is the first upgrade to plan for. The indices do not
+      measure the effect of RAM capacity. At 1080p, cheaper 8 GB cards also need lower
+      settings. On a tight budget, choose 1080p rather than expecting the 1440p or 4K
+      rows to deliver the same experience. Totals cover the tower, excluding Windows,
+      peripherals and the simulator.</p>
   </section>
 
   <div id="builds"></div>
@@ -113,15 +121,17 @@
         <b>AM4 and LGA1700</b> deliberately — nobody puts that much memory in an entry
         build. Mid and high move to DDR5 where the platform earns it. Nothing takes 64 GB:
         that kit now costs more than a 9800X3D.</p>
-      <p><b>Radeon is better value at every tier right now.</b> An
+      <p><b>Radeon offers better value in the higher GPU tiers right now.</b> An
         <b id="p-9070xt">RX 9070 XT</b> is both cheaper and faster than an
         <b id="p-5070ti">RTX 5070 Ti</b> (81 against 70 at 1440p), which is why the XT tops
         the 1440p and 4K blocks while the Nvidia column spends more for less.</p>
-      <p><b>8 GB is a 1080p-only compromise, and only on the Nvidia side.</b> An
+      <p><b>8 GB is a 1080p-only compromise.</b> Budget includes the RX 7600 and
+        RTX 5050 to lower the starting price; expect lower settings. An
         <b id="p-5060">RTX 5060</b> saves real money over a 5060 Ti 16 GB and the penalty
         at 1080p is the mildest it gets (+29%, against +59% at 1440p). On AMD it is a trap:
         the 8 GB 9060 XT is <b id="p-9060xt8">—</b> against <b id="p-9060xt16">—</b> for
-        the 16 GB, and that gap buys <b>+66%</b> at 1080p — so AMD's floor stays at 16 GB.</p>
+        the 16 GB, and that gap buys <b>+66%</b> at 1080p — so Entry and above favour
+        the 16 GB Radeon.</p>
       <p><b>The two columns are alternatives, not packages — mix them.</b> A
         <span class="tick-demo">✔</span> marks the better index per euro in that row,
         counting memory with the CPU because the socket drags the RAM cost along. Nothing

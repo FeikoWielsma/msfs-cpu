@@ -23,7 +23,7 @@ and methodology machinery is tucked into expanders.
 - **By source** — browse one comparable dataset at a time (a Tom's Hardware test
   *epoch* or a PCGH/ComputerBase *scene*); average + 1% low bars, tap to re-baseline.
 - **Build guide** at [`/specs`](https://msfs.razortek.nl/specs) — the ranking turned into
-  something you can buy: complete, fully priced builds at three budgets for each
+  something you can buy: complete, fully priced builds at four budgets for each
   resolution, every chip carrying its measured index. A separate page, not a tab. It also
   carries a **budget generator**: give it a number and which vendors you will consider,
   and it searches every priced part for the best complete build that fits.
@@ -84,7 +84,7 @@ python make_megachart.py --averaged  # normalized megachart PNG
 A second page, served at `msfs.razortek.nl/specs` from `specs/index.html` — deliberately
 not a tab in the SPA: it answers a different question ("what do I buy?") and shares no
 state with the charts. It fetches `public/builds.json` and renders, per resolution, the
-three budget tiers as two vendor columns, each an itemised build that totals to the
+four budget tiers as two vendor columns, each an itemised build that totals to the
 figure shown. The parts breakdown is the thing the PNG card cannot do; the card has room
 only for the sum.
 
@@ -92,6 +92,12 @@ Everything on it comes from `builds.json`, including the figures quoted in the p
 the copy names a part and the page fills in its price, so refreshing the CSV never leaves
 a stale number in a sentence. `#1080p` / `#1440p` / `#4K` in the URL selects a resolution,
 so a specific ladder is linkable.
+
+The default view starts at 1080p and a EUR 1,000 budget. Budget compromises are enabled:
+the generator prefers a complete 32 GB build whenever one fits, falling back to 16 GB
+only below that floor, and permits 8 GB graphics cards at 1080p. `vram8=0` disables
+these compromises; explicit old `vram8=1` links keep working. The new hand-picked
+Budget tier uses 16 GB RAM and lists the capacity/settings compromises on the page.
 
 Both stylesheets import `src/theme.css`, so the two pages cannot drift apart on a colour,
 and the theme toggle writes the same `msfs-theme` key the SPA reads.
