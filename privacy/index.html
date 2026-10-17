@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy policy — Razortek's MSFS hardware guide</title>
+<meta name="description" content="How Razortek's MSFS hardware guide handles hosting data, self-hosted analytics, browser preferences, email and optional Ko-fi tips, and how to exercise your privacy rights.">
+<link rel="canonical" href="https://msfs.razortek.nl/privacy/">
+<link rel="icon" type="image/jpeg" href="/favicon.jpg">
+<script>
+  try { document.documentElement.dataset.theme = localStorage.getItem("msfs-theme") || "dark"; } catch {}
+</script>
+<link rel="stylesheet" href="/src/about.css">
+</head>
+<body>
+<main class="about">
+  <nav class="project-links" aria-label="Site navigation">
+    <a href="/">Benchmarks</a><a href="/specs/">Build guide</a><a href="/about/">About &amp; contact</a>
+  </nav>
+  <header>
+    <p class="eyebrow">Razortek's MSFS hardware guide</p>
+    <h1>Privacy policy</h1>
+    <p>Last updated: <time datetime="2026-10-17">17 October 2026</time></p>
+    <p class="intro">You can use the tools without an account. This page explains the data involved in
+      visiting the site, contacting me, or leaving an optional tip.</p>
+  </header>
+
+  <section aria-labelledby="controller">
+    <h2 id="controller">Who is responsible?</h2>
+    <p>Feiko Wielsma, known as Razortek, operates <b>msfs.razortek.nl</b> as an independent
+      personal project in the Netherlands and is the controller for the processing described here.
+      Contact <a href="mailto:msfs@razortek.nl">msfs@razortek.nl</a> about this policy or your data.</p>
+    <p>Microsoft, Asobo and the official MSFS Discord do not operate this site.</p>
+  </section>
+
+  <section aria-labelledby="hosting">
+    <h2 id="hosting">Visiting the site</h2>
+    <p>GitHub Pages hosts the website and serves its pages, images, fonts and data files.
+      Your browser sends connection information, including your IP address and browser information,
+      when it requests those files. GitHub states that it logs visitors' IP addresses for security purposes.</p>
+    <p>Delivering and protecting the site serves the legitimate interests of making this free
+      resource available and preventing abuse (GDPR Article 6(1)(f)). GitHub also processes
+      service data for its own purposes under its
+      <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener noreferrer" target="_blank">privacy statement</a>,
+      which describes its retention and international-transfer arrangements.</p>
+    <p>The fonts are served from this site's own files. Your browser does not need to contact
+      Google Fonts to display the pages.</p>
+  </section>
+
+  <section aria-labelledby="tools">
+    <h2 id="tools">Browser preferences &amp; build selections</h2>
+    <p>The site stores your light or dark theme preference in local storage under
+      <code>msfs-theme</code>. If you disable analytics below, it stores your choice under
+      <code>umami.disabled</code>. These preferences stay in this browser until removed or changed;
+      they are not site accounts or advertising identifiers.</p>
+    <p>The tools calculate results in your browser. Build selections can appear in the query
+      string and resolution in the URL fragment, so a link can reproduce a selection. Anyone
+      you share that link with can see those selections. The hosting service receives the
+      requested path and query string; URL fragments are not sent in the HTTP request.</p>
+    <p>You can remove stored preferences through your browser's site-data settings. The
+      site uses these settings to provide the display and privacy choices you request.</p>
+  </section>
+
+  <section id="analytics" aria-labelledby="analytics-title">
+    <h2 id="analytics-title">Website analytics</h2>
+    <p>The three tool pages use Umami at <code>stats.feikowielsma.nl</code>, privately
+      self-hosted in the Netherlands. The About page and this privacy page do not load analytics.</p>
+    <p>Analytics records page visits, referring pages, visit times, screen size, browser,
+      operating system, device category, language and approximate location. The analytics
+      endpoint receives your IP address and user agent as part of the connection; Umami uses
+      connection information to derive location and visit statistics. Its session records do
+      not store a raw IP-address field. This site's integration does not supply a name,
+      email address, account identifier, form contents, session recording or heatmap data.</p>
+    <p>The tracker does not use analytics cookies. It is configured to omit query strings and
+      URL fragments from recorded page URLs, respect the browser's Do Not Track setting, and
+      record visits only on <code>msfs.razortek.nl</code>. The aim is to understand which
+      resources people use and improve them, relying on legitimate interests for limited
+      website statistics (GDPR Article 6(1)(f)). You may object or opt out below.</p>
+    <p><b>Retention:</b> no automatic expiry is currently configured for the analytics
+      database. Historical statistics remain until manually deleted. The analytics server's
+      reverse-proxy access logs can contain IP addresses and requested URLs; those logs are
+      configured to rotate with a maximum age of 14 days, with size limits that may shorten this.
+      Docker's separate service-output logs rotate by size, without a fixed age limit.</p>
+    <p>The server configuration includes local backups and a Google Drive backup copy with
+      28-day retention. Backups may contain analytics records and logs, so deleting live records
+      does not immediately remove all backup copies. Google may process backup data outside
+      the Netherlands under its service arrangements.</p>
+    <div class="privacy-controls">
+      <p id="analyticsStatus" role="status">Checking this browser's analytics preference…</p>
+      <button id="disableAnalytics" type="button">Disable analytics in this browser</button>
+      <button id="enableAnalytics" type="button">Remove my analytics opt-out</button>
+      <noscript><p>JavaScript is disabled, so the site's analytics script cannot run.</p></noscript>
+    </div>
+    <p>The choice applies to this browser and site origin. It does not remove existing
+      records or disable the hosting provider's necessary connection logs. Do Not Track,
+      if enabled in your browser, is respected independently of this stored choice.</p>
+  </section>
+
+  <section aria-labelledby="email">
+    <h2 id="email">Email &amp; community messages</h2>
+    <p>If you email <a href="mailto:msfs@razortek.nl">msfs@razortek.nl</a>, I receive your
+      email address, message, attachments and mail-routing information. Mailgun receives the
+      email and forwards it to my Gmail inbox. I use it to answer questions, investigate
+      corrections and handle privacy or project enquiries, based on the legitimate interest
+      of responding to people who contact me (GDPR Article 6(1)(f)). Privacy-rights requests
+      may also be processed to meet legal obligations (Article 6(1)(c)).</p>
+    <p>Correspondence is kept while the enquiry and necessary follow-up remain open. A
+      relevant record may be kept longer where needed to explain a correction, resolve a dispute
+      or meet a legal obligation; unrelated personal details are not needed for a public correction.
+      I do not add correspondents to a marketing list.</p>
+    <p>Mailgun and Google process email through their services, which can involve processing
+      outside the EEA. See the
+      <a href="https://www.mailgun.com/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">Mailgun privacy policy</a>
+      and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google privacy policy</a>
+      for their service, retention and transfer information.</p>
+    <p>If you contact me through Discord instead, Discord handles the message under its
+      <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.
+      Public channel messages are visible to other community members. Do not post sensitive details there.</p>
+  </section>
+
+  <section aria-labelledby="tips">
+    <h2 id="tips">Optional tips on Ko-fi</h2>
+    <p>The Ko-fi link takes you to a separate website. No Ko-fi payment widget or payment form
+      is embedded here. Ko-fi and its payment services handle checkout; I do not receive your
+      full card details from this site.</p>
+    <p>As the creator, I may receive the supporter name, email address, message, amount,
+      transaction reference and other details shared through Ko-fi or the payment provider.
+      I use those details to administer the tip, handle a payment question or refund, and keep
+      necessary records. The bases are legitimate interests in administering voluntary support
+      (Article 6(1)(f)) and applicable recordkeeping obligations (Article 6(1)(c)).</p>
+    <p>Payment records are kept for the applicable statutory retention period where one
+      applies, or while needed for payment administration and disputes. A tip is not consent
+      to marketing. Ko-fi explains its own processing and international arrangements in its
+      <a href="https://more.ko-fi.com/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>;
+      the payment provider's policy also applies to its processing.</p>
+  </section>
+
+  <section aria-labelledby="sharing">
+    <h2 id="sharing">Other links, sharing &amp; international processing</h2>
+    <p>There are currently no retailer affiliate links, advertising pixels or embedded retailer
+      widgets on the site. If that changes, this policy and the disclosures next to shopping
+      links will be updated before those integrations are introduced.</p>
+    <p>Following a source, Discord, Ko-fi or retailer link opens a service with its own
+      privacy practices. The destination receives connection information when you visit it.
+      Those services do not receive a request merely because their text link is displayed here.</p>
+    <p>The service providers named above receive data as needed to host the site, run analytics,
+      back up the server, deliver email or process a tip. Information may also be disclosed
+      where required by law or necessary to establish or defend a legal claim. I do not sell
+      visitor or correspondent data or use it to build advertising profiles.</p>
+    <p>GitHub, Google, Mailgun, Ko-fi and payment providers may process information outside
+      the EEA. Depending on the service and recipient, safeguards can include an adequacy
+      decision or standard contractual clauses. Their linked privacy statements explain
+      the safeguards they use and how to request more information.</p>
+  </section>
+
+  <section aria-labelledby="rights">
+    <h2 id="rights">Your rights &amp; questions</h2>
+    <p>Depending on the processing and applicable law, you can request access, correction,
+      deletion, restriction or a portable copy of personal data, and object to processing
+      based on legitimate interests. If processing is based on consent, you can withdraw it.
+      These rights are subject to legal conditions, including records that must be retained.</p>
+    <p>Email <a href="mailto:msfs@razortek.nl">msfs@razortek.nl</a> to exercise a right or
+      raise a concern. I aim to respond within one month; where a lawful extension is needed,
+      I will explain it. I may request proportionate information to verify your request.
+      Because the tools have no visitor accounts and analytics does not use an account identity,
+      I may not be able to link a statistical record to you without additional information.</p>
+    <p>The build generator makes hardware suggestions, not automated decisions with legal
+      or similarly significant effects about people. There is no requirement to send personal
+      information to use the tools; without contact details I may be unable to answer an enquiry.</p>
+    <p>You can complain to the Dutch
+      <a href="https://www.autoriteitpersoonsgegevens.nl/" target="_blank" rel="noopener noreferrer">Autoriteit Persoonsgegevens</a>
+      or your local data-protection authority. You do not have to contact me first.</p>
+  </section>
+
+  <section aria-labelledby="changes">
+    <h2 id="changes">Changes to this policy</h2>
+    <p>This policy will be updated when the site's data practices change. The date at the top
+      identifies the latest revision. Material changes will be explained here.</p>
+  </section>
+  <footer>
+    <nav class="project-links" aria-label="Project information"><a href="/about/">About &amp; contact</a><a href="/about/#funding">Policy</a><a href="/">Benchmarks</a></nav>
+    <p>By Feiko / Razortek. Independent of Microsoft and Asobo.</p>
+  </footer>
+</main>
+<script type="module" src="/src/privacy.ts"></script>
+</body>
+</html>

@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MSFS CPU vs GPU Bottleneck Explainer</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono for authentic MSFS avionics / dev console feel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            msfs: {
+              green: '#00ff66',
+              red: '#ff3344',
+              yellow: '#ffcc00',
+              cyan: '#00e5ff',
+              dark: '#050811',
+              card: '#0b1120',
+              border: '#1e293b'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070b14; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+    /* Bottleneck card glowing indicators */
+    @keyframes pulseGlowRed {
+      0%, 100% { box-shadow: 0 0 15px rgba(255, 51, 68, 0.35); border-color: rgba(255, 51, 68, 0.8); }
+      50% { box-shadow: 0 0 30px rgba(255, 51, 68, 0.75); border-color: rgba(255, 51, 68, 1); }
+    }
+    @keyframes pulseGlowGreen {
+      0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 102, 0.3); border-color: rgba(0, 255, 102, 0.7); }
+      50% { box-shadow: 0 0 30px rgba(0, 255, 102, 0.7); border-color: rgba(0, 255, 102, 1); }
+    }
+    .bottleneck-cpu-active {
+      animation: pulseGlowRed 2.2s infinite ease-in-out;
+    }
+    .bottleneck-gpu-active {
+      animation: pulseGlowGreen 2.2s infinite ease-in-out;
+    }
+
+    /* Conveyor belt animation */
+    @keyframes conveyorMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 40px 0; }
+    }
+    .conveyor-track {
+      background: repeating-linear-gradient(
+        90deg,
+        #1e293b 0px,
+        #1e293b 10px,
+        #0f172a 10px,
+        #0f172a 20px
+      );
+      animation: conveyorMove 1s linear infinite;
+    }
+    .conveyor-stalled {
+      animation-play-state: paused !important;
+    }
+    
+    /* Subtle pulse animation for visual callouts */
+    @keyframes softPulse {
+      0%, 100% { transform: scale(1); opacity: 0.95; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+    .soft-pulse {
+      animation: softPulse 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-[#050811] text-slate-100 font-sans min-h-screen selection:bg-cyan-500 selection:text-black">
+
+  <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-sky-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 text-slate-950 font-black text-xl">
+          ✈
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-base md:text-lg tracking-tight text-white flex items-center gap-2">
+              MSFS Bottleneck Visualizer
+            </h1>
+            <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-mono font-semibold">
+              RX 9070 vs 9070 XT Edition
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Why a 12% faster GPU gives <span class="text-amber-400 font-semibold">+0 FPS</span> at congested airports, but the full <span class="text-emerald-400 font-semibold">+12%</span> at 35,000 ft
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Scenario Switcher in Header -->
+      <div class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
+        <button id="hdr-btn-airport" onclick="selectPreset('airport')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow-md flex items-center gap-1.5">
+          <span>🏢 Busy Airport (JFK/CDG)</span>
+        </button>
+        <button id="hdr-btn-cruise" onclick="selectPreset('cruise')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all duration-200 flex items-center gap-1.5">
+          <span>☁️ FL350 Cruise (Clouds)</span>
+        </button>
+        <button id="hdr-btn-vfr" onclick="selectPreset('vfr')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all duration-200 flex items-center gap-1.5">
+          <span>🌲 Low VFR Countryside</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left Column: Flight Viewport & Interactive Frame Assembly Pipeline (8 cols) -->
+      <div class="lg:col-span-8 flex flex-col gap-5">
+        
+        <!-- Live Flight Sim Simulation Viewport with Speed Controls & Clear Annotations -->
+        <div class="relative rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950 group">
+          <!-- Canvas with height for clear layout -->
+          <canvas id="flightCanvas" class="w-full h-[300px] md:h-[320px] block"></canvas>
+          
+          <!-- Flight Context HUD Overlay (Top Left) -->
+          <div class="absolute top-3 left-3 bg-black/85 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-white/10 text-xs font-mono space-y-1 max-w-[80%] pointer-events-none">
+            <div class="flex items-center gap-2 text-cyan-300 font-bold text-xs md:text-sm">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+              <span id="canvasSceneTitle">John F. Kennedy Intl. (KJFK) Ground Ops</span>
+            </div>
+            <div class="text-slate-400 text-[11px] leading-snug" id="canvasSceneSubtitle">
+              AI Traffic: 92 | Ground Vehicles: 140 | Draw Calls: ~9,800/frame
+            </div>
+          </div>
+
+          <!-- Speed & Annotation Controls Bar (Top Right) -->
+          <div class="absolute top-3 right-3 flex items-center gap-1.5 bg-black/85 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/10 text-xs font-mono z-10">
+            <span class="text-slate-400 text-[11px] hidden sm:inline mr-1">Speed:</span>
+            <button id="speed-btn-pause" onclick="setAnimSpeed(0)" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold transition-all">⏸ Pause</button>
+            <button id="speed-btn-slow" onclick="setAnimSpeed(0.3)" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold transition-all">0.3x</button>
+            <button id="speed-btn-normal" onclick="setAnimSpeed(1.0)" class="px-2 py-1 rounded bg-cyan-500 text-slate-950 text-[10px] font-bold transition-all">1x Smooth</button>
+            
+            <div class="w-px h-4 bg-slate-700 mx-1"></div>
+            
+            <button id="toggle-annotations-btn" onclick="toggleAnnotations()" class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold hover:bg-cyan-500/30 transition-all flex items-center gap-1">
+              <i data-lucide="eye" class="w-3 h-3"></i>
+              <span id="annotationsBtnText">Labels: ON</span>
+            </button>
+          </div>
+
+          <!-- Dynamic CPU/GPU Real-Time Task Badges Overlay (Bottom Left) -->
+          <div id="liveWorkloadCallout" class="absolute bottom-3 left-3 bg-slate-950/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 text-[11px] font-mono space-y-1 max-w-[70%] pointer-events-none">
+            <div class="flex items-center gap-1.5 font-bold" id="calloutHeader">
+              <span class="w-2 h-2 rounded-full bg-red-400"></span>
+              <span class="text-red-400">CPU MAINTHREAD WORKLOAD</span>
+            </div>
+            <div class="text-slate-300 text-[10.5px]" id="calloutDetail">
+              Calculating: 92 AI planes paths • Runway ATC logic • Physics & avionics screens
+            </div>
+          </div>
+
+          <!-- Bottleneck State Indicator Badge (Bottom Right) -->
+          <div id="canvasBottleneckBadge" class="absolute bottom-3 right-3 px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wide shadow-lg border backdrop-blur-md flex items-center gap-2 bg-red-950/80 border-red-500/80 text-red-300 pointer-events-none">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+            <span id="canvasBottleneckText">LIMITED BY MAINTHREAD (CPU)</span>
+          </div>
+        </div>
+
+        <!-- Frame Generation Pipeline ("The Factory Assembly Line") -->
+        <div class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-5 shadow-xl backdrop-blur-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs">
+                ⚙️
+              </div>
+              <h2 class="text-xs uppercase font-extrabold tracking-wider text-slate-300">
+                The Live Frame Pipeline (Assembly Line)
+              </h2>
+            </div>
+            <div class="text-xs text-slate-400">
+              Golden Law: <span class="text-slate-200 font-semibold">The GPU cannot draw a frame until the CPU finishes building it!</span>
+            </div>
+          </div>
+
+          <!-- Visual 3-Stage Pipeline Assembly Line with Worker Personas -->
+          <div class="grid grid-cols-1 md:grid-cols-11 gap-3 relative py-1">
+            
+            <!-- STAGE 1: CPU MainThread (Worker 1) (4 Cols) -->
+            <div id="cpuStageCard" class="md:col-span-4 bg-slate-950/80 p-4 rounded-xl border-2 border-slate-800 transition-all flex flex-col justify-between relative overflow-hidden">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <div class="text-xs font-black text-red-400 flex items-center gap-1.5 tracking-tight">
+                    <i data-lucide="cpu" class="w-4 h-4 text-red-400"></i>
+                    WORKER 1: CPU (MainThread)
+                  </div>
+                  <span id="pipelineCpuMs" class="text-xs font-mono font-extrabold px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30">
+                    22.5 ms
+                  </span>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1 leading-relaxed" id="cpuTaskDesc">
+                  Calculates flight physics, glass cockpit avionics, AI ground pathfinding, and dispatches <b>Draw Calls</b> to DirectX 12.
+                </div>
+              </div>
+
+              <!-- Animated Workload Progress -->
+              <div class="mt-3">
+                <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-1">
+                  <span>CPU Stress:</span>
+                  <span id="cpuStressLabel" class="text-red-400 font-bold">100% Saturation (Starving GPU)</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                  <div id="cpuProgressBar" class="h-full bg-gradient-to-r from-amber-500 to-red-500 transition-all duration-300" style="width: 100%;"></div>
+                </div>
+              </div>
+
+              <div class="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+                <span class="text-slate-400 font-mono">Worker State:</span>
+                <span id="cpuStateText" class="font-mono text-red-400 font-semibold">Maxed Out ⚠️</span>
+              </div>
+            </div>
+
+            <!-- Conveyor Belt Buffer Stage (DirectX 12 Queue) (3 Cols) -->
+            <div class="md:col-span-3 bg-slate-950/50 p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between text-center relative">
+              <div class="text-[11px] font-bold text-sky-400 flex items-center justify-center gap-1">
+                <i data-lucide="arrow-right-left" class="w-3.5 h-3.5"></i>
+                DirectX 12 Command Buffer
+              </div>
+
+              <!-- Animated Conveyor Track -->
+              <div class="my-3 py-1">
+                <div id="conveyorBelt" class="conveyor-track h-3.5 rounded border border-slate-700 shadow-inner"></div>
+                <div class="flex items-center justify-center gap-2 mt-2 text-[10px] font-mono" id="queueStatusDot">
+                  <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                  <span id="queueFeedText" class="text-slate-300">Passing Draw Calls</span>
+                </div>
+              </div>
+
+              <div class="text-[10px] text-slate-400 font-mono" id="pipelineIdleDiff">
+                GPU waits 10.4ms idle per frame
+              </div>
+            </div>
+
+            <!-- STAGE 2: GPU Pixel Rendering (Worker 2) (4 Cols) -->
+            <div id="gpuStageCard" class="md:col-span-4 bg-slate-950/80 p-4 rounded-xl border-2 border-slate-800 transition-all flex flex-col justify-between relative overflow-hidden">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <div class="text-xs font-black text-emerald-400 flex items-center gap-1.5 tracking-tight">
+                    <i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i>
+                    WORKER 2: GPU (Rasterizer)
+                  </div>
+                  <span id="pipelineGpuMs" class="text-xs font-mono font-extrabold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    12.1 ms
+                  </span>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1 leading-relaxed" id="gpuTaskDesc">
+                  Shades 1440p pixels, raymarches volumetric clouds, anti-aliasing, cockpit reflections, and draws to display.
+                </div>
+              </div>
+
+              <!-- Animated Workload Progress -->
+              <div class="mt-3">
+                <div class="flex justify-between text-[10px] font-mono text-slate-400 mb-1">
+                  <span>GPU Activity:</span>
+                  <span id="gpuStressLabel" class="text-slate-400 font-mono">54% (Idle Waiting)</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                  <div id="gpuProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-300" style="width: 54%;"></div>
+                </div>
+              </div>
+
+              <div class="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+                <span class="text-slate-400 font-mono">Worker State:</span>
+                <span id="gpuStateText" class="font-mono text-slate-400">Sitting Idle / Waiting ⏳</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="lg:col-span-4 flex flex-col gap-4">
+        
+        <!-- Authentic MSFS Developer Mode HUD -->
+        <div class="bg-black/95 border-2 border-slate-800 rounded-2xl p-5 shadow-2xl relative font-mono text-xs">
+          
+          <!-- Top Dev Mode Title Bar -->
+          <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+              <span class="text-xs font-bold text-slate-200 tracking-wider">DEVMODE: FPS DISPLAY</span>
+            </div>
+            <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-white/10 text-slate-400 font-mono">DirectX 12</span>
+          </div>
+
+          <!-- Big FPS Output -->
+          <div class="text-center py-4 bg-slate-950/90 rounded-xl border border-white/5 mb-4">
+            <div class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1">Resulting Framerate</div>
+            <div class="flex items-baseline justify-center gap-2">
+              <span id="hudFpsNumber" class="text-5xl font-black text-white tracking-tight">44.4</span>
+              <span class="text-sm font-bold text-slate-400">FPS</span>
+            </div>
+            
+            <!-- Exact MSFS Dev Mode bottleneck tag -->
+            <div id="hudBottleneckBadge" class="mt-2.5 text-xs font-bold px-3 py-1 inline-block rounded-full bg-red-500/20 text-red-400 border border-red-500/40">
+              Limited by MainThread
+            </div>
+          </div>
+
+          <!-- Timing Bars breakdown (Identical to MSFS in-game engine timings) -->
+          <div class="space-y-3.5">
+            <!-- App Frame Time -->
+            <div>
+              <div class="flex justify-between items-center text-slate-400 mb-1">
+                <span class="text-white font-semibold">App Frame Time:</span>
+                <span id="hudAppTime" class="text-white font-bold">22.5 ms</span>
+              </div>
+              <div class="w-full bg-slate-900 h-2 rounded overflow-hidden">
+                <div id="hudAppBar" class="bg-cyan-400 h-full transition-all duration-200" style="width: 70%;"></div>
+              </div>
+            </div>
+
+            <!-- CPU MainThread Time -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-red-400 flex items-center gap-1.5 font-semibold">
+                  <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                  MainThread (CPU):
+                </span>
+                <span id="hudMainThreadTime" class="text-red-400 font-bold">22.5 ms</span>
+              </div>
+              <div class="w-full bg-slate-900 h-2 rounded overflow-hidden">
+                <div id="hudMainThreadBar" class="bg-red-500 h-full transition-all duration-200" style="width: 70%;"></div>
+              </div>
+              <p class="text-[10px] text-slate-500 font-sans mt-0.5">Time CPU spends preparing geometry, avionics & airport world</p>
+            </div>
+
+            <!-- GPU Frame Time -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-emerald-400 flex items-center gap-1.5 font-semibold">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  GPU Frame Time:
+                </span>
+                <span id="hudGpuTime" class="text-emerald-400 font-bold">12.1 ms</span>
+              </div>
+              <div class="w-full bg-slate-900 h-2 rounded overflow-hidden">
+                <div id="hudGpuBar" class="bg-emerald-400 h-full transition-all duration-200" style="width: 38%;"></div>
+              </div>
+              <p class="text-[10px] text-slate-500 font-sans mt-0.5">Time GPU spends drawing pixels, shaders & weather effects</p>
+            </div>
+          </div>
+
+          <!-- Formula Card -->
+          <div class="mt-4 p-3 bg-slate-900/90 rounded-xl border border-white/10 text-[11px] text-slate-300 font-sans">
+            <div class="font-bold text-amber-300 flex items-center gap-1.5 mb-1">
+              <i data-lucide="calculator" class="w-3.5 h-3.5 text-amber-300"></i>
+              The Math of Sim Performance:
+            </div>
+            <p class="text-slate-400 leading-relaxed font-mono text-[10.5px]">
+              Effective Frame Time = <span class="text-white font-bold">MAX(CPU ms, GPU ms)</span><br>
+              FPS = <span class="text-cyan-400 font-bold">1000 ÷ MAX(CPU, GPU)</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Plain English Explanation Card -->
+        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl">
+          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <i data-lucide="info" class="w-4 h-4 text-cyan-400"></i>
+            What is happening in this scene?
+          </h3>
+          <p id="plainExplanation" class="text-xs text-slate-300 leading-relaxed">
+            The CPU takes 22.5ms to calculate the heavy airport physics and AI traffic. Even though your GPU can draw the frame in only 12.1ms, it must sit idle waiting 10.4ms for the CPU to finish. Buying a faster GPU won't increase FPS here!
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/40 border-2 border-cyan-500/40 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+      
+      <!-- Top banner answering ShadowPulse's question -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-cyan-500/20 pb-4 mb-5">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold mb-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-cyan-400"></i>
+            SHADOWPULSE'S EXACT QUESTION TESTED
+          </div>
+          <h2 class="text-lg md:text-xl font-black text-white">
+            "Will I feel the ~12% difference between the RX 9070 and RX 9070 XT?"
+          </h2>
+          <p class="text-xs text-slate-300 mt-1">
+            Let's see what happens to FPS when swapping from RX 9070 to RX 9070 XT (+12% raster speed) in both situations with your selected CPU:
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="text-right hidden md:block">
+            <div class="text-[10px] uppercase font-mono text-slate-400">Selected CPU</div>
+            <div id="comparisonCpuName" class="text-xs font-bold text-amber-300">AMD Ryzen 7 9800X3D</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparative Side-by-Side Dual Benchmark Columns -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Case 1: At Congested Airport -->
+        <div class="bg-slate-950/80 border border-slate-800/90 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="building-2" class="w-4 h-4"></i>
+                Case 1: Busy International Airport (On Ground)
+              </span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-red-500/20 text-red-300 font-mono font-bold">
+                CPU Limited
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mb-4" id="compAptCpuDesc">
+              CPU MainThread workload is saturated issuing thousands of draw calls and simulating AI traffic.
+            </p>
+
+            <div class="space-y-3 font-mono text-xs">
+              <div class="bg-slate-900/90 p-3 rounded-lg flex items-center justify-between border border-slate-800">
+                <span class="text-slate-300">With <b>RX 9070</b>:</span>
+                <span class="text-white font-bold text-sm" id="compAptFps9070">44.4 FPS</span>
+              </div>
+              <div class="bg-slate-900/90 p-3 rounded-lg flex items-center justify-between border border-cyan-500/40">
+                <span class="text-cyan-300">With <b>RX 9070 XT</b> (+12% GPU):</span>
+                <span class="text-cyan-300 font-bold text-sm" id="compAptFps9070xt">44.4 FPS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800/80">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-300">Actual FPS Improvement:</span>
+              <span id="compAptDeltaBadge" class="text-sm font-extrabold font-mono text-red-400 bg-red-950/50 px-2.5 py-1 rounded border border-red-500/30">
+                +0.0% (0.0 FPS gain)
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2 leading-relaxed" id="compAptVerdict">
+              <b>Result:</b> The 9070 XT's shaders render pixels 12% faster, but the GPU spends that extra saved time <i>doing nothing</i> because it is blocked waiting for the CPU to deliver the next frame!
+            </p>
+          </div>
+        </div>
+
+        <!-- Case 2: In Flight / High Altitude Cruise -->
+        <div class="bg-slate-950/80 border border-slate-800/90 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="cloud" class="w-4 h-4"></i>
+                Case 2: FL350 Cruise / Volumetric Clouds
+              </span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold">
+                GPU Limited
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mb-4" id="compCruiseGpuDesc">
+              CPU has very little work in high altitude, but the GPU is working at 100% raymarching dense 3D clouds.
+            </p>
+
+            <div class="space-y-3 font-mono text-xs">
+              <div class="bg-slate-900/90 p-3 rounded-lg flex items-center justify-between border border-slate-800">
+                <span class="text-slate-300">With <b>RX 9070</b>:</span>
+                <span class="text-white font-bold text-sm" id="compCruFps9070">58.8 FPS</span>
+              </div>
+              <div class="bg-slate-900/90 p-3 rounded-lg flex items-center justify-between border border-emerald-500/40">
+                <span class="text-emerald-300">With <b>RX 9070 XT</b> (+12% GPU):</span>
+                <span class="text-emerald-300 font-bold text-sm" id="compCruFps9070xt">65.9 FPS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800/80">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-300">Actual FPS Improvement:</span>
+              <span id="compCruDeltaBadge" class="text-sm font-extrabold font-mono text-emerald-400 bg-emerald-950/50 px-2.5 py-1 rounded border border-emerald-500/30">
+                +12.0% (+7.1 FPS gain)
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2 leading-relaxed" id="compCruVerdict">
+              <b>Result:</b> Here you get the <b>entire 12% boost</b>! Because the CPU is finishing well ahead of time, every ounce of extra GPU compute directly manifests as smoother gameplay and higher FPS.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+      <div class="border-b border-slate-800 pb-3 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-sm md:text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i>
+            Hardware & Simulation Parameters
+          </h2>
+          <p class="text-xs text-slate-400">Adjust the CPU, GPU, resolution, and sim load to watch the bottleneck flip back and forth in real-time.</p>
+        </div>
+        <button onclick="resetDefaults()" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors flex items-center gap-1 font-medium">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          Reset Baseline
+        </button>
+      </div>
+
+      <!-- Controls Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Control 1: CPU Selection (Highlighting 9800X3D) -->
+        <div class="space-y-2.5">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <i data-lucide="cpu" class="w-3.5 h-3.5 text-red-400"></i>
+              1. Processor (CPU)
+            </label>
+            <span id="cpuVcacheBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30">
+              3D V-Cache
+            </span>
+          </div>
+          
+          <select id="cpuSelect" onchange="handleCpuChange(this.value)" class="w-full bg-slate-950 border border-slate-700 text-xs rounded-xl p-2.5 font-medium text-slate-200 focus:outline-none focus:border-cyan-500">
+            <option value="9800X3D">AMD Ryzen 7 9800X3D (Top Sim King)</option>
+            <option value="7800X3D">AMD Ryzen 7 7800X3D (3D V-Cache)</option>
+            <option value="7600X">AMD Ryzen 5 7600X (Solid 6-Core)</option>
+            <option value="5600X" selected>AMD Ryzen 5 5600X (Mid-Range Baseline)</option>
+            <option value="budget">Budget 4-Core / Older Gen (i3 / i5 8th gen)</option>
+          </select>
+
+          <p class="text-[11px] text-slate-400 leading-normal" id="cpuDescSnippet">
+            MSFS is notorious for taxing single-core cache latency. AMD's 3D V-Cache massively slashes CPU frame times.
+          </p>
+        </div>
+
+        <!-- Control 2: GPU Selection (Focusing on RX 9070 vs 9070 XT) -->
+        <div class="space-y-2.5">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-400"></i>
+              2. Graphics Card (GPU)
+            </label>
+            <span id="gpuModelBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              Selected
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btn-gpu-9070" onclick="handleGpuChange('9070')" class="p-2 rounded-xl border text-xs font-semibold text-left transition-all border-cyan-500 bg-cyan-500/20 text-cyan-300">
+              <div class="font-bold">RX 9070 16GB</div>
+              <div class="text-[10px] text-slate-400 font-normal">Base 10K build</div>
+            </button>
+            <button id="btn-gpu-9070xt" onclick="handleGpuChange('9070xt')" class="p-2 rounded-xl border text-xs font-semibold text-left transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700">
+              <div class="font-bold">RX 9070 XT 16GB</div>
+              <div class="text-[10px] text-emerald-400 font-mono font-bold">+12% speed</div>
+            </button>
+          </div>
+
+          <!-- Secondary GPU select dropdown -->
+          <div class="pt-1">
+            <select id="gpuOtherSelect" onchange="handleGpuChange(this.value)" class="w-full bg-slate-950 border border-slate-800 text-[11px] rounded-lg p-2 text-slate-400 focus:outline-none focus:border-cyan-500">
+              <option value="" disabled selected>Or choose other GPU reference:</option>
+              <option value="7800xt">AMD Radeon RX 7800 XT (Last Gen)</option>
+              <option value="4070">NVIDIA GeForce RTX 4070 12GB</option>
+              <option value="4080">NVIDIA GeForce RTX 4080 16GB</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Control 3: Display Resolution -->
+        <div class="space-y-2.5">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <i data-lucide="monitor" class="w-3.5 h-3.5 text-sky-400"></i>
+              3. Resolution (GPU Load)
+            </label>
+            <span id="resBadge" class="text-[11px] font-mono text-cyan-400 font-bold">1440p (QHD)</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-1.5">
+            <button id="res-btn-1080p" onclick="handleResChange('1080p')" class="py-2.5 text-center rounded-xl border text-xs font-semibold border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700">
+              1080p
+            </button>
+            <button id="res-btn-1440p" onclick="handleResChange('1440p')" class="py-2.5 text-center rounded-xl border text-xs font-semibold border-cyan-500 bg-cyan-500/20 text-cyan-300">
+              1440p
+            </button>
+            <button id="res-btn-4k" onclick="handleResChange('4k')" class="py-2.5 text-center rounded-xl border text-xs font-semibold border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700">
+              4K UHD
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-normal">
+            Resolution <i>only</i> multiplies GPU shader work. It does not increase CPU draw calls!
+          </p>
+        </div>
+
+        <!-- Control 4: Fine-grained Sim Settings (Traffic & Volumetric Clouds) -->
+        <div class="space-y-2.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center justify-between">
+            <span class="flex items-center gap-1.5"><i data-lucide="settings-2" class="w-3.5 h-3.5 text-amber-400"></i> 4. Sim Quality Levers</span>
+          </label>
+
+          <!-- CPU slider: AI Traffic & Terrain LOD -->
+          <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 space-y-1">
+            <div class="flex justify-between text-[11px] font-mono">
+              <span class="text-red-400">Airport AI & Terrain LOD</span>
+              <span id="lodValLabel" class="text-white">Medium (100)</span>
+            </div>
+            <input id="lodSlider" type="range" min="50" max="250" value="100" step="25" oninput="handleLodChange(this.value)" class="w-full accent-red-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+            <div class="text-[9.5px] text-slate-500">Heavily scales CPU MainThread time</div>
+          </div>
+
+          <!-- GPU slider: Volumetric Clouds / Weather -->
+          <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 space-y-1">
+            <div class="flex justify-between text-[11px] font-mono">
+              <span class="text-emerald-400">Volumetric Clouds</span>
+              <span id="cloudValLabel" class="text-white">Ultra</span>
+            </div>
+            <input id="cloudSlider" type="range" min="1" max="3" value="3" step="1" oninput="handleCloudChange(this.value)" class="w-full accent-emerald-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+            <div class="text-[9.5px] text-slate-500">Heavily scales GPU pixel time</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+      
+      <!-- Card 1 -->
+      <div class="bg-slate-900/70 border border-slate-800/80 p-5 rounded-2xl space-y-2.5">
+        <div class="font-extrabold text-amber-400 text-sm flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-4 h-4 text-amber-400"></i>
+          1. What is a "CPU Bottleneck"?
+        </div>
+        <p class="text-slate-300 leading-relaxed">
+          Before any pixel can be rendered, your CPU must calculate aerodynamics, aircraft avionics (glass cockpit screens), runway logic, and issue instructions called <b>Draw Calls</b> to the GPU.
+        </p>
+        <p class="text-slate-400 leading-relaxed">
+          If the CPU takes <b>22ms</b> to finish that math, you will get at most <b>45 FPS</b>, regardless of whether you have an RX 9070 or an RTX 4090.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-slate-900/70 border border-slate-800/80 p-5 rounded-2xl space-y-2.5">
+        <div class="font-extrabold text-emerald-400 text-sm flex items-center gap-2">
+          <i data-lucide="gauge" class="w-4 h-4 text-emerald-400"></i>
+          2. What is a "GPU Bottleneck"?
+        </div>
+        <p class="text-slate-300 leading-relaxed">
+          The GPU is the artist. It turns draw calls into actual colored pixels on screen, calculating 3D volumetric light through clouds, reflections on airplane wings, and anti-aliasing.
+        </p>
+        <p class="text-slate-400 leading-relaxed">
+          Up in the clouds at 35,000 ft, the ground is simple, so the CPU works with ease. Here the GPU runs at <b>99% - 100% capacity</b>, meaning a 12% faster GPU yields <b>almost exactly 12% higher FPS</b>.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-slate-900/70 border border-slate-800/80 p-5 rounded-2xl space-y-2.5">
+        <div class="font-extrabold text-cyan-400 text-sm flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4 text-cyan-400"></i>
+          3. How to fix each in MSFS?
+        </div>
+        <div class="space-y-1.5 text-slate-300">
+          <div>
+            <b class="text-red-400">If MainThread Limited:</b>
+            <span class="text-slate-400">Lower Terrain Level of Detail (TLOD), decrease Airport Traffic / Ground Vehicles, or pick an AMD CPU with 3D V-Cache (e.g. <b>9800X3D</b>).</span>
+          </div>
+          <div class="pt-1">
+            <b class="text-emerald-400">If GPU Limited:</b>
+            <span class="text-slate-400">Enable FSR / DLSS Super Resolution, lower Volumetric Clouds from Ultra to High, or step down resolution.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // State machine tracking user configuration
+    const state = {
+      scenario: 'airport', // 'airport' | 'cruise' | 'vfr'
+      cpuModel: '5600X',    // '9800X3D' | '7800X3D' | '7600X' | '5600X' | 'budget'
+      gpuModel: '9070',     // '9070' | '9070xt' | '7800xt' | '4070' | '4080'
+      resolution: '1440p',  // '1080p' | '1440p' | '4k'
+      terrainLod: 100,      // 50 - 250
+      cloudsLevel: 3,       // 1 (Low/Med), 2 (High), 3 (Ultra)
+      animSpeed: 1.0,       // 0 (Paused), 0.3 (Slow), 1.0 (Normal)
+      showAnnotations: true,// Toggle on-canvas educational callouts
+
+      // Calculated engine values
+      cpuMs: 22.5,
+      gpuMs: 12.1,
+      fps: 44.4,
+      bottleneck: 'CPU'     // 'CPU' | 'GPU' | 'BALANCED'
+    };
+
+    // Scenarios base workload profiles
+    const scenarios = {
+      airport: {
+        title: "John F. Kennedy Intl. (KJFK) Ground Operations",
+        subtitle: "AI Traffic: 92 aircraft | Ground Vehicles: 140 | Draw Calls: ~9,800/frame",
+        calloutHeader: "CPU MAINTHREAD WORKLOAD (HEAVY)",
+        calloutDetail: "Simulating 92 AI flight paths, runway taxi routes, avionics glass displays, ground collision checks.",
+        baseCpuTime: 23.0,
+        baseGpuTime: 12.0
+      },
+      cruise: {
+        title: "Flight Level 350 (35,000 ft) Over Alps",
+        subtitle: "AI Traffic: 2 | Minimal ground terrain | Dense Volumetric Clouds & Raymarching",
+        calloutHeader: "GPU RASTERIZER WORKLOAD (HEAVY)",
+        calloutDetail: "CPU has virtually nothing to calculate. GPU is 100% maxed raymarching millions of 3D cloud fog particles.",
+        baseCpuTime: 10.5,
+        baseGpuTime: 17.5
+      },
+      vfr: {
+        title: "Low VFR Flying (Cessna 172 @ 2,500 ft)",
+        subtitle: "Scattered trees & photogrammetry | Light weather | Moderate physics load",
+        calloutHeader: "BALANCED SIMULATION WORKLOAD",
+        calloutDetail: "Moderate terrain photogrammetry streaming (CPU) + tree/shadow rendering (GPU) running in tandem.",
+        baseCpuTime: 14.5,
+        baseGpuTime: 14.0
+      }
+    };
+
+    // CPU single-core / 3D V-Cache latency scaling factor (relative to 5600X = 1.0)
+    const cpuPerformanceMultipliers = {
+      '9800X3D': 0.50, // AMD Ryzen 7 9800X3D (Zen 5 + huge 2nd gen 3D V-Cache, ~2x faster draw call rate than 5600X)
+      '7800X3D': 0.58, // AMD Ryzen 7 7800X3D (Zen 4 3D V-Cache)
+      '7600X': 0.82,   // AMD Ryzen 5 7600X
+      '5600X': 1.00,   // Baseline popular mid-range chip
+      'budget': 1.38   // Budget 4-core / older 8th/9th gen Intel
+    };
+
+    const cpuDescriptions = {
+      '9800X3D': "Ryzen 7 9800X3D with 96MB 3D V-Cache. Eliminates memory stalls and virtually wipes out MSFS MainThread hitches.",
+      '7800X3D': "Ryzen 7 7800X3D: The legendary MSFS benchmark champion. Slashes airport frame times dramatically.",
+      '7600X': "Ryzen 5 7600X: Solid high-clock Zen 4 chip. Respectable frame delivery at airports.",
+      '5600X': "Ryzen 5 5600X: Mid-range classic. Often hits CPU limits with dense AI traffic and complex add-on jetliners.",
+      'budget': "Budget / Older 4-Core: Severely struggles with MSFS draw calls. Heavy airport stuttering expected."
+    };
+
+    // GPU relative raster speeds (Base RX 9070 = 1.0)
+    // 9070 XT is ~12% faster (1 / 1.12 ≈ 0.893 time multiplier)
+    const gpuTimeMultipliers = {
+      '9070': 1.000,
+      '9070xt': 0.893, // 12% faster frame completion
+      '7800xt': 1.040, // Slightly slower than 9070 in MSFS
+      '4070': 1.030,   // Roughly on par with 7800 XT
+      '4080': 0.760    // Much faster tier
+    };
+
+    // Resolution time scaling factors
+    const resMultipliers = {
+      '1080p': 0.72,
+      '1440p': 1.00,
+      '4k': 1.68
+    };
+
+    function recalculate() {
+      const scen = scenarios[state.scenario];
+
+      // 1. Calculate CPU Time (ms)
+      // Scaled by CPU tier + Terrain LOD slider
+      const cpuScale = cpuPerformanceMultipliers[state.cpuModel];
+      const lodFactor = 0.75 + (state.terrainLod / 100) * 0.25;
+      state.cpuMs = scen.baseCpuTime * cpuScale * lodFactor;
+
+      // 2. Calculate GPU Time (ms)
+      // Scaled by GPU model + resolution + volumetric clouds slider
+      const gpuScale = gpuTimeMultipliers[state.gpuModel] || 1.0;
+      const resFactor = resMultipliers[state.resolution];
+      const cloudFactor = state.cloudsLevel === 3 ? 1.0 : (state.cloudsLevel === 2 ? 0.86 : 0.72);
+      state.gpuMs = scen.baseGpuTime * gpuScale * resFactor * cloudFactor;
+
+      // Golden Law of 3D Rendering:
+      // A frame cannot be presented faster than whichever processor takes the longest.
+      const effectiveFrameMs = Math.max(state.cpuMs, state.gpuMs);
+      state.fps = 1000 / effectiveFrameMs;
+
+      // Categorize bottleneck
+      if (state.cpuMs > state.gpuMs * 1.06) {
+        state.bottleneck = 'CPU';
+      } else if (state.gpuMs > state.cpuMs * 1.06) {
+        state.bottleneck = 'GPU';
+      } else {
+        state.bottleneck = 'BALANCED';
+      }
+
+      updateDOM();
+    }
+
+    function setAnimSpeed(speed) {
+      state.animSpeed = speed;
+      const pauseBtn = document.getElementById('speed-btn-pause');
+      const slowBtn = document.getElementById('speed-btn-slow');
+      const normalBtn = document.getElementById('speed-btn-normal');
+
+      [pauseBtn, slowBtn, normalBtn].forEach(b => {
+        b.className = 'px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold transition-all';
+      });
+
+      if (speed === 0) {
+        pauseBtn.className = 'px-2 py-1 rounded bg-amber-500 text-slate-950 text-[10px] font-bold transition-all';
+      } else if (speed < 0.5) {
+        slowBtn.className = 'px-2 py-1 rounded bg-cyan-500 text-slate-950 text-[10px] font-bold transition-all';
+      } else {
+        normalBtn.className = 'px-2 py-1 rounded bg-cyan-500 text-slate-950 text-[10px] font-bold transition-all';
+      }
+    }
+
+    function toggleAnnotations() {
+      state.showAnnotations = !state.showAnnotations;
+      const btnText = document.getElementById('annotationsBtnText');
+      const callout = document.getElementById('liveWorkloadCallout');
+      if (state.showAnnotations) {
+        btnText.textContent = 'Labels: ON';
+        callout.style.display = 'block';
+      } else {
+        btnText.textContent = 'Labels: OFF';
+        callout.style.display = 'none';
+      }
+    }
+
+    function updateDOM() {
+      // 1. Viewport canvas titles
+      const scen = scenarios[state.scenario];
+      document.getElementById('canvasSceneTitle').textContent = scen.title;
+      document.getElementById('canvasSceneSubtitle').textContent = scen.subtitle;
+
+      // Live workload callout box
+      document.getElementById('calloutHeader').innerHTML = `
+        <span class="w-2 h-2 rounded-full ${state.bottleneck === 'CPU' ? 'bg-red-400 animate-ping' : (state.bottleneck === 'GPU' ? 'bg-emerald-400 animate-ping' : 'bg-cyan-400')}"></span>
+        <span class="${state.bottleneck === 'CPU' ? 'text-red-400' : (state.bottleneck === 'GPU' ? 'text-emerald-400' : 'text-cyan-300')}">${scen.calloutHeader}</span>
+      `;
+      document.getElementById('calloutDetail').textContent = scen.calloutDetail;
+
+      // 2. DevMode HUD numbers
+      document.getElementById('hudFpsNumber').textContent = state.fps.toFixed(1);
+      const effectiveTime = Math.max(state.cpuMs, state.gpuMs);
+      document.getElementById('hudAppTime').textContent = `${effectiveTime.toFixed(1)} ms`;
+      document.getElementById('hudMainThreadTime').textContent = `${state.cpuMs.toFixed(1)} ms`;
+      document.getElementById('hudGpuTime').textContent = `${state.gpuMs.toFixed(1)} ms`;
+
+      // Pipeline numbers
+      document.getElementById('pipelineCpuMs').textContent = `${state.cpuMs.toFixed(1)} ms`;
+      document.getElementById('pipelineGpuMs').textContent = `${state.gpuMs.toFixed(1)} ms`;
+
+      // Relative bar lengths (32ms = 100% scale)
+      const scaleCeil = 34;
+      document.getElementById('hudAppBar').style.width = `${Math.min(100, (effectiveTime / scaleCeil) * 100)}%`;
+      document.getElementById('hudMainThreadBar').style.width = `${Math.min(100, (state.cpuMs / scaleCeil) * 100)}%`;
+      document.getElementById('hudGpuBar').style.width = `${Math.min(100, (state.gpuMs / scaleCeil) * 100)}%`;
+
+      // Assembly line progress bars
+      const cpuPercent = Math.min(100, Math.round((state.cpuMs / effectiveTime) * 100));
+      const gpuPercent = Math.min(100, Math.round((state.gpuMs / effectiveTime) * 100));
+
+      document.getElementById('cpuProgressBar').style.width = `${cpuPercent}%`;
+      document.getElementById('gpuProgressBar').style.width = `${gpuPercent}%`;
+
+      // Conveyor track status
+      const conveyor = document.getElementById('conveyorBelt');
+      const queueDot = document.getElementById('queueStatusDot');
+      const queueFeedText = document.getElementById('queueFeedText');
+      const pipelineDiff = document.getElementById('pipelineIdleDiff');
+
+      // Badges & styling changes based on Bottleneck
+      const canvasBadge = document.getElementById('canvasBottleneckBadge');
+      const hudBadge = document.getElementById('hudBottleneckBadge');
+      const cpuCard = document.getElementById('cpuStageCard');
+      const gpuCard = document.getElementById('gpuStageCard');
+      const plainText = document.getElementById('plainExplanation');
+
+      cpuCard.classList.remove('bottleneck-cpu-active', 'bottleneck-gpu-active');
+      gpuCard.classList.remove('bottleneck-cpu-active', 'bottleneck-gpu-active');
+
+      if (state.bottleneck === 'CPU') {
+        // CPU Limited
+        canvasBadge.className = 'absolute bottom-3 right-3 px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wide shadow-lg border backdrop-blur-md flex items-center gap-2 bg-red-950/90 border-red-500 text-red-300 pointer-events-none';
+        canvasBadge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span><span>LIMITED BY MAINTHREAD (CPU)</span>`;
+
+        hudBadge.textContent = 'Limited by MainThread';
+        hudBadge.className = 'mt-2.5 text-xs font-bold px-3 py-1 inline-block rounded-full bg-red-500/20 text-red-400 border border-red-500/40';
+
+        cpuCard.classList.add('bottleneck-cpu-active');
+        document.getElementById('cpuStressLabel').textContent = '100% Saturation (Starving GPU)';
+        document.getElementById('cpuStateText').textContent = 'Working 100% Flat Out ⚠️';
+        document.getElementById('gpuStressLabel').textContent = `${gpuPercent}% Activity (Under-utilized)`;
+        document.getElementById('gpuStateText').textContent = 'Sitting Idle / Waiting ⏳';
+
+        const idleMs = (state.cpuMs - state.gpuMs).toFixed(1);
+        pipelineDiff.textContent = `GPU idle for ${idleMs}ms waiting on CPU`;
+        conveyor.classList.add('conveyor-stalled');
+        queueDot.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span class="text-red-400">Queue Starved</span>`;
+
+        plainText.innerHTML = `Your <b>CPU MainThread is taking ${state.cpuMs.toFixed(1)}ms</b>, while the GPU is already done in <b>${state.gpuMs.toFixed(1)}ms</b>. Because the graphics card has to wait idle for ${idleMs}ms every single frame, <span class="text-amber-300 font-semibold">upgrading to the RX 9070 XT gives literally 0 extra frames here</span>.`;
+      } else if (state.bottleneck === 'GPU') {
+        // GPU Limited
+        canvasBadge.className = 'absolute bottom-3 right-3 px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wide shadow-lg border backdrop-blur-md flex items-center gap-2 bg-emerald-950/90 border-emerald-500 text-emerald-300 pointer-events-none';
+        canvasBadge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span><span>LIMITED BY GPU</span>`;
+
+        hudBadge.textContent = 'Limited by GPU';
+        hudBadge.className = 'mt-2.5 text-xs font-bold px-3 py-1 inline-block rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+
+        gpuCard.classList.add('bottleneck-gpu-active');
+        document.getElementById('cpuStressLabel').textContent = `${cpuPercent}% (Unburdened)`;
+        document.getElementById('cpuStateText').textContent = 'Delivering Smoothly ✅';
+        document.getElementById('gpuStressLabel').textContent = '99% - 100% Saturation (Full Tilt)';
+        document.getElementById('gpuStateText').textContent = 'Painting Hard 🔥';
+
+        const waitMs = (state.gpuMs - state.cpuMs).toFixed(1);
+        pipelineDiff.textContent = `CPU finishes ${waitMs}ms ahead of GPU`;
+        conveyor.classList.remove('conveyor-stalled');
+        queueDot.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="text-emerald-400">Frames Pipelining Smoothly</span>`;
+
+        plainText.innerHTML = `Your <b>GPU is working at maximum 99-100% load (${state.gpuMs.toFixed(1)}ms)</b>, while the CPU easily supplies draw calls in <b>${state.cpuMs.toFixed(1)}ms</b>. <span class="text-emerald-300 font-semibold">Here, switching to the ~12% faster RX 9070 XT translates directly into the full +12% framerate boost!</span>`;
+      } else {
+        // Balanced
+        canvasBadge.className = 'absolute bottom-3 right-3 px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold tracking-wide shadow-lg border backdrop-blur-md flex items-center gap-2 bg-cyan-950/90 border-cyan-500 text-cyan-300 pointer-events-none';
+        canvasBadge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span><span>PERFECTLY BALANCED PIPELINE</span>`;
+
+        hudBadge.textContent = 'Balanced Pipeline';
+        hudBadge.className = 'mt-2.5 text-xs font-bold px-3 py-1 inline-block rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/40';
+
+        document.getElementById('cpuStressLabel').textContent = '~95% Balanced';
+        document.getElementById('cpuStateText').textContent = 'In Sync ⚡';
+        document.getElementById('gpuStressLabel').textContent = '~95% Balanced';
+        document.getElementById('gpuStateText').textContent = 'In Sync ⚡';
+
+        pipelineDiff.textContent = `CPU & GPU frame times matched`;
+        conveyor.classList.remove('conveyor-stalled');
+        queueDot.innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400"></span><span class="text-cyan-400">Synchronized</span>`;
+
+        plainText.innerHTML = `Both the CPU and GPU are finishing work at virtually the same rate (~${state.cpuMs.toFixed(1)}ms). Neither processor is stalled waiting for the other.`;
+      }
+
+      // Update the side-by-side RX 9070 vs RX 9070 XT experiment card
+      updateComparisonCard();
+    }
+
+    function updateComparisonCard() {
+      const cpuScale = cpuPerformanceMultipliers[state.cpuModel];
+      const resFactor = resMultipliers[state.resolution];
+      const cloudFactor = state.cloudsLevel === 3 ? 1.0 : (state.cloudsLevel === 2 ? 0.86 : 0.72);
+      const lodFactor = 0.75 + (state.terrainLod / 100) * 0.25;
+
+      const cpuNameLabels = {
+        '9800X3D': 'AMD Ryzen 7 9800X3D (3D V-Cache)',
+        '7800X3D': 'AMD Ryzen 7 7800X3D',
+        '7600X': 'AMD Ryzen 5 7600X',
+        '5600X': 'AMD Ryzen 5 5600X',
+        'budget': 'Budget 4-Core CPU'
+      };
+      document.getElementById('comparisonCpuName').textContent = cpuNameLabels[state.cpuModel];
+
+      // 1. Busy Airport Condition:
+      const aptBaseCpu = scenarios.airport.baseCpuTime * cpuScale * lodFactor;
+      const aptBaseGpu9070 = scenarios.airport.baseGpuTime * 1.000 * resFactor * cloudFactor;
+      const aptBaseGpuXT   = scenarios.airport.baseGpuTime * 0.893 * resFactor * cloudFactor;
+
+      const aptFps9070 = 1000 / Math.max(aptBaseCpu, aptBaseGpu9070);
+      const aptFpsXT   = 1000 / Math.max(aptBaseCpu, aptBaseGpuXT);
+      const aptDeltaPct = ((aptFpsXT - aptFps9070) / aptFps9070) * 100;
+
+      document.getElementById('compAptFps9070').textContent = `${aptFps9070.toFixed(1)} FPS`;
+      document.getElementById('compAptFps9070xt').textContent = `${aptFpsXT.toFixed(1)} FPS`;
+
+      const aptBadge = document.getElementById('compAptDeltaBadge');
+      const aptVerdict = document.getElementById('compAptVerdict');
+
+      if (aptDeltaPct < 0.5) {
+        aptBadge.textContent = `+0.0% (0.0 FPS gain)`;
+        aptBadge.className = 'text-sm font-extrabold font-mono text-red-400 bg-red-950/50 px-2.5 py-1 rounded border border-red-500/30';
+        aptVerdict.innerHTML = `<b>Result:</b> The 9070 XT's shaders render pixels 12% faster, but the GPU spends that extra saved time <i>doing nothing</i> because it is blocked waiting for the CPU to deliver the next frame!`;
+      } else {
+        aptBadge.textContent = `+${aptDeltaPct.toFixed(1)}% (+${(aptFpsXT - aptFps9070).toFixed(1)} FPS)`;
+        aptBadge.className = 'text-sm font-extrabold font-mono text-emerald-400 bg-emerald-950/50 px-2.5 py-1 rounded border border-emerald-500/30';
+        aptVerdict.innerHTML = `<b>Result:</b> Because you equipped the powerful <b>${state.cpuModel}</b>, the CPU is so fast that the GPU bottleneck emerges, allowing some of the XT's extra speed to shine through!`;
+      }
+
+      // 2. High Altitude Cruise Condition:
+      const cruBaseCpu = scenarios.cruise.baseCpuTime * cpuScale * lodFactor;
+      const cruBaseGpu9070 = scenarios.cruise.baseGpuTime * 1.000 * resFactor * cloudFactor;
+      const cruBaseGpuXT   = scenarios.cruise.baseGpuTime * 0.893 * resFactor * cloudFactor;
+
+      const cruFps9070 = 1000 / Math.max(cruBaseCpu, cruBaseGpu9070);
+      const cruFpsXT   = 1000 / Math.max(cruBaseCpu, cruBaseGpuXT);
+      const cruDeltaPct = ((cruFpsXT - cruFps9070) / cruFps9070) * 100;
+
+      document.getElementById('compCruFps9070').textContent = `${cruFps9070.toFixed(1)} FPS`;
+      document.getElementById('compCruFps9070xt').textContent = `${cruFpsXT.toFixed(1)} FPS`;
+
+      const cruBadge = document.getElementById('compCruDeltaBadge');
+      const diffFps = (cruFpsXT - cruFps9070).toFixed(1);
+      cruBadge.textContent = `+${cruDeltaPct.toFixed(1)}% (+${diffFps} FPS gain)`;
+
+      if (cruDeltaPct > 8.0) {
+        cruBadge.className = 'text-sm font-extrabold font-mono text-emerald-400 bg-emerald-950/50 px-2.5 py-1 rounded border border-emerald-500/30';
+      } else {
+        cruBadge.className = 'text-sm font-extrabold font-mono text-amber-400 bg-amber-950/50 px-2.5 py-1 rounded border border-amber-500/30';
+      }
+    }
+
+    function selectPreset(preset) {
+      state.scenario = preset;
+      
+      const aptBtn = document.getElementById('hdr-btn-airport');
+      const cruBtn = document.getElementById('hdr-btn-cruise');
+      const vfrBtn = document.getElementById('hdr-btn-vfr');
+
+      [aptBtn, cruBtn, vfrBtn].forEach(b => {
+        b.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all duration-200 flex items-center gap-1.5';
+      });
+
+      if (preset === 'airport') {
+        aptBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow-md flex items-center gap-1.5';
+        document.getElementById('lodSlider').value = 150;
+        state.terrainLod = 150;
+        document.getElementById('lodValLabel').textContent = 'High (150)';
+      } else if (preset === 'cruise') {
+        cruBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 bg-cyan-500 text-slate-950 shadow-md flex items-center gap-1.5';
+        document.getElementById('lodSlider').value = 75;
+        state.terrainLod = 75;
+        document.getElementById('lodValLabel').textContent = 'Low (75)';
+      } else {
+        vfrBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 bg-emerald-500 text-slate-950 shadow-md flex items-center gap-1.5';
+        document.getElementById('lodSlider').value = 100;
+        state.terrainLod = 100;
+        document.getElementById('lodValLabel').textContent = 'Medium (100)';
+      }
+
+      recalculate();
+    }
+
+    function handleCpuChange(val) {
+      state.cpuModel = val;
+      document.getElementById('cpuDescSnippet').textContent = cpuDescriptions[val];
+      
+      const badge = document.getElementById('cpuVcacheBadge');
+      if (val === '9800X3D') {
+        badge.textContent = 'Top Sim King (Zen 5 V-Cache)';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      } else if (val === '7800X3D') {
+        badge.textContent = '3D V-Cache';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30';
+      } else {
+        badge.textContent = 'Standard Cache';
+        badge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
+      }
+
+      recalculate();
+    }
+
+    function handleGpuChange(model) {
+      state.gpuModel = model;
+      const b9070 = document.getElementById('btn-gpu-9070');
+      const bXT = document.getElementById('btn-gpu-9070xt');
+      const badge = document.getElementById('gpuModelBadge');
+
+      b9070.className = 'p-2 rounded-xl border text-xs font-semibold text-left transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700';
+      bXT.className = 'p-2 rounded-xl border text-xs font-semibold text-left transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700';
+
+      if (model === '9070') {
+        b9070.className = 'p-2 rounded-xl border text-xs font-semibold text-left transition-all border-cyan-500 bg-cyan-500/20 text-cyan-300';
+        badge.textContent = 'Radeon RX 9070 16GB';
+        document.getElementById('gpuOtherSelect').value = '';
+      } else if (model === '9070xt') {
+        bXT.className = 'p-2 rounded-xl border text-xs font-semibold text-left transition-all border-emerald-500 bg-emerald-500/20 text-emerald-300';
+        badge.textContent = 'RX 9070 XT (+12% Faster)';
+        document.getElementById('gpuOtherSelect').value = '';
+      } else {
+        badge.textContent = model.toUpperCase();
+      }
+
+      recalculate();
+    }
+
+    function handleResChange(res) {
+      state.resolution = res;
+      ['1080p', '1440p', '4k'].forEach(r => {
+        const btn = document.getElementById(`res-btn-${r}`);
+        if (r === res) {
+          btn.className = 'py-2.5 text-center rounded-xl border text-xs font-semibold border-cyan-500 bg-cyan-500/20 text-cyan-300';
+        } else {
+          btn.className = 'py-2.5 text-center rounded-xl border text-xs font-semibold border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700';
+        }
+      });
+      document.getElementById('resBadge').textContent = res === '4k' ? '4K UHD (Heavy GPU)' : (res === '1440p' ? '1440p QHD' : '1080p FHD');
+      recalculate();
+    }
+
+    function handleLodChange(val) {
+      state.terrainLod = parseInt(val, 10);
+      let label = `${val}`;
+      if (val <= 75) label = `Low (${val})`;
+      else if (val <= 125) label = `Medium (${val})`;
+      else if (val <= 175) label = `High (${val})`;
+      else label = `Ultra (${val})`;
+      document.getElementById('lodValLabel').textContent = label;
+      recalculate();
+    }
+
+    function handleCloudChange(val) {
+      state.cloudsLevel = parseInt(val, 10);
+      const labels = { 1: 'Medium', 2: 'High', 3: 'Ultra' };
+      document.getElementById('cloudValLabel').textContent = labels[state.cloudsLevel];
+      recalculate();
+    }
+
+    function resetDefaults() {
+      state.scenario = 'airport';
+      state.cpuModel = '5600X';
+      state.gpuModel = '9070';
+      state.resolution = '1440p';
+      state.terrainLod = 100;
+      state.cloudsLevel = 3;
+      state.animSpeed = 1.0;
+      state.showAnnotations = true;
+
+      document.getElementById('cpuSelect').value = '5600X';
+      document.getElementById('lodSlider').value = 100;
+      document.getElementById('lodValLabel').textContent = 'Medium (100)';
+      document.getElementById('cloudSlider').value = 3;
+      document.getElementById('cloudValLabel').textContent = 'Ultra';
+
+      selectPreset('airport');
+      handleCpuChange('5600X');
+      handleGpuChange('9070');
+      handleResChange('1440p');
+      setAnimSpeed(1.0);
+    }
+
+    const canvas = document.getElementById('flightCanvas');
+    const ctx = canvas.getContext('2d');
+    let timeTick = 0;
+
+    function resizeCanvas() {
+      if (canvas && canvas.parentElement) {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight || 300;
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Helper to draw clean callout badges directly on the canvas
+    function drawAnnotationBadge(ctx, x, y, label, type = 'cpu', align = 'center') {
+      if (!state.showAnnotations) return;
+      
+      ctx.save();
+      ctx.font = 'bold 10px "JetBrains Mono", monospace';
+      const textWidth = ctx.measureText(label).width;
+      const padding = 6;
+      const height = 18;
+      const width = textWidth + padding * 2 + 14;
+
+      let drawX = x - width / 2;
+      if (align === 'left') drawX = x;
+      if (align === 'right') drawX = x - width;
+
+      // Card background
+      ctx.fillStyle = type === 'cpu' ? 'rgba(239, 68, 68, 0.90)' : (type === 'gpu' ? 'rgba(16, 185, 129, 0.90)' : 'rgba(14, 165, 233, 0.90)');
+      ctx.beginPath();
+      ctx.roundRect(drawX, y - height / 2, width, height, 4);
+      ctx.fill();
+
+      // Border
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Icon dot
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(drawX + padding + 4, y, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Text label
+      ctx.fillStyle = '#ffffff';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, drawX + padding + 12, y);
+
+      ctx.restore();
+    }
+
+    function renderSimulation() {
+      // Slow, smooth progression: scale by animSpeed (no jarring jumps)
+      timeTick += 0.016 * state.animSpeed;
+      const t = timeTick;
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (state.scenario === 'airport') {
+        // ==========================================
+        // 1. SCENARIO: BUSY AIRPORT (CALM & CRISP)
+        // ==========================================
+
+        // Dusk Sky gradient
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.55);
+        skyGrad.addColorStop(0, '#040711');
+        skyGrad.addColorStop(0.7, '#0f172a');
+        skyGrad.addColorStop(1, '#1e293b');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, w, h * 0.55);
+
+        // Distant city/terminal skyline
+        ctx.fillStyle = '#090d16';
+        const numBuildings = 14;
+        const bWidth = w / numBuildings;
+        for (let i = 0; i < numBuildings; i++) {
+          const bHeight = 35 + ((i * 7) % 30);
+          ctx.fillRect(i * bWidth, h * 0.55 - bHeight, bWidth - 4, bHeight);
+
+          // Subtle warm office window dots
+          ctx.fillStyle = 'rgba(254, 240, 138, 0.6)';
+          for (let row = 0; row < 3; row++) {
+            ctx.fillRect(i * bWidth + 6, h * 0.55 - bHeight + 8 + (row * 8), 3, 3);
+            ctx.fillRect(i * bWidth + 14, h * 0.55 - bHeight + 8 + (row * 8), 3, 3);
+          }
+          ctx.fillStyle = '#090d16';
+        }
+
+        // Air traffic control tower with blinking red beacon
+        const towerX = w * 0.85;
+        const towerTopY = h * 0.55 - 90;
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(towerX - 6, towerTopY + 25, 12, 65); // Shaft
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(towerX - 16, towerTopY, 32, 25);     // Cab
+        // Glass windows
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(towerX - 13, towerTopY + 4, 26, 8);
+        // Blinking beacon on tower
+        const beaconOn = Math.sin(t * 3) > 0;
+        ctx.fillStyle = beaconOn ? '#ef4444' : '#7f1d1d';
+        ctx.beginPath();
+        ctx.arc(towerX, towerTopY - 2, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Tarmac Ground
+        const tarmacGrad = ctx.createLinearGradient(0, h * 0.55, 0, h);
+        tarmacGrad.addColorStop(0, '#0f172a');
+        tarmacGrad.addColorStop(1, '#020617');
+        ctx.fillStyle = tarmacGrad;
+        ctx.fillRect(0, h * 0.55, w, h * 0.45);
+
+        // Taxiway & Runway markings
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Runway guidelines converging toward horizon
+        ctx.moveTo(w * 0.15, h);
+        ctx.lineTo(w * 0.42, h * 0.55);
+        ctx.moveTo(w * 0.85, h);
+        ctx.lineTo(w * 0.58, h * 0.55);
+        ctx.stroke();
+
+        // Calm yellow taxi centerline
+        ctx.strokeStyle = '#eab308';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([12, 8]);
+        ctx.beginPath();
+        ctx.moveTo(w * 0.05, h * 0.72);
+        ctx.lineTo(w * 0.95, h * 0.72);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Ground service tug (moving slowly from left to right)
+        const tugX = ((t * 22) % (w + 140)) - 70;
+        const tugY = h * 0.63;
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(tugX, tugY, 24, 10);
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(tugX + 14, tugY - 6, 8, 6); // Cabin
+        // Wheels
+        ctx.fillStyle = '#020617';
+        ctx.beginPath();
+        ctx.arc(tugX + 5, tugY + 10, 3, 0, Math.PI * 2);
+        ctx.arc(tugX + 19, tugY + 10, 3, 0, Math.PI * 2);
+        ctx.fill();
+        // Amber beacon on vehicle
+        if (Math.sin(t * 6) > 0) {
+          ctx.fillStyle = '#fde047';
+          ctx.beginPath();
+          ctx.arc(tugX + 18, tugY - 8, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Secondary parked AI Jetliner in background
+        const parkedX = w * 0.22;
+        const parkedY = h * 0.58;
+        ctx.fillStyle = '#64748b';
+        ctx.beginPath();
+        ctx.ellipse(parkedX, parkedY, 40, 9, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Tail
+        ctx.beginPath();
+        ctx.moveTo(parkedX - 35, parkedY);
+        ctx.lineTo(parkedX - 45, parkedY - 18);
+        ctx.lineTo(parkedX - 30, parkedY);
+        ctx.fill();
+
+        // Primary User Airliner on Runway Taxi (Smooth and crisp)
+        const planeX = w * 0.50;
+        const planeY = h * 0.76;
+
+        // Fuselage
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.ellipse(planeX, planeY, 68, 16, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Cockpit windshield
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.ellipse(planeX + 50, planeY - 4, 12, 5, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Wings
+        ctx.fillStyle = '#cbd5e1';
+        ctx.beginPath();
+        ctx.moveTo(planeX - 10, planeY);
+        ctx.lineTo(planeX - 85, planeY + 12);
+        ctx.lineTo(planeX + 5, planeY + 18);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(planeX - 10, planeY - 4);
+        ctx.lineTo(planeX - 85, planeY - 26);
+        ctx.lineTo(planeX + 5, planeY - 6);
+        ctx.fill();
+
+        // Jet Engines
+        ctx.fillStyle = '#475569';
+        ctx.beginPath();
+        ctx.ellipse(planeX - 30, planeY + 12, 14, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(planeX - 30, planeY - 14, 14, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Tail fin
+        ctx.fillStyle = '#0284c7'; // Blue airline livery
+        ctx.beginPath();
+        ctx.moveTo(planeX - 45, planeY);
+        ctx.lineTo(planeX - 70, planeY - 32);
+        ctx.lineTo(planeX - 52, planeY);
+        ctx.closePath();
+        ctx.fill();
+
+        // Wingtip navigation lights
+        ctx.fillStyle = '#22c55e'; // Green right wingtip
+        ctx.beginPath();
+        ctx.arc(planeX - 85, planeY + 12, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ef4444'; // Red left wingtip
+        ctx.beginPath();
+        ctx.arc(planeX - 85, planeY - 26, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Landing AI Aircraft descending slowly in the sky
+        const landingProgress = (t * 0.08) % 1;
+        const landX = w * 0.25 + landingProgress * (w * 0.4);
+        const landY = h * 0.18 + landingProgress * (h * 0.22);
+        ctx.fillStyle = '#94a3b8';
+        ctx.beginPath();
+        ctx.ellipse(landX, landY, 22, 5, 0.1, 0, Math.PI * 2);
+        ctx.fill();
+
+        // --- CLEAR ON-SCREEN WORKLOAD CALLOUT LABELS ---
+        // Showing clearly what the CPU is calculating in real-time
+        drawAnnotationBadge(ctx, planeX + 50, planeY - 25, 'CPU: Cockpit Glass Avionics', 'cpu', 'center');
+        drawAnnotationBadge(ctx, parkedX, parkedY - 25, 'CPU: Parked AI Traffic (KJFK)', 'cpu', 'center');
+        drawAnnotationBadge(ctx, towerX - 20, towerTopY + 30, 'CPU: Airport ATC & Collision Logic', 'cpu', 'right');
+        drawAnnotationBadge(ctx, landX, landY - 15, 'CPU: Incoming AI Flight Path', 'cpu', 'center');
+
+      } else if (state.scenario === 'cruise') {
+        // ==========================================
+        // 2. SCENARIO: 35,000 FT CRUISE (PEACEFUL)
+        // ==========================================
+
+        // Deep Stratospheric Sky gradient
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, h);
+        skyGrad.addColorStop(0, '#020617');
+        skyGrad.addColorStop(0.35, '#075985');
+        skyGrad.addColorStop(0.7, '#38bdf8');
+        skyGrad.addColorStop(1, '#bae6fd');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, w, h);
+
+        // Sun with warm atmospheric glow
+        const sunX = w * 0.78;
+        const sunY = h * 0.22;
+        const sunGrad = ctx.createRadialGradient(sunX, sunY, 6, sunX, sunY, 80);
+        sunGrad.addColorStop(0, '#ffffff');
+        sunGrad.addColorStop(0.2, 'rgba(254, 240, 138, 0.8)');
+        sunGrad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+        ctx.fillStyle = sunGrad;
+        ctx.beginPath();
+        ctx.arc(sunX, sunY, 80, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Distant majestic alpine mountain peaks below clouds
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.65);
+        for (let x = 0; x <= w; x += 40) {
+          const peakY = h * 0.62 + Math.sin(x * 0.015) * 25;
+          ctx.lineTo(x, peakY);
+        }
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        // Thick, dense volumetric cloud layers below (Heavy GPU work!)
+        // Calm, majestic, slow drift (no rushing blur)
+        const cloudDrift = (t * 12) % 180;
+        
+        // Deep cloud puff layer
+        ctx.fillStyle = 'rgba(241, 245, 249, 0.45)';
+        for (let i = -2; i < 14; i++) {
+          const cx = i * 90 - cloudDrift;
+          const cy = h * 0.68 + Math.sin(i * 1.5) * 12;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 55, 0, Math.PI * 2);
+          ctx.arc(cx + 35, cy - 10, 45, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Foreground dense fluffy cloud tops
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        for (let i = -2; i < 12; i++) {
+          const cx = i * 110 - (cloudDrift * 1.2);
+          const cy = h * 0.75 + Math.cos(i * 2.1) * 14;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 65, 0, Math.PI * 2);
+          ctx.arc(cx + 45, cy - 12, 50, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Airplane Wingtip / Window View (Cruising smoothly)
+        ctx.save();
+        ctx.translate(w * 0.35, h * 0.54);
+        ctx.rotate(-0.04);
+
+        // Wing body
+        const wingGrad = ctx.createLinearGradient(0, 0, 200, 40);
+        wingGrad.addColorStop(0, '#f8fafc');
+        wingGrad.addColorStop(0.7, '#cbd5e1');
+        wingGrad.addColorStop(1, '#94a3b8');
+        ctx.fillStyle = wingGrad;
+        ctx.beginPath();
+        ctx.moveTo(-50, 15);
+        ctx.lineTo(190, 0);
+        ctx.lineTo(210, -32); // Winglet
+        ctx.lineTo(202, 14);
+        ctx.lineTo(-50, 52);
+        ctx.closePath();
+        ctx.fill();
+
+        // High-bypass Turbofan Engine Nacelle
+        ctx.fillStyle = '#64748b';
+        ctx.beginPath();
+        ctx.ellipse(45, 38, 30, 20, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.ellipse(25, 42, 16, 13, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+
+        // --- CLEAR ON-SCREEN WORKLOAD CALLOUT LABELS ---
+        // Showing clearly what the GPU is calculating in real-time
+        drawAnnotationBadge(ctx, w * 0.40, h * 0.78, 'GPU: Raymarched Volumetric Clouds (99% Load)', 'gpu', 'center');
+        drawAnnotationBadge(ctx, w * 0.38, h * 0.44, 'GPU: Metal Roughness & Cockpit Shaders', 'gpu', 'center');
+        drawAnnotationBadge(ctx, w * 0.78, h * 0.12, 'GPU: Atmospheric Rayleigh Scattering', 'gpu', 'center');
+        drawAnnotationBadge(ctx, w * 0.15, h * 0.22, 'CPU: Relaxing (~10ms) - 0 AI traffic here!', 'cpu', 'left');
+
+      } else {
+        // ==========================================
+        // 3. SCENARIO: LOW VFR COUNTRYSIDE
+        // ==========================================
+
+        // Countryside Clear Sky
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.52);
+        skyGrad.addColorStop(0, '#0284c7');
+        skyGrad.addColorStop(1, '#bae6fd');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, w, h * 0.52);
+
+        // Distant rolling green hills
+        ctx.fillStyle = '#15803d';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.52);
+        for (let x = 0; x <= w; x += 30) {
+          const y = h * 0.52 + Math.sin(x * 0.006 + 1) * 18;
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        // Forefront terrain & scattered tree lines
+        ctx.fillStyle = '#166534';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.70);
+        for (let x = 0; x <= w; x += 30) {
+          const y = h * 0.70 + Math.cos(x * 0.008) * 14;
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        // Scattered 3D tree canopies
+        for (let tr = 0; tr < 12; tr++) {
+          const tx = (tr * 75) % w;
+          const ty = h * 0.68 + (tr % 3) * 12;
+          ctx.fillStyle = '#14532d';
+          ctx.beginPath();
+          ctx.arc(tx, ty, 8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Cessna 172 Skyhawk cruising slowly across the view
+        const cessnaX = ((t * 28) % (w + 120)) - 60;
+        const cessnaY = h * 0.36 + Math.sin(t * 1.2) * 3;
+
+        // Fuselage
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(cessnaX, cessnaY, 36, 7);
+        // High wing
+        ctx.fillStyle = '#e2e8f0';
+        ctx.fillRect(cessnaX + 8, cessnaY - 8, 20, 4);
+        // Tail
+        ctx.fillStyle = '#dc2626'; // Red tail accent
+        ctx.fillRect(cessnaX + 30, cessnaY - 8, 5, 9);
+        // Spinning propeller disk
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.beginPath();
+        ctx.ellipse(cessnaX - 2, cessnaY + 3.5, 2, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // On-screen callouts
+        drawAnnotationBadge(ctx, cessnaX + 18, cessnaY - 22, 'Cessna 172 Flight Model (CPU)', 'cpu', 'center');
+        drawAnnotationBadge(ctx, w * 0.5, h * 0.76, 'GPU: Terrain Textures & Foliage Shaders', 'gpu', 'center');
+      }
+
+      requestAnimationFrame(renderSimulation);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Render Lucide icons
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+      resizeCanvas();
+      recalculate();
+      renderSimulation();
+    });
+  </script>
+</body>
+</html>

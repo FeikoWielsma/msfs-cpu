@@ -141,7 +141,7 @@ class RefreshTest(unittest.TestCase):
         stale_cpu = next(c for c in doc['catalogue']['cpus'] if c['part'] == 'Core Ultra 5 250K Plus')
         self.assertNotIn('nl', stale_cpu['by'])
         self.assertIn('de', stale_cpu['by'], 'regional observations must remain independent')
-        self.assertEqual(len(doc['builds']), 18)
+        self.assertEqual(len(doc['builds']), 24)
 
 
 if __name__ == '__main__':

@@ -1136,19 +1136,14 @@ function switchHardware(hw: "cpu" | "gpu"): void {
 
   const footer = document.getElementById("footer");
   if (footer) footer.innerHTML = hw === "cpu"
-    ? `Combined from <b>Tom's Hardware</b>, <b>PCGH</b> and <b>ComputerBase</b> reviews,
-       transcribed/scraped into <code>msfs24_data.csv</code>, <code>pcgh_msfs24.csv</code> and
-       <code>computerbase_msfs24.csv</code>, unified by <code>build_data.py</code> into
-       <code>data.json</code>, then rendered by this Vite + TypeScript app. Absolute FPS aren't
-       comparable across sources — the Performance Index normalises them. Not affiliated with Tom's
-       Hardware, PCGH or ComputerBase.<br>
-       Made by <b>'Razortek'</b> from the Official MSFS Discord (<a href="https://discord.com/invite/msfs" target="_blank" rel="noopener">https://discord.com/invite/msfs</a>); you can direct opinions about this tool to <code>#hardware</code> there because he basically lives there.`
-    : `GPU benchmarks transcribed from <b>Tom's Hardware's</b> Flight Simulator 2024 reviews into
-       <code>msfs24_gpu_data.csv</code>, unified by <code>build_gpu_data.py</code> into
-       <code>gpu_data.json</code>, then rendered by this Vite + TypeScript app. Raw FPS aren't
-       comparable across test runs — the Performance Index normalises them per resolution. Not
-       affiliated with Tom's Hardware.<br>
-       Made by <b>'Razortek'</b> from the Official MSFS Discord (<a href="https://discord.com/invite/msfs" target="_blank" rel="noopener">https://discord.com/invite/msfs</a>); you can direct opinions about this tool to <code>#hardware</code> there because he basically lives there.`;
+    ? `CPU results compiled from <b>Tom's Hardware</b>, <b>PCGH</b> and <b>ComputerBase</b>.
+       The Performance Index aligns results from different tests; it is a relative ranking,
+       not a prediction of your frame rate. Original reviews are linked under Sources.
+       Not affiliated with these publications.`
+    : `GPU results compiled from <b>Tom's Hardware's</b> MSFS 2024 reviews.
+       The Performance Index aligns different test runs separately for each resolution;
+       scores cannot be compared across resolutions. Original reviews are linked under Sources.
+       Not affiliated with Tom's Hardware.`;
 
   const analysisPanel = document.getElementById("analysisPanel");
   if (analysisPanel) analysisPanel.style.display = "";

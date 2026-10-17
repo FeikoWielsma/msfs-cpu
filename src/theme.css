@@ -1,3 +1,5 @@
+@import "./fonts.css";
+
 /* Palette, shared by every page on the site.
  *
  * Both the SPA (style.css) and the build guide (specs.css) import this, so the two
@@ -43,6 +45,9 @@ html[data-theme="light"] {
   --pos:#00897b; --pos-bg:#e0f2f1; --neg:#d32f2f; --neg-bg:#ffebee;
   --shadow:0 1px 3px rgba(0,0,0,.08), 0 12px 36px -16px rgba(0,0,0,.15);
 }
+
+.project-links { display:flex; flex-wrap:wrap; gap:8px 18px; margin-bottom:14px; }
+.project-links a { text-underline-offset:3px; }
 
 /* Build-guide additions. The two index chips have to stay tellable apart at 10px, so
  * they are the same cyan/green split the PNG cards use; the money colour is a violet
